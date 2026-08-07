@@ -83,4 +83,8 @@ These are load-bearing and each one is written up in `docs/stack.md`:
 
 ## Deploy
 
-Vercel, as a plain static site — no adapter, no framework preset gymnastics beyond Astro's default. `thetoken.dad` is canonical; `thetokendad.com` 301s in. Not wired yet — TASK-036.
+**Host is undecided — Cloudflare Pages or Vercel.** TASK-036. Whichever it is, this ships as a **plain static site**: no adapter, no framework preset gymnastics beyond Astro's default. `thetoken.dad` is canonical; `thetokendad.com` 301s in.
+
+The undecidedness is deliberate and cheap. Static output plus a `dist/` directory is the most portable thing a build can produce, so the two platforms are a same-day switch and neither is load-bearing on the stack. What actually differs between them — build-image Bun support, redirect and header config, edge behaviour, pricing at zero traffic — is worth measuring rather than assuming, and the comparison is itself a post.
+
+Build command on either platform is `bun run build`, output directory `dist`. Both resolve a Node version for the build image from `.nvmrc` / `engines.node` even when the build itself runs through Bun, which is why those fields are retained.
