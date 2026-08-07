@@ -1,0 +1,13 @@
+{
+  // Static-assets-only Worker. There is no server script and no Astro adapter —
+  // `output: 'static'` is unchanged, so this does NOT reopen the static lock.
+  // Cloudflare now steers all new projects to Workers rather than Pages; this is
+  // that path, and it is also the one that can later grow a server handler
+  // without migrating platforms.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "thetokendad-site",
+  "compatibility_date": "2026-08-07",
+  "assets": {
+    "directory": "./dist"
+  }
+}
