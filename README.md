@@ -64,7 +64,9 @@ draft: true                # optional, defaults to false
 ---
 ```
 
-`draft: true` removes the post from **every** surface — the home page, the blog index, its own route, and the RSS feed. It is not merely unlinked; it does not exist in the build. That is enforced in one place, `src/lib/posts.ts`, so there is no way for a surface to drift and leak a draft.
+`draft: true` removes the post from **every** built surface — the home page, the blog index, its own route, and the RSS feed. It is not merely unlinked; it does not exist in the build. That is enforced in one place, `src/lib/posts.ts`, so there is no way for a surface to drift and leak a draft.
+
+**Drafts are visible in `bun run dev`**, so you can read and screenshot a post before publishing it. The gate is `import.meta.env.DEV`, which is false in every `astro build` — and a build is the only thing that ever gets deployed, so this cannot leak. If you want to see exactly what will ship, run `bun run build && bun run preview`.
 
 `.mdx` files can import and render `.astro` components. `.md` files cannot. Use `.mdx` by default.
 
