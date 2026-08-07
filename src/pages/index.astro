@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { getPublishedPosts } from '../lib/posts';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+const posts = (await getPublishedPosts()).slice(0, 5);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <section>
+    <h1>{SITE_TITLE}</h1>
+    <p>{SITE_DESCRIPTION}</p>
+  </section>
+
+  <section>
+    <h2>Writing</h2>
+    {posts.length === 0 ? (
+      <p>Nothing published yet.</p>
+    ) : (
+      <ul>
+        {posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+            <FormattedDate date={post.data.pubDate} />
+            <p>{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )}
+    <a href="/blog">All writing</a>
+  </section>
+</BaseLayout>

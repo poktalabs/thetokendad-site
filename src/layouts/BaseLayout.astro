@@ -1,0 +1,36 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_TITLE } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <header>
+      <a href="/">{SITE_TITLE}</a>
+      <nav>
+        <a href="/blog">Writing</a>
+        <a href="/about">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <p>&copy; {new Date().getFullYear()} {SITE_TITLE}</p>
+      <a href="/rss.xml">RSS</a>
+    </footer>
+  </body>
+</html>

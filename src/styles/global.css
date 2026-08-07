@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+
+/*
+  DESIGN IS DELIBERATELY ABSENT.
+
+  This file carries no visual direction on purpose. The canvas's look is being
+  designed by hand (Mel, via /impeccable) on top of this scaffold, and anything
+  opinionated here would just be work to undo.
+
+  What goes here when design lands: a Tailwind 4 `@theme` block with the brand
+  tokens (colors, type scale, fonts), plus any base element styles.
+
+  @theme {
+    --color-*: ...;
+    --font-*: ...;
+  }
+*/

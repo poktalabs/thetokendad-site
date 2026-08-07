@@ -1,0 +1,31 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags: string[];
+}
+
+const { title, description, pubDate, updatedDate, tags } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <article>
+    <h1>{title}</h1>
+    <p>
+      <FormattedDate date={pubDate} />
+      {updatedDate && (<span> · updated <FormattedDate date={updatedDate} /></span>)}
+    </p>
+    {tags.length > 0 && (
+      <ul>
+        {tags.map((tag) => (<li>{tag}</li>))}
+      </ul>
+    )}
+
+    <slot />
+  </article>
+</BaseLayout>
