@@ -11,18 +11,19 @@ This is *surface 1* of the `thetokendad-website` workstream. Surface 2 — the *
 
 ## Running it
 
-Node **24.19.0** is required — `.nvmrc` and `engines.node` both pin it, and the stack was verified on it.
+**Bun 1.3.14** (or newer) is both the package manager and the script runner — pinned via `packageManager` and `engines.bun` in `package.json`. `.nvmrc` and `engines.node` (24.19.0) are **kept**, not vestigial: Cloudflare Pages and Vercel both resolve a Node version for the build image from those fields even when the build command itself runs through Bun, so removing them would break deploy-time Node resolution on either platform — the deploy target is still undecided between the two.
 
 ```bash
-nvm use            # reads .nvmrc → 24.19.0
-npm install
-npm run dev        # http://localhost:4321
-npm run build      # → dist/
-npm run check      # astro check — must stay at 0 errors / 0 warnings / 0 hints
-npm run preview    # serve dist/
+bun install
+bun run dev        # http://localhost:4321
+bun run build      # → dist/
+bun run check      # astro check — must stay at 0 errors / 0 warnings / 0 hints
+bun run preview    # serve dist/
 ```
 
-The gate before anything is considered done: **`npm run build` clean and `npm run check` at 0/0/0.**
+The gate before anything is considered done: **`bun run build` clean and `bun run check` at 0/0/0.**
+
+The lockfile is `bun.lock` (Bun 1.2+'s text/JSONC format, not the legacy binary `bun.lockb`) — it is the artifact, same as `package-lock.json` was under npm. Do not hand-edit it.
 
 ## Structure
 
@@ -78,6 +79,7 @@ These are load-bearing and each one is written up in `docs/stack.md`:
 5. **The Rust compiler is strict.** Every non-void element needs a closing tag, and invalid HTML nesting is no longer silently corrected.
 6. **`src/fetch.ts` is a reserved filename.** Do not create one.
 7. **`compressHTML` defaults to `'jsx'`.** Whitespace between adjacent inline elements gets stripped. Watch for lost spaces in typography-heavy sections.
+8. **`bun install` migrates `package-lock.json` automatically** the first time it runs against an npm-installed tree, and produces exact-pin resolutions identical to npm's — verified against all 8 pinned packages (`astro`, `tailwindcss`, `@tailwindcss/vite`, `typescript`, `@astrojs/mdx`, `@astrojs/markdown-satteri`, `zod`, `sharp`, `@astrojs/check`) with zero drift. No `trustedDependencies` entry was needed: `bun pm untrusted` reports 0 untrusted packages with scripts — `sharp`'s native `libvips` binding and `esbuild`'s platform binary both installed and ran correctly under Bun's default trust list. If a future dependency's postinstall gets silently skipped, `bun pm untrusted` is the first thing to check.
 
 ## Deploy
 
