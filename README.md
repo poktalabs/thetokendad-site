@@ -85,6 +85,28 @@ These are load-bearing and each one is written up in `docs/stack.md`:
 9. **`nvm use` before `bun run dev`.** Nothing enforces `.nvmrc`. Astro's dev server daemonises itself **under Node, not under Bun** — `bun run dev` only means Bun executed the script — so it silently picks up whatever `node` is on `PATH`. Check the Astro dev toolbar's debug info: it should say `Node v24.19.0`.
 8. **`bun install` migrates `package-lock.json` automatically** the first time it runs against an npm-installed tree, and produces exact-pin resolutions identical to npm's — verified against all 8 pinned packages (`astro`, `tailwindcss`, `@tailwindcss/vite`, `typescript`, `@astrojs/mdx`, `@astrojs/markdown-satteri`, `zod`, `sharp`, `@astrojs/check`) with zero drift. No `trustedDependencies` entry was needed: `bun pm untrusted` reports 0 untrusted packages with scripts — `sharp`'s native `libvips` binding and `esbuild`'s platform binary both installed and ran correctly under Bun's default trust list. If a future dependency's postinstall gets silently skipped, `bun pm untrusted` is the first thing to check.
 
+## Version archive
+
+Every visual iteration of the canvas stays **live and reachable forever**, not just screenshotted. The evolution is content — the design post shows real pages you can click, not a carousel of PNGs.
+
+```bash
+./scripts/cut-version.sh 1 "First design pass"
+```
+
+That builds, freezes `dist/` into `archive/v1/`, writes `archive/wrangler.v1.jsonc`, and deploys it as its own Worker.
+
+| | |
+|---|---|
+| **v0** — undesigned scaffold, 2026-08-07 | [thetokendad-v0.mel-19b.workers.dev](https://thetokendad-v0.mel-19b.workers.dev) → `v0.thetoken.dad` |
+
+Three decisions in here that are load-bearing:
+
+1. **The archive is the built output, not the source.** Rebuilding a two-year-old Astro tree needs a registry, a Node version and native binaries to all still exist. A frozen `dist/` is ~36KB of static HTML and CSS that renders as long as browsers do. Git tags (`site-v0`) record the source alongside it, but the artifact is what's guaranteed.
+2. **One Worker and one hostname per version.** Not a subpath of the live site. Every asset path Astro emits is absolute (`/_astro/…`, `/blog/`), so a version served from `/v/0/` would fetch the *live* stylesheet and render as whatever the current design is — silently destroying the thing the archive exists to show. Cloudflare static assets are free and uncapped, so hostnames are the cheap axis here.
+3. **Archives are `noindex`.** `_headers` sets `X-Robots-Tag: noindex, nofollow` and `robots.txt` disallows everything. These two files are the **only** deviation from a byte-exact copy of `dist/` — both non-visual. Without them, every version competes with the live site for identical content in search.
+
+Versions are immutable. `cut-version.sh` refuses to overwrite an existing one.
+
 ## Deploy
 
 **Host is undecided — Cloudflare Pages or Vercel.** TASK-036. Whichever it is, this ships as a **plain static site**: no adapter, no framework preset gymnastics beyond Astro's default. `thetoken.dad` is canonical; `thetokendad.com` 301s in.

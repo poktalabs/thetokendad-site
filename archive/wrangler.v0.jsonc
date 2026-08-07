@@ -1,0 +1,16 @@
+{
+  // Frozen v0 of the canvas — the undesigned scaffold, exactly as it built on
+  // 2026-08-07. Its own Worker so it keeps its own hostname, which is what makes
+  // the built HTML work untouched: every asset path in an Astro build is absolute
+  // (/_astro/…, /blog/), so a version can only be served from a root, never from
+  // a subpath of the live site.
+  //
+  // Deploy:  bunx wrangler deploy --config archive/wrangler.v0.jsonc
+  // Cutting a new version: see README § Version archive.
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "thetokendad-v0",
+  "compatibility_date": "2026-08-07",
+  "assets": {
+    "directory": "./v0"
+  }
+}
