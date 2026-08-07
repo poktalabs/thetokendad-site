@@ -14,6 +14,7 @@ This is *surface 1* of the `thetokendad-website` workstream. Surface 2 — the *
 **Bun 1.3.14** (or newer) is both the package manager and the script runner — pinned via `packageManager` and `engines.bun` in `package.json`. `.nvmrc` and `engines.node` (24.19.0) are **kept**, not vestigial: Cloudflare Pages and Vercel both resolve a Node version for the build image from those fields even when the build command itself runs through Bun, so removing them would break deploy-time Node resolution on either platform — the deploy target is still undecided between the two.
 
 ```bash
+nvm use            # reads .nvmrc → 24.19.0. NOT optional, see trap 9 below
 bun install
 bun run dev        # http://localhost:4321
 bun run build      # → dist/
@@ -80,7 +81,8 @@ These are load-bearing and each one is written up in `docs/stack.md`:
 4. **Astro 7 uses Sätteri, not remark/rehype.** Any markdown plugin (reading time, heading anchors, footnotes) has to be checked against Sätteri rather than assumed. Tracked as TASK-037.
 5. **The Rust compiler is strict.** Every non-void element needs a closing tag, and invalid HTML nesting is no longer silently corrected.
 6. **`src/fetch.ts` is a reserved filename.** Do not create one.
-7. **`compressHTML` defaults to `'jsx'`.** Whitespace between adjacent inline elements gets stripped. Watch for lost spaces in typography-heavy sections.
+7. **`compressHTML` defaults to `'jsx'`.** Whitespace between adjacent inline elements gets stripped — **and this is already happening in this repo.** The header nav renders `WritingAbout` and the post listing renders `Why I'm building this in publicAugust 7, 2026`, in both dev and production, because a newline between two `<a>` tags is removed rather than collapsed to a space. Do not patch it with `&nbsp;` — fix it with layout (`flex` + `gap`) during the design pass.
+9. **`nvm use` before `bun run dev`.** Nothing enforces `.nvmrc`. Astro's dev server daemonises itself **under Node, not under Bun** — `bun run dev` only means Bun executed the script — so it silently picks up whatever `node` is on `PATH`. Check the Astro dev toolbar's debug info: it should say `Node v24.19.0`.
 8. **`bun install` migrates `package-lock.json` automatically** the first time it runs against an npm-installed tree, and produces exact-pin resolutions identical to npm's — verified against all 8 pinned packages (`astro`, `tailwindcss`, `@tailwindcss/vite`, `typescript`, `@astrojs/mdx`, `@astrojs/markdown-satteri`, `zod`, `sharp`, `@astrojs/check`) with zero drift. No `trustedDependencies` entry was needed: `bun pm untrusted` reports 0 untrusted packages with scripts — `sharp`'s native `libvips` binding and `esbuild`'s platform binary both installed and ran correctly under Bun's default trust list. If a future dependency's postinstall gets silently skipped, `bun pm untrusted` is the first thing to check.
 
 ## Deploy
