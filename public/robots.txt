@@ -1,4 +1,11 @@
-User-agent: *
-Allow: /
+# Cloudflare prepends a managed block above this one (AI training/search policy,
+# set in the zone's settings) which already carries a `User-agent: * / Allow: /`
+# group. Repeating that here produced two groups for the same user-agent — legal
+# but ambiguous, since the spec leaves duplicate-group handling undefined.
+#
+# So this file declares only what Cloudflare's block does not: where the sitemap
+# is. A robots.txt with a Sitemap line and no rules is valid and fully permissive
+# — absence of a rule means allowed — so this stays correct even if the managed
+# block is ever turned off.
 
 Sitemap: https://thetoken.dad/sitemap-index.xml

@@ -95,9 +95,9 @@ Every visual iteration of the canvas stays **live and reachable forever**, not j
 
 That builds, freezes `dist/` into `archive/v1/`, writes `archive/wrangler.v1.jsonc`, and deploys it as its own Worker.
 
-| | |
+| Version | Live at |
 |---|---|
-| **v0** — undesigned scaffold, 2026-08-07 | [thetokendad-v0.mel-19b.workers.dev](https://thetokendad-v0.mel-19b.workers.dev) → `v0.thetoken.dad` |
+| **v0** — undesigned scaffold, 2026-08-07 | **[v0.thetoken.dad](https://v0.thetoken.dad)** |
 
 Three decisions in here that are load-bearing:
 
