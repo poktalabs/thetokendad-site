@@ -12,5 +12,8 @@
   "compatibility_date": "2026-08-07",
   "assets": {
     "directory": "./v0"
-  }
+  },
+  "routes": [
+    { "pattern": "v0.thetoken.dad", "custom_domain": true }
+  ]
 }

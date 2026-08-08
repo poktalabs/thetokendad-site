@@ -1,0 +1,12 @@
+{
+  // Redirect-only Worker for the typo-catcher domain.
+  // Deploy: bunx wrangler deploy --config redirect/wrangler.jsonc
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "thetokendad-com-redirect",
+  "main": "./index.js",
+  "compatibility_date": "2026-08-08",
+  "routes": [
+    { "pattern": "thetokendad.com", "custom_domain": true },
+    { "pattern": "www.thetokendad.com", "custom_domain": true }
+  ]
+}

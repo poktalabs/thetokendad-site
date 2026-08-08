@@ -9,5 +9,12 @@
   "compatibility_date": "2026-08-07",
   "assets": {
     "directory": "./dist"
-  }
+  },
+  // Custom domains declared here rather than clicked in the dashboard, so the
+  // hostname a deploy serves is part of the repo and survives a rebuild from
+  // scratch. Cloudflare creates the DNS records and provisions certs.
+  "routes": [
+    { "pattern": "thetoken.dad", "custom_domain": true },
+    { "pattern": "www.thetoken.dad", "custom_domain": true }
+  ]
 }
