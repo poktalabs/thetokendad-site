@@ -109,6 +109,42 @@ Versions are immutable. `cut-version.sh` refuses to overwrite an existing one.
 
 ## Deploy
 
+Three Workers, three configs, one repo. **Only the first is safe to automate.**
+
+| Worker | Config | Serves | Deploys |
+|---|---|---|---|
+| `thetokendad-site` | `wrangler.jsonc` | `thetoken.dad`, `www.thetoken.dad` | **CI, on push to `main`** |
+| `thetokendad-v0` | `archive/wrangler.v0.jsonc` | `v0.thetoken.dad` | **manual, once, never again** |
+| `thetokendad-com-redirect` | `redirect/wrangler.jsonc` | `thetokendad.com`, `www.…` | manual — the code never changes |
+
+🔴 **Never put the archive Workers on CI.** Their configs point at `archive/vN/`, a frozen snapshot — but a CI job wired to the wrong config would redeploy them from whatever `dist/` currently holds, silently overwriting a historical version with the present design. That destroys the one thing the archive exists to prove. Archives are deployed once, by hand, by `cut-version.sh`.
+
+### Manual deploys
+
+```bash
+bunx wrangler deploy                                      # the live site
+bunx wrangler deploy --config redirect/wrangler.jsonc     # the .com redirect
+```
+
+### CI deploys (Workers Builds)
+
+Connecting the repo requires authorizing Cloudflare's GitHub App, so it is a one-time dashboard action:
+
+1. Cloudflare → **Workers & Pages** → **`thetokendad-site`** → **Settings** → **Build**
+2. **Connect** → authorize the Cloudflare GitHub App → pick **`poktalabs/thetokendad-site`**
+3. Configure:
+   - **Branch:** `main`
+   - **Root directory:** `/`
+   - **Build command:** `bun run build`
+   - **Deploy command:** `npx wrangler deploy`
+4. Save, then push a commit to confirm it fires.
+
+The build image detects Bun from `bun.lock` and reads `.nvmrc` for the Node version — the two files that made the local toolchain reproducible do the same job in CI.
+
+**Custom domains are declared in `wrangler.jsonc`, not the dashboard**, so a CI deploy re-asserts the hostnames rather than depending on state someone clicked once. The whole topology rebuilds from the repo.
+
+## Deploy notes
+
 **Host is undecided — Cloudflare Pages or Vercel.** TASK-036. Whichever it is, this ships as a **plain static site**: no adapter, no framework preset gymnastics beyond Astro's default. `thetoken.dad` is canonical; `thetokendad.com` 301s in.
 
 The undecidedness is deliberate and cheap. Static output plus a `dist/` directory is the most portable thing a build can produce, so the two platforms are a same-day switch and neither is load-bearing on the stack. What actually differs between them — build-image Bun support, redirect and header config, edge behaviour, pricing at zero traffic — is worth measuring rather than assuming, and the comparison is itself a post.
