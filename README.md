@@ -139,7 +139,22 @@ Connecting the repo requires authorizing Cloudflare's GitHub App, so it is a one
    - **Deploy command:** `npx wrangler deploy`
 4. Save, then push a commit to confirm it fires.
 
-The build image detects Bun from `bun.lock` and reads `.nvmrc` for the Node version — the two files that made the local toolchain reproducible do the same job in CI.
+The build image detects Bun from `bun.lock` and reads `.nvmrc` for the Node version — the two files that made the local toolchain reproducible do the same job in CI. `npx wrangler deploy` resolves the **pinned** `wrangler@4.120.0` from `node_modules`, not the latest release, because it is a devDependency.
+
+**Connected 2026-08-08.** Production branch `main`, root `/`, non-production branch builds **disabled**.
+
+### Turning on branch previews (deferred, two steps)
+
+Non-production builds are off because there are no non-production branches yet, and because **the checkbox alone would not work**. Declaring custom domains disabled preview URLs at the Worker level — wrangler says so on every deploy:
+
+> *Because your 'workers.dev' route is disabled and your 'preview_urls' setting is not in your Wrangler file, Preview URLs will be disabled for this deployment by default.*
+
+So enabling only the checkbox uploads versions with no URL to open. When a branch workflow exists — the design pass is the likely trigger — do both:
+
+1. Add `"preview_urls": true` to `wrangler.jsonc`.
+2. Tick **Builds for non-production branches**, leaving the command as `npx wrangler versions upload`.
+
+`versions upload` publishes a version *without* promoting it, so `thetoken.dad` keeps serving `main` while the branch gets its own URL. Note those URLs are public — unguessable and short-lived, but a previewed draft technically exists on the internet.
 
 **Custom domains are declared in `wrangler.jsonc`, not the dashboard**, so a CI deploy re-asserts the hostnames rather than depending on state someone clicked once. The whole topology rebuilds from the repo.
 
