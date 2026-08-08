@@ -1,0 +1,156 @@
+---
+title: "I deployed the same site to two hosts and got two different URL structures"
+description: "Choosing between Cloudflare and Vercel by deploying to both instead of reading pricing pages. One build, two canonical URL sets, a version pin silently ignored, and three false alarms that were all my own fault."
+pubDate: 2026-08-08
+tags: ["hosting", "cloudflare", "vercel", "astro", "receipts"]
+draft: true
+---
+
+Most hosting comparisons are written from pricing pages. I wrote this one from two deploys.
+
+The conclusion is boring — I picked Cloudflare. What's interesting is everything the exercise turned up that no amount of documentation-reading would have: the same build produced two different sets of URLs, one platform quietly ignored a version pin my repo declared, and the argument that actually decided it wasn't on any feature matrix.
+
+## The assumption nobody had examined
+
+I was going to use Vercel. Not because I'd decided to — because it's where my other Astro sites run.
+
+That's not a reason. Nobody had written one down. It had been true long enough to feel settled, which is a different thing from being correct, and it's the kind of default worth poking exactly once before you build on top of it for three years.
+
+## The free tier isn't free for this
+
+First thing I found: **Vercel's Hobby plan prohibits commercial use**, and defines it broadly. A brochure site for a business, a client project you invoiced for, a lead-generation landing page — all commercial.
+
+This site is a lead-generation landing page. It exists partly to get me hired. Under those terms, I can't run it on Hobby.
+
+So Vercel's real floor is $20/month. Not "free with paid upgrades available" — twenty dollars, month one, for permission.
+
+Cloudflare's free tier has no commercial-use restriction. You can run a revenue-generating business on it.
+
+I want to be careful here, because I initially got the shape of this wrong in my own head. Cloudflare *also* has a $20/month Pro plan, and when I saw that I briefly thought the comparison was a wash. It isn't, and the difference is the whole thing:
+
+**Vercel's $20 is the entry price. Cloudflare's $20 is an optional upgrade you never buy.**
+
+Cloudflare Pro adds managed WAF rulesets, image optimization, bot challenges. A static blog with eight files needs none of it. Same number, opposite meaning. The honest comparison was never $20 vs $20 — it was **$0 vs $20**, and it widens with traffic rather than narrowing.
+
+## So I deployed to both
+
+Same `dist/`, same afternoon, both live within an hour.
+
+**The boring result first, because most comparisons skip it: correctness was identical.** I have an unpublished post sitting at `draft: true`, and on both platforms it returned 404 and the RSS feed carried zero items. Every route matched. Compression matched.
+
+That matters. When a comparison only reports differences, it quietly implies everything else differed too.
+
+Latency, mean time-to-first-byte over eight runs:
+
+| | Mean TTFB |
+|---|---|
+| Cloudflare | **0.20s** |
+| Vercel | 0.32s |
+
+**Don't quote that as a benchmark.** One machine, one network, one vantage point, and the two requests landed on different edges — Cloudflare served me from Dallas, Vercel from San Francisco. It's directionally consistent with Cloudflare having far more points of presence, and that's all I'll claim for it. A real latency claim needs multi-region synthetic monitoring I didn't run.
+
+## The finding that changed my code
+
+Here's the one I didn't see coming.
+
+Astro's `trailingSlash` option defaults to `'ignore'`. I'd never thought about it. Turns out "ignore" means *let the host decide*, and the two hosts decided differently:
+
+| Path | Cloudflare | Vercel |
+|---|---|---|
+| `/blog` | **307** → `/blog/` | **200** |
+| `/about` | **307** → `/about/` | **200** |
+| `/index.html` | **307** → `/` | **200** |
+| `/blog/` | 200 | 200 |
+
+One build. Two canonical URL structures. Two sets of indexable pages.
+
+And because my scaffold's internal links were inconsistent — `/blog` in the nav, `/blog/[slug]/` in the listings — **every navigation click on Cloudflare was eating a redirect.** Not broken. Just quietly worse, in a way I'd never have noticed from one deploy.
+
+The fix is one line:
+
+```js
+// astro.config.mjs
+trailingSlash: 'always',
+```
+
+Plus making the internal links agree. Now the canonical shape is a property of the build instead of a property of whoever's serving it.
+
+I couldn't have found this by reading either platform's docs. Both behave reasonably. They just don't behave *identically*, and the only way to see that is to put the same artifact in both and diff the behaviour.
+
+## `packageManager` is a suggestion
+
+My repo pins everything exactly. No caret ranges, lockfile committed, the whole discipline. It declares:
+
+```json
+"packageManager": "bun@1.3.14"
+```
+
+Vercel auto-detected Bun from `bun.lock` with zero configuration, which is genuinely nice. Then it ran **Bun 1.3.12**.
+
+It didn't warn me. The build image pins its own Bun and my declaration was ignored. So a repo can be pinned locally and floating in CI, with the two disagreeing and nothing anywhere saying so.
+
+While I was in there, Vercel also flagged something that turned out to be **my** bug, not theirs:
+
+> `"engines": { "node": ">=24.19.0" }` will automatically upgrade when a new major Node.js version is released.
+
+A `>=` range, in a repo whose entire point is exact pins. That one's on me, and it would have silently moved to Node 25 on release.
+
+## What actually decided it
+
+Not latency. Three things, in order of weight.
+
+**The success case sends a bill on Vercel.** Pro includes 1TB of bandwidth, then charges $0.15–$0.35 per GB depending on region. Cloudflare's static asset requests are free and uncapped.
+
+At normal traffic both are zero. The asymmetry only shows up on a good day — and a good day is the entire point of this project. If something I write actually lands, Vercel prices that. Cloudflare doesn't. There's no scenario running the other direction where Cloudflare's bandwidth model costs me more.
+
+**Consolidation.** I own a typo-catcher domain that was already on Cloudflare. Moving the canonical domain there made the 301 between them a free edge rule instead of compute, and got me cookieless analytics with no consent banner and a free email address on the domain. Vercel has an answer for none of that.
+
+**Where I'll be standing when static ends.** This site is static today. It won't stay static — email capture, payments, and gated content all need a server route. On Cloudflare Workers that's one line added to the config I already have, and the door opens onto D1, R2, KV, Queues, and Workers AI. On Vercel it's a different, metered path.
+
+Migrating platforms the week you ship a paid thing is a bad week to be migrating.
+
+**The honest counterweight:** Vercel's developer experience for Astro is better. Preview deployments per pull request are genuinely useful, and I had none for the first day. And the marginal cost of staying would have been zero, since the Pro seat was already paid for. I left the Vercel deployment running as a fallback.
+
+## Workers, not Pages
+
+If you go Cloudflare, there's a sub-decision people get wrong, and Cloudflare will tell you the answer if you try the wrong one. I ran `wrangler pages deploy` and it refused:
+
+> Maybe you intended to deploy a Worker project instead? **Workers are the recommended way to deploy all new projects.**
+
+Pages was Cloudflare's original static-site product. Workers has since absorbed static-asset hosting, and new capability lands there. Static asset requests are free and unlimited either way, so cost doesn't decide it.
+
+Two things in this build settled it inside an hour. My domain redirect is a ten-line Worker using the same config format and deploy command as the site itself. And every frozen version of this page — I'm archiving each redesign at its own permanent URL — is just a Worker with an assets directory, which is why the script that cuts a new version is forty lines instead of a pile of separate projects.
+
+## The part most write-ups leave out
+
+Three things went wrong. All three were my fault, and they were all the same mistake.
+
+**I reported an outage that didn't exist.** After attaching the domain, my checks showed the apex had an IPv6 record and no IPv4 record — meaning a large chunk of the internet couldn't reach the site. I went to add the missing record. Cloudflare rejected it: a Workers-managed record already existed. I re-checked. The IPv4 records were there, on every resolver, and had been the whole time.
+
+I'd measured during the propagation window and gotten a **cached negative answer** — the resolver remembering, for a few minutes, that the record hadn't existed yet.
+
+**I declared the Cloudflare deploy broken.** Every HTML route 404ing while the non-HTML files served fine. It was a fresh subdomain that hadn't propagated. It came up a minute later.
+
+**I declared the redirect broken.** 500 on every path. Certificate provisioning. Fine shortly after.
+
+And a fourth I nearly repeated at the very end: DNS records that I could see were saved still looked missing on a public resolver, because of a five-minute negative cache.
+
+One root cause: **DNS and certificates are eventually consistent, and the tools that check them answer instantly.** `dig` and `curl` will give you a confident, wrong answer for several minutes, and neither ever says "I'm not sure yet." The fix is a habit — query the authoritative nameserver directly, not a resolver:
+
+```bash
+dig +short TXT _dmarc.example.com @your-nameserver.cloudflare.com
+```
+
+I'd already learned this lesson two days earlier and not generalised it. I published a "cold install took ~99 seconds" figure that wasn't an install measurement at all — it had timed a session that included an unrelated upgrade step. I hedged it as "not a fair number to quote" and published it anyway.
+
+That hedge is the actual failure. It looked like appropriate caution while laundering an unusable number into the record. A measurement without its method attached isn't a measurement, and hedging it is not a substitute for re-running it or dropping it.
+
+Same mistake twice in one build, once about time and once about DNS.
+
+## What I haven't done
+
+- **Cloudflare's build image never got exercised** during the comparison — that arm was deployed from a locally-built directory, so the build-pipeline findings above are Vercel-only.
+- **The latency numbers are one vantage point.** Stated above, worth restating.
+- **No preview deployments** for branches yet. Deliberately deferred until I have branches worth previewing.
+
+The site now deploys itself on push, about thirty seconds from `git push` to live. Which means the next thing I break, I'll break in public and faster.
