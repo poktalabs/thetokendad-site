@@ -90,10 +90,13 @@ These are load-bearing and each one is written up in `docs/stack.md`:
 Every visual iteration of the canvas stays **live and reachable forever**, not just screenshotted. The evolution is content — the design post shows real pages you can click, not a carousel of PNGs.
 
 ```bash
-./scripts/cut-version.sh 1 "First design pass"
+./scripts/cut-version.sh v1 "First design pass"
+./scripts/cut-version.sh a  "Design run, arm A"
 ```
 
-That builds, freezes `dist/` into `archive/v1/`, writes `archive/wrangler.v1.jsonc`, and deploys it as its own Worker.
+That builds, freezes `dist/` into `archive/<slug>/`, writes `archive/wrangler.<slug>.jsonc`, and deploys it as its own Worker.
+
+**The argument is a slug, not a number** — an arbitrary `[a-z0-9-]` string that becomes the directory, the Worker name and the hostname. Numbered versions pass `v1`, `v2`. The design run publishes its candidates at neutral single letters so they can be judged blind. Keep it to **one DNS label**: Cloudflare's Universal SSL covers a single level of subdomain, so `a.thetoken.dad` is free while `v0.1.thetoken.dad` would need Advanced Certificate Manager at $10/month. The script rejects anything outside `[a-z0-9-]`.
 
 | Version | Live at |
 |---|---|
