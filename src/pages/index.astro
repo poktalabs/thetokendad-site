@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FormattedDate from '../components/FormattedDate.astro';
+import Glyph from '../components/Glyph.astro';
+import PostCard from '../components/PostCard.astro';
+import SignalKey from '../components/SignalKey.astro';
 import { getPublishedPosts } from '../lib/posts';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
@@ -8,26 +10,50 @@ const posts = (await getPublishedPosts()).slice(0, 5);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <section>
-    <h1>{SITE_TITLE}</h1>
-    <p>{SITE_DESCRIPTION}</p>
+  {/*
+    The entrance. Two things: the name, set so the definite article is visible
+    as its own word — "the" is the whole positioning — and the premise.
+    Then the key, which is the one thing on this site that moves.
+  */}
+  <section class="shell entrance">
+    <h1>
+      <span class="entrance-mark">The</span>
+      <span class="entrance-name">Token Dad</span>
+    </h1>
+    <p class="entrance-line">{SITE_DESCRIPTION}</p>
+
+    <div class="entrance-key">
+      <div class="key-head">
+        <span class="label">What the marks mean</span>
+      </div>
+      <SignalKey variant="plate" class="arrival" />
+    </div>
   </section>
 
-  <section>
-    <h2>Writing</h2>
-    {posts.length === 0 ? (
-      <p>Nothing published yet.</p>
-    ) : (
-      <ul>
-        {posts.map((post) => (
-          <li>
-            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-            <FormattedDate date={post.data.pubDate} />
-            <p>{post.data.description}</p>
-          </li>
-        ))}
-      </ul>
-    )}
-    <a href="/blog/">All writing</a>
+  <section class="shell stack-section">
+    <div class="section-head">
+      <Glyph name="writing" size={18} />
+      <span class="label">Latest writing</span>
+    </div>
+
+    {
+      posts.length === 0 ? (
+        <p class="lede column" style="text-align:center">
+          Nothing published yet. The first post is being written.
+        </p>
+      ) : (
+        <ul class="entries column">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </ul>
+      )
+    }
+
+    <div class="section-foot">
+      <a class="quiet-link" href="/blog/">
+        <span>All writing</span>
+      </a>
+    </div>
   </section>
 </BaseLayout>

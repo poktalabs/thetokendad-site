@@ -14,6 +14,10 @@ export const getStaticPaths = (async () => {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+// Same 220 wpm as the listing cards, so the two never disagree.
+const words = (post.body ?? '').split(/\s+/).filter(Boolean).length;
+const readingTime = `${Math.max(1, Math.round(words / 220))} min read`;
 ---
 
 <PostLayout
@@ -22,6 +26,7 @@ const { Content } = await render(post);
   pubDate={post.data.pubDate}
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
+  readingTime={readingTime}
 >
   <Content />
 </PostLayout>

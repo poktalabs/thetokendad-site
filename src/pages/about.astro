@@ -1,12 +1,56 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_TITLE } from '../consts';
+import Glyph from '../components/Glyph.astro';
+import SignalKey from '../components/SignalKey.astro';
+import { SITE_TITLE, SOCIAL } from '../consts';
 
 // CONTENT PENDING — the bio is blocked on TASK-005 (brand basics).
 // The route exists so the structure is real; the prose is Mel's to write.
+//
+// Design note: an empty page is a place to point somewhere, not a place to
+// apologise, so this states the truth in one line and hands the reader the
+// two things that do exist — the writing, and the key to the marks that run
+// through it. No bio has been invented here.
 ---
 
 <BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is.">
-  <h1>About</h1>
-  <p>Bio pending — see TASK-005.</p>
+  <div class="shell page-head">
+    <h1 class="page-title">About</h1>
+    <p class="post-lede">
+      This page isn't written yet. The writing is a better introduction anyway.
+    </p>
+    <div class="center-row">
+      <a class="quiet-link" href="/blog/">
+        <Glyph name="writing" size={18} />
+        <span>Read the writing</span>
+      </a>
+    </div>
+  </div>
+
+  <section class="shell column stack">
+    <h2 class="section-title">The signs</h2>
+    <p class="lede">
+      Every post carries one or two marks that say what kind of post it is,
+      before you read a word of it. Six shapes, one drawing rule, one colour
+      each.
+    </p>
+    <SignalKey variant="list" />
+    <p class="meta">
+      Red belongs to Correction and to nothing else, so a published number that
+      changed is the loudest thing on the site.
+    </p>
+  </section>
+
+  <section class="shell column stack stack-section">
+    <h2 class="section-title">Elsewhere</h2>
+    <div class="marks marks--labelled">
+      <a class="quiet-link" href="/rss.xml">
+        <Glyph name="feed" size={18} />
+        <span>RSS</span>
+      </a>
+      <a class="quiet-link" href={SOCIAL.instagram} rel="me noopener">
+        <span>Instagram</span>
+      </a>
+    </div>
+  </section>
 </BaseLayout>

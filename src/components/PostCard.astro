@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+import SignalKey from './SignalKey.astro';
+
+/**
+ * One entry in a list of writing.
+ *
+ * The marks are wordless here. A reader arriving at a list has the key one
+ * click away and learns the six shapes by repetition, which is the whole point
+ * of a signage system. On a post page — where people land cold from a feed —
+ * the same marks carry their word.
+ *
+ * Reading time is on the card because the reader this site is built for is a
+ * parent with no time, and "how long is this" is the first thing they ask.
+ */
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+
+const words = (post.body ?? '').split(/\s+/).filter(Boolean).length;
+const readingTime = `${Math.max(1, Math.round(words / 220))} min read`;
+---
+
+<li class="entry">
+  <a class="entry-link" href={`/blog/${post.id}/`}>
+    <SignalKey variant="marks" tags={post.data.tags} />
+    <div class="meta meta-row">
+      <FormattedDate date={post.data.pubDate} />
+      <span class="sep" aria-hidden="true">/</span>
+      <span>{readingTime}</span>
+    </div>
+    <h3 class="entry-title">{post.data.title}</h3>
+    <p class="entry-summary">{post.data.description}</p>
+  </a>
+</li>

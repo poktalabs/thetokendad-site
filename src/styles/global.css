@@ -1,17 +1,905 @@
 @import 'tailwindcss';
 
-/*
-  DESIGN IS DELIBERATELY ABSENT.
+/* =============================================================================
+   thetoken.dad — "Signal Set"
 
-  This file carries no visual direction on purpose. The canvas's look is being
-  designed by hand (Mel, via /impeccable) on top of this scaffold, and anything
-  opinionated here would just be work to undo.
+   Dark is the real theme; it is the default, declared here in @theme. Light is
+   a separate set of colour decisions further down, not an inversion.
 
-  What goes here when design lands: a Tailwind 4 `@theme` block with the brand
-  tokens (colors, type scale, fonts), plus any base element styles.
+   Colour is information. The ground, the rules and the type are monotone.
+   Saturated hue appears only on the glyph marks, on links, and on focus.
+   No gradients. No glows. Depth comes from tone steps and hairlines.
+   ========================================================================== */
 
-  @theme {
-    --color-*: ...;
-    --font-*: ...;
+/* `static` because most of these tokens are consumed as `var(--color-…)` from
+   inline styles in the markup rather than through generated utilities, and
+   Tailwind drops theme variables it cannot see being used. */
+@theme static {
+  /* --- Type ------------------------------------------------------------- */
+  --font-display: 'Archivo Variable', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Faustina Variable', 'Faustina', 'Iowan Old Style', Charter, Georgia, serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Consolas', 'DejaVu Sans Mono', monospace;
+
+  --text-hero: clamp(2.9rem, 10vw, 6rem);
+  --text-h1: clamp(2rem, 5.2vw, 3.4rem);
+  --text-h2: clamp(1.3rem, 2.8vw, 1.65rem);
+  --text-h3: clamp(1.05rem, 2vw, 1.2rem);
+  --text-lede: clamp(1.1rem, 2.4vw, 1.35rem);
+  --text-body: clamp(1.0625rem, 0.98rem + 0.4vw, 1.1875rem);
+  --text-meta: 0.8125rem;
+  --text-label: 0.6875rem;
+
+  /* --- Ground and ink (dark: the real theme) ----------------------------- */
+  --color-ground: #0a1620;
+  --color-surface: #0f2130;
+  --color-surface-2: #14293a;
+  --color-line: #1e394b;
+  --color-line-strong: #2c536b;
+  --color-text: #dce8ee;
+  --color-text-strong: #f4fafc;
+  --color-muted: #8ca6b4;
+
+  /* --- Signals: the typed palette. One hue per family, nothing else. ----- */
+  --color-signal-origin: #f0709f;
+  --color-signal-open: #55ce93;
+  --color-signal-measure: #f5b845;
+  --color-signal-platform: #4cd4dc;
+  --color-signal-correction: #ff6a5e;
+  --color-signal-unlisted: #8ca6b4;
+
+  /* Interaction inherits the Measurement hue: receipts are the site's spine. */
+  --color-link: #f5b845;
+
+  /* --- Shape ------------------------------------------------------------- */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* Measures and rhythm. Plain custom properties — not utility-generating. */
+:root {
+  --width-page: 72rem;
+  --width-narrow: 44rem;
+  --measure: 38rem;
+  --space-section: clamp(4.5rem, 11vw, 8.5rem);
+  --space-block: clamp(2.25rem, 5vw, 3.5rem);
+  --rule: 1px solid var(--color-line);
+  color-scheme: dark light;
+}
+
+/* =============================================================================
+   Light theme — its own decisions, not an inversion.
+
+   The dark ground is a midnight with blue-green chroma; the light ground is a
+   gallery wall, a warm-neutral green-grey, not white and not cream. The signal
+   hues are re-chosen at their own lightness so each one holds >= 4.5:1 on that
+   wall — they are not the dark hues darkened by formula.
+   ========================================================================== */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-ground: #eceee9;
+    --color-surface: #f5f6f2;
+    --color-surface-2: #e3e6df;
+    --color-line: #ccd2c8;
+    --color-line-strong: #aeb6ac;
+    --color-text: #1b2422;
+    --color-text-strong: #0b1211;
+    --color-muted: #576560;
+
+    --color-signal-origin: #a02057;
+    --color-signal-open: #17663f;
+    --color-signal-measure: #8a5b00;
+    --color-signal-platform: #0a6672;
+    --color-signal-correction: #ae2318;
+    --color-signal-unlisted: #576560;
+
+    --color-link: #8a5b00;
   }
-*/
+}
+
+/* =============================================================================
+   Base
+   ========================================================================== */
+
+html {
+  background: var(--color-ground);
+}
+
+body {
+  background: var(--color-ground);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.72;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  /* Light-on-dark needs thinning; dark-on-light does not. Reset below. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+::selection {
+  background: var(--color-link);
+  color: var(--color-ground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-link);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* =============================================================================
+   Shell
+   ========================================================================== */
+
+.shell {
+  width: 100%;
+  max-width: var(--width-page);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+}
+
+.column {
+  width: 100%;
+  max-width: var(--width-narrow);
+  margin-inline: auto;
+}
+
+.site-main {
+  flex: 1 0 auto;
+  padding-block-end: var(--space-section);
+}
+
+/* --- Header: a sign at the entrance. Centred, stacked, small. ------------ */
+.site-header {
+  border-bottom: var(--rule);
+  padding-block: clamp(1.5rem, 4vw, 2.25rem);
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 700;
+  font-stretch: 122%;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-strong);
+  text-decoration: none;
+}
+
+.wordmark:hover {
+  color: var(--color-link);
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /* compressHTML: 'jsx' strips whitespace between adjacent inline elements.
+     Every gap on this site is a gap property, never a literal space. */
+  gap: clamp(1.5rem, 5vw, 2.75rem);
+}
+
+.navlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-stretch: 104%;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.navlink:hover,
+.navlink[aria-current='page'] {
+  color: var(--color-text-strong);
+}
+
+.navlink[aria-current='page'] .glyph {
+  color: var(--color-link);
+}
+
+/* --- Footer -------------------------------------------------------------- */
+.site-footer {
+  border-top: var(--rule);
+  padding-block: clamp(2rem, 5vw, 3rem);
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 2.25rem);
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 500;
+  font-stretch: 104%;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.site-footer a:hover {
+  color: var(--color-text-strong);
+}
+
+/* =============================================================================
+   Type roles
+   ========================================================================== */
+
+.label {
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-stretch: 104%;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.meta {
+  font-family: var(--font-display);
+  font-size: var(--text-meta);
+  font-weight: 450;
+  font-stretch: 100%;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.meta-row .sep {
+  color: var(--color-line-strong);
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 640;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  color: var(--color-text-strong);
+  text-wrap: balance;
+}
+
+.lede {
+  font-size: var(--text-lede);
+  line-height: 1.55;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+/* =============================================================================
+   Home — the entrance
+
+   "The 'the' is load-bearing." The wordmark is set to say so: a small, wide
+   THE over the full-width TOKEN DAD.
+   ========================================================================== */
+
+.entrance {
+  padding-block: clamp(3.5rem, 13vh, 7.5rem) 0;
+  text-align: center;
+}
+
+.entrance-mark {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-stretch: 122%;
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.9rem);
+}
+
+.entrance-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: 700;
+  font-stretch: 118%;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: var(--color-text-strong);
+}
+
+.entrance-line {
+  margin: clamp(1.75rem, 4vw, 2.5rem) auto 0;
+  max-width: 30rem;
+  font-size: var(--text-lede);
+  line-height: 1.5;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+/* =============================================================================
+   The key plate — the signature element
+
+   A museum key. Six cells, hairline-ruled, symmetric at every breakpoint.
+   It teaches the marks so that the marks can appear alone elsewhere.
+   ========================================================================== */
+
+.key-head {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.key-plate {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--color-line);
+  border: var(--rule);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+@media (min-width: 40rem) {
+  .key-plate {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .key-plate {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.key-cell {
+  background: var(--color-ground);
+  padding: clamp(1.5rem, 4vw, 2.25rem) 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.key-cell .label {
+  color: var(--color-muted);
+}
+
+/* List form of the same key, used where the meanings are spelled out. */
+.key-list {
+  display: grid;
+  gap: 1px;
+  background: var(--color-line);
+  border: var(--rule);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.key-row {
+  background: var(--color-ground);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 1rem clamp(1rem, 3vw, 1.75rem);
+  padding: clamp(1.1rem, 3vw, 1.5rem) clamp(1.1rem, 3vw, 1.75rem);
+}
+
+@media (min-width: 40rem) {
+  .key-row {
+    grid-template-columns: auto 9rem 1fr;
+    align-items: center;
+  }
+}
+
+.key-row-meaning {
+  grid-column: 1 / -1;
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+@media (min-width: 40rem) {
+  .key-row-meaning {
+    grid-column: auto;
+  }
+}
+
+/* =============================================================================
+   Signal marks — the wordless form
+   ========================================================================== */
+
+.glyph {
+  display: block;
+  flex: none;
+  color: currentColor;
+}
+
+.marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.marks--labelled {
+  gap: clamp(1rem, 3vw, 1.5rem);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mark-word {
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-stretch: 104%;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* =============================================================================
+   Writing list
+   ========================================================================== */
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: var(--space-block);
+}
+
+/* No `margin: 0` here: `.column` sets `margin-inline: auto` and is declared
+   earlier in the file, so a blanket margin reset would silently un-centre
+   every list this class is combined with. Preflight already zeroes ul margins. */
+.entries {
+  display: flex;
+  flex-direction: column;
+}
+
+.entry {
+  border-top: var(--rule);
+}
+
+.entry:last-child {
+  border-bottom: var(--rule);
+}
+
+.entry-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-block: clamp(2rem, 5vw, 2.75rem);
+  padding-inline: clamp(0.5rem, 2vw, 1.25rem);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 140ms ease;
+}
+
+.entry-link:hover {
+  background: var(--color-surface);
+}
+
+.entry-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  font-weight: 620;
+  font-stretch: 108%;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--color-text-strong);
+  text-wrap: balance;
+}
+
+.entry-link:hover .entry-title {
+  color: var(--color-link);
+}
+
+.entry-summary {
+  color: var(--color-muted);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+.section-foot {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-block);
+}
+
+.quiet-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-stretch: 104%;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 0.2rem;
+  transition: border-color 140ms ease;
+}
+
+.quiet-link:hover {
+  border-bottom-color: var(--color-link);
+}
+
+/* =============================================================================
+   Post
+   ========================================================================== */
+
+.page-head {
+  text-align: center;
+  padding-block: clamp(3rem, 9vh, 5.5rem) var(--space-block);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.post-lede {
+  max-width: 34rem;
+  font-size: var(--text-lede);
+  line-height: 1.55;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+.post-rule {
+  border: 0;
+  border-top: var(--rule);
+  margin: 0 auto var(--space-block);
+  max-width: var(--measure);
+  width: 100%;
+}
+
+.post-foot {
+  max-width: var(--measure);
+  margin: var(--space-section) auto 0;
+  padding-top: var(--space-block);
+  border-top: var(--rule);
+  display: flex;
+  justify-content: center;
+}
+
+/* =============================================================================
+   Prose — the primary surface
+
+   Left-aligned inside a centred column. The page is symmetric; the reading is
+   not, because ragged-right at a fixed measure is what long text wants.
+   ========================================================================== */
+
+.prose {
+  max-width: var(--measure);
+  margin-inline: auto;
+  text-wrap: pretty;
+}
+
+.prose > * + * {
+  margin-top: 1.4em;
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 620;
+  font-stretch: 108%;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+  color: var(--color-text-strong);
+  margin-top: 3.25em;
+  margin-bottom: -0.35em;
+  text-wrap: balance;
+}
+
+.prose h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 640;
+  font-stretch: 104%;
+  line-height: 1.3;
+  color: var(--color-text-strong);
+  margin-top: 2.25em;
+  margin-bottom: -0.5em;
+}
+
+.prose strong {
+  font-weight: 650;
+  color: var(--color-text-strong);
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose a {
+  color: var(--color-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, var(--color-link) 45%, transparent);
+  transition: text-decoration-color 140ms ease;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--color-link);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose ul {
+  list-style: none;
+}
+
+.prose ul > li {
+  position: relative;
+}
+
+/* A mark, not a bullet: the same 2px stroke as the glyph grammar. */
+.prose ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.4em;
+  top: 0.72em;
+  width: 0.6em;
+  height: 2px;
+  background: var(--color-line-strong);
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose ol > li::marker {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+  font-size: 0.85em;
+}
+
+.prose li + li {
+  margin-top: 0.6em;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--color-signal-platform);
+  background: var(--color-surface);
+  padding: 1.1em 1.35em;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--color-muted);
+}
+
+.prose blockquote > * + * {
+  margin-top: 0.8em;
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xs);
+  padding: 0.1em 0.35em;
+  color: var(--color-text-strong);
+}
+
+.prose pre {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  line-height: 1.65;
+  background: var(--color-surface);
+  border: var(--rule);
+  border-radius: var(--radius-sm);
+  padding: 1.1em 1.35em;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Tables carry the receipts. Figures are tabular and right-aligned; the
+   header row is signage, not prose. */
+.prose table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-family: var(--font-display);
+  font-size: 0.92em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+.prose thead th {
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-stretch: 104%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-align: left;
+  padding: 0 1.25em 0.75em 0;
+  border-bottom: 1px solid var(--color-line-strong);
+  white-space: nowrap;
+}
+
+.prose tbody td {
+  padding: 0.75em 1.25em 0.75em 0;
+  border-bottom: var(--rule);
+  vertical-align: baseline;
+}
+
+.prose tbody td:not(:first-child) {
+  white-space: nowrap;
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.prose thead th:last-child,
+.prose tbody td:last-child {
+  padding-right: 0;
+}
+
+.prose hr {
+  border: 0;
+  border-top: var(--rule);
+  margin-block: 2.5em;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
+/* =============================================================================
+   The one authored moment
+
+   On arrival at the home page the key draws itself: each mark's strokes are
+   traced in sequence, its solid points land, its word appears. About 1.6s
+   in total. Nothing on this site moves again.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  .arrival [data-draw] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: trace 640ms cubic-bezier(0.33, 0.9, 0.3, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 110ms + 140ms);
+  }
+
+  .arrival [data-point] {
+    opacity: 0;
+    transform: scale(0.2);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: land 320ms cubic-bezier(0.33, 0.9, 0.3, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 110ms + 560ms);
+  }
+
+  .arrival .key-cell .label {
+    opacity: 0;
+    animation: settle 420ms ease-out forwards;
+    animation-delay: calc(var(--i, 0) * 110ms + 700ms);
+  }
+}
+
+@keyframes trace {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes land {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes settle {
+  to {
+    opacity: 1;
+  }
+}
+
+/* =============================================================================
+   Utilities used sparingly in markup
+   ========================================================================== */
+
+.stack-section {
+  margin-top: var(--space-section);
+}
+
+.stack > * + * {
+  margin-top: 1.4rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 620;
+  font-stretch: 108%;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+  color: var(--color-text-strong);
+}
+
+.entrance-key {
+  margin-top: clamp(2.75rem, 8vh, 4.5rem);
+}
+
+.center-row {
+  display: flex;
+  justify-content: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

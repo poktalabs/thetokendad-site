@@ -1,0 +1,119 @@
+---
+import Glyph from './Glyph.astro';
+
+/**
+ * SignalKey — the one place the symbol system is defined.
+ *
+ * Tags are an open set; the marks are a closed one. Tags map into six
+ * families, a post's tags are de-duplicated down to the families they touch,
+ * and anything unrecognised falls to `unlisted` rather than being given a
+ * borrowed meaning. Red belongs to Correction alone and appears nowhere else.
+ *
+ * Variants:
+ *   plate  — the six-cell key. The entrance sign.
+ *   list   — the same key with each meaning spelled out.
+ *   marks  — a post's own marks, derived from its tags.
+ */
+
+type Family =
+  | 'origin'
+  | 'open'
+  | 'measure'
+  | 'platform'
+  | 'correction'
+  | 'unlisted';
+
+const FAMILIES: { id: Family; name: string; meaning: string }[] = [
+  { id: 'origin', name: 'Origin', meaning: 'Where this started.' },
+  { id: 'open', name: 'In public', meaning: 'Work shown while it is still wrong.' },
+  { id: 'measure', name: 'Measurement', meaning: 'A number, with the method attached.' },
+  { id: 'platform', name: 'Platform', meaning: 'The tools and hosts underneath.' },
+  { id: 'correction', name: 'Correction', meaning: 'A published number that changed.' },
+  { id: 'unlisted', name: 'Unlisted', meaning: 'A tag with no mark assigned yet.' },
+];
+
+const TAG_FAMILY: Record<string, Family> = {
+  genesis: 'origin',
+  'building in public': 'open',
+  receipts: 'measure',
+  hosting: 'platform',
+  cloudflare: 'platform',
+  vercel: 'platform',
+  astro: 'platform',
+  correction: 'correction',
+};
+
+interface Props {
+  variant?: 'plate' | 'list' | 'marks';
+  tags?: string[];
+  labelled?: boolean;
+  size?: number;
+  class?: string;
+}
+
+const {
+  variant = 'plate',
+  tags = [],
+  labelled = false,
+  size,
+  class: className,
+} = Astro.props;
+
+const touched = new Set(
+  tags.map((tag) => TAG_FAMILY[tag.toLowerCase()] ?? 'unlisted'),
+);
+const marks = FAMILIES.filter((family) => touched.has(family.id));
+---
+
+{
+  variant === 'plate' && (
+    <ul class:list={['key-plate', className]}>
+      {FAMILIES.map((family, i) => (
+        <li class="key-cell" style={`--i:${i}`}>
+          <Glyph
+            name={family.id}
+            size={size ?? 34}
+            style={`color:var(--color-signal-${family.id})`}
+          />
+          <span class="label">{family.name}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+{
+  variant === 'list' && (
+    <ul class:list={['key-list', className]}>
+      {FAMILIES.map((family) => (
+        <li class="key-row">
+          <Glyph
+            name={family.id}
+            size={size ?? 28}
+            style={`color:var(--color-signal-${family.id})`}
+          />
+          <span class="label">{family.name}</span>
+          <span class="key-row-meaning">{family.meaning}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+{
+  variant === 'marks' && marks.length > 0 && (
+    <ul class:list={['marks', labelled && 'marks--labelled', className]}>
+      {marks.map((family) => (
+        <li class="mark">
+          <Glyph
+            name={family.id}
+            size={size ?? 20}
+            title={labelled ? undefined : family.name}
+            style={`color:var(--color-signal-${family.id})`}
+          />
+          {labelled && <span class="mark-word">{family.name}</span>}
+        </li>
+      ))}
+    </ul>
+  )
+}

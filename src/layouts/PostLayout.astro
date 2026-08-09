@@ -1,6 +1,19 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Glyph from '../components/Glyph.astro';
+import SignalKey from '../components/SignalKey.astro';
+
+/**
+ * The primary reading surface.
+ *
+ * The furniture is centred; the reading is not. A post header is a gallery
+ * label — symmetric, hung above the work — and the prose below it is set
+ * ragged-right at a fixed measure, because that is what long text wants.
+ *
+ * The marks carry their words here. This is the page people land on cold from
+ * a feed, and a symbol nobody has been taught yet is just a decoration.
+ */
 
 interface Props {
   title: string;
@@ -8,24 +21,60 @@ interface Props {
   pubDate: Date;
   updatedDate?: Date;
   tags: string[];
+  readingTime?: string;
 }
 
-const { title, description, pubDate, updatedDate, tags } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, readingTime } =
+  Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
   <article>
-    <h1>{title}</h1>
-    <p>
-      <FormattedDate date={pubDate} />
-      {updatedDate && (<span> · updated <FormattedDate date={updatedDate} /></span>)}
-    </p>
-    {tags.length > 0 && (
-      <ul>
-        {tags.map((tag) => (<li>{tag}</li>))}
-      </ul>
-    )}
+    <header class="shell page-head">
+      <SignalKey variant="marks" tags={tags} labelled />
+      <h1 class="page-title">{title}</h1>
+      <p class="post-lede">{description}</p>
+      <div class="meta meta-row">
+        <FormattedDate date={pubDate} />
+        {
+          updatedDate && (
+            <Fragment>
+              <span class="sep" aria-hidden="true">
+                /
+              </span>
+              <span class="meta-row" style="gap:0.35rem">
+                <span>Updated</span>
+                <FormattedDate date={updatedDate} />
+              </span>
+            </Fragment>
+          )
+        }
+        {
+          readingTime && (
+            <Fragment>
+              <span class="sep" aria-hidden="true">
+                /
+              </span>
+              <span>{readingTime}</span>
+            </Fragment>
+          )
+        }
+      </div>
+    </header>
 
-    <slot />
+    <hr class="post-rule" />
+
+    <div class="shell">
+      <div class="prose">
+        <slot />
+      </div>
+
+      <div class="post-foot">
+        <a class="quiet-link" href="/blog/">
+          <Glyph name="writing" size={18} />
+          <span>All writing</span>
+        </a>
+      </div>
+    </div>
   </article>
 </BaseLayout>

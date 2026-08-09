@@ -1,0 +1,114 @@
+---
+/**
+ * Glyph — the Signal Set.
+ *
+ * One drawing grammar, no exceptions except the one noted below:
+ *
+ *   - 24x24 canvas, safe area 4-20, everything snapped to a 4px sub-grid.
+ *   - 2px stroke, round caps and joins, no fill except deliberate solid points.
+ *   - Primitives allowed: full circle, half-arc (r=8), horizontal bar,
+ *     vertical bar, right-angle path, solid point. Nothing else.
+ *   - At most three primitives per mark.
+ *   - Every mark is bilaterally symmetric about the vertical axis.
+ *
+ * The exception: `feed` is the public RSS mark, which is asymmetric and
+ * corner-set. Wayfinding defers to an existing public standard over its own
+ * house rules — a symbol people already know beats a symbol that matches.
+ *
+ * `data-draw` marks a stroked element (traced on arrival), `data-point` marks
+ * a solid one (it lands after the tracing). Both are inert unless an ancestor
+ * carries `.arrival`.
+ */
+
+interface Props {
+  name:
+    | 'origin'
+    | 'open'
+    | 'measure'
+    | 'platform'
+    | 'correction'
+    | 'unlisted'
+    | 'writing'
+    | 'about'
+    | 'feed';
+  size?: number;
+  title?: string;
+  class?: string;
+  style?: string;
+}
+
+const { name, size = 24, title, class: className, style } = Astro.props;
+
+const MARKS: Record<Props['name'], string> = {
+  // A marked point: where something starts.
+  origin: `
+    <circle cx="12" cy="12" r="8" pathLength="1" data-draw />
+    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" data-point />`,
+
+  // A container with the lid taken off: what is inside can be seen.
+  open: `
+    <path d="M4 8V20H20V8" pathLength="1" data-draw />
+    <path d="M8 4H16" pathLength="1" data-draw />`,
+
+  // A dimension line, terminated at both ends: a quantity with its bounds
+  // declared. The drafting mark for "this distance was measured".
+  // Set horizontally on purpose: the vertical version of this mark reads as a
+  // capital I, and a glyph that can be mistaken for a letter has failed at the
+  // one job a wordless system has.
+  measure: `
+    <path d="M4 12H20" pathLength="1" data-draw />
+    <path d="M4 7V17" pathLength="1" data-draw />
+    <path d="M20 7V17" pathLength="1" data-draw />`,
+
+  // A block standing on ground somebody else owns.
+  platform: `
+    <path d="M4 17H20" pathLength="1" data-draw />
+    <path d="M7 17V8H17V17" pathLength="1" data-draw />`,
+
+  // The Origin ring, struck through: a point that was published and then
+  // changed. Same ring as Origin and Unlisted — a marked point, an empty
+  // point, a struck point.
+  correction: `
+    <circle cx="12" cy="12" r="8" pathLength="1" data-draw />
+    <path d="M4 12H20" pathLength="1" data-draw />`,
+
+  // An unmarked point: no symbol assigned yet.
+  unlisted: `
+    <circle cx="12" cy="12" r="8" pathLength="1" data-draw />`,
+
+  // Lines of text, narrowing.
+  writing: `
+    <path d="M4 8H20" pathLength="1" data-draw />
+    <path d="M4 13H20" pathLength="1" data-draw />
+    <path d="M8 18H16" pathLength="1" data-draw />`,
+
+  // A person.
+  about: `
+    <circle cx="12" cy="8" r="3" pathLength="1" data-draw />
+    <path d="M4 20A8 8 0 0 1 20 20" pathLength="1" data-draw />`,
+
+  // The public RSS mark. See the note above.
+  feed: `
+    <path d="M5 11A8 8 0 0 1 13 19" pathLength="1" data-draw />
+    <path d="M5 5A14 14 0 0 1 19 19" pathLength="1" data-draw />
+    <circle cx="6" cy="18" r="2" fill="currentColor" stroke="none" data-point />`,
+};
+
+const inner = title ? `<title>${title}</title>${MARKS[name]}` : MARKS[name];
+---
+
+<svg
+  class:list={['glyph', className]}
+  style={style}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  set:html={inner}
+/>
