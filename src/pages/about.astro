@@ -4,9 +4,40 @@ import { SITE_TITLE } from '../consts';
 
 // CONTENT PENDING — the bio is blocked on TASK-005 (brand basics).
 // The route exists so the structure is real; the prose is Mel's to write.
+
+// The key. Museums put the legend on the wall for the visitor who noticed
+// there was a system; the visitor who didn't loses nothing by walking past.
+const KEY = [
+  { stamp: 'origin', name: 'origin' },
+  { stamp: 'route', name: 'route' },
+  { stamp: 'frame', name: 'frame' },
+  { stamp: 'measure', name: 'measure' },
+  { stamp: 'repair', name: 'repair' },
+  { stamp: 'mark', name: 'mark' },
+];
 ---
 
-<BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is.">
-  <h1>About</h1>
-  <p>Bio pending — see TASK-005.</p>
+<BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is." section="about">
+  <Fragment slot="plate">
+    <h1 class="plate-title">About</h1>
+    <p class="plate-lede">Bio pending — see TASK-005.</p>
+  </Fragment>
+
+  <hr class="divider" />
+
+  <section>
+    <h2 class="rail-head">The key</h2>
+    <ul class="key">
+      {
+        KEY.map((entry) => (
+          <li>
+            <svg class={`stamp${entry.stamp === 'repair' ? ' stamp--alert' : ''}`} width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <use href={`#s-${entry.stamp}`} />
+            </svg>
+            <span class="key-name">{entry.name}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </BaseLayout>

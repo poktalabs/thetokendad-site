@@ -5,29 +5,64 @@ import { getPublishedPosts } from '../lib/posts';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 const posts = (await getPublishedPosts()).slice(0, 5);
+
+// The stamp vocabulary, mapped from the tags that already exist in the
+// content. An unknown tag falls back to the neutral mark rather than
+// inventing a meaning. Duplicated per page because the design may only
+// touch the seven shipped files — a shared module would be an eighth.
+const STAMP: Record<string, string> = {
+  genesis: 'origin',
+  'building in public': 'origin',
+  hosting: 'route',
+  cloudflare: 'route',
+  vercel: 'route',
+  deploy: 'route',
+  astro: 'frame',
+  stack: 'frame',
+  build: 'frame',
+  receipts: 'measure',
+  cost: 'measure',
+  numbers: 'measure',
+  correction: 'repair',
+  postmortem: 'repair',
+};
+const stampFor = (tags: string[]) => STAMP[tags?.[0]?.toLowerCase() ?? ''] ?? 'mark';
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <section>
-    <h1>{SITE_TITLE}</h1>
-    <p>{SITE_DESCRIPTION}</p>
-  </section>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} section="home">
+  <Fragment slot="plate">
+    <h1 class="plate-title">{SITE_TITLE}</h1>
+    <p class="plate-lede">{SITE_DESCRIPTION}</p>
+  </Fragment>
+
+  <hr class="divider" />
 
   <section>
-    <h2>Writing</h2>
-    {posts.length === 0 ? (
-      <p>Nothing published yet.</p>
-    ) : (
-      <ul>
-        {posts.map((post) => (
-          <li>
-            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-            <FormattedDate date={post.data.pubDate} />
-            <p>{post.data.description}</p>
-          </li>
-        ))}
-      </ul>
-    )}
-    <a href="/blog/">All writing</a>
+    <h2 class="rail-head">Writing</h2>
+    {
+      posts.length === 0 ? (
+        <p class="rail-empty">Nothing published yet.</p>
+      ) : (
+        <ul class="rail">
+          {posts.map((post) => (
+            <li class="rail-item">
+              <a class="rail-link" href={`/blog/${post.id}/`}>
+                <svg class="stamp" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <use href={`#s-${stampFor(post.data.tags)}`} />
+                </svg>
+                <span>
+                  <span class="rail-date">
+                    <FormattedDate date={post.data.pubDate} />
+                  </span>
+                  <h3 class="rail-title">{post.data.title}</h3>
+                  <span class="rail-dek">{post.data.description}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    <a class="rail-more" href="/blog/">All writing</a>
   </section>
 </BaseLayout>

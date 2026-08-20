@@ -5,22 +5,61 @@ import { getPublishedPosts } from '../../lib/posts';
 import { SITE_TITLE } from '../../consts';
 
 const posts = await getPublishedPosts();
+
+// See the note in src/pages/index.astro — the map is duplicated because the
+// design may only touch the seven shipped files.
+const STAMP: Record<string, string> = {
+  genesis: 'origin',
+  'building in public': 'origin',
+  hosting: 'route',
+  cloudflare: 'route',
+  vercel: 'route',
+  deploy: 'route',
+  astro: 'frame',
+  stack: 'frame',
+  build: 'frame',
+  receipts: 'measure',
+  cost: 'measure',
+  numbers: 'measure',
+  correction: 'repair',
+  postmortem: 'repair',
+};
+const stampFor = (tags: string[]) => STAMP[tags?.[0]?.toLowerCase() ?? ''] ?? 'mark';
 ---
 
-<BaseLayout title={`Writing · ${SITE_TITLE}`} description="Posts from The Token Dad.">
-  <h1>Writing</h1>
+<BaseLayout
+  title={`Writing · ${SITE_TITLE}`}
+  description="Posts from The Token Dad."
+  section="writing"
+>
+  <Fragment slot="plate">
+    <h1 class="plate-title">Writing</h1>
+  </Fragment>
 
-  {posts.length === 0 ? (
-    <p>Nothing published yet.</p>
-  ) : (
-    <ul>
-      {posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-          <FormattedDate date={post.data.pubDate} />
-          <p>{post.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  )}
+  <div class="plate-gap"></div>
+
+  {
+    posts.length === 0 ? (
+      <p class="rail-empty">Nothing published yet.</p>
+    ) : (
+      <ul class="rail">
+        {posts.map((post) => (
+          <li class="rail-item">
+            <a class="rail-link" href={`/blog/${post.id}/`}>
+              <svg class="stamp" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <use href={`#s-${stampFor(post.data.tags)}`} />
+              </svg>
+              <span>
+                <span class="rail-date">
+                  <FormattedDate date={post.data.pubDate} />
+                </span>
+                <h2 class="rail-title">{post.data.title}</h2>
+                <span class="rail-dek">{post.data.description}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </BaseLayout>

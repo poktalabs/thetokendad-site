@@ -1,17 +1,796 @@
 @import 'tailwindcss';
 
-/*
-  DESIGN IS DELIBERATELY ABSENT.
+/* Self-hosted variable fonts. `standard.css` carries every registered axis:
+   Archivo = wght + wdth, Piazzolla = wght + opsz, Martian Mono = wght + wdth.
+   Subsetting is handled by the unicode-range in each @font-face, so a
+   latin-only reader downloads one file per family. */
+@import '@fontsource-variable/archivo/standard.css';
+@import '@fontsource-variable/piazzolla/standard.css';
+@import '@fontsource-variable/piazzolla/standard-italic.css';
+@import '@fontsource-variable/martian-mono/standard.css';
 
-  This file carries no visual direction on purpose. The canvas's look is being
-  designed by hand (Mel, via /impeccable) on top of this scaffold, and anything
-  opinionated here would just be work to undo.
+/* ---------------------------------------------------------------------------
+   THE TOKEN — the design system for thetoken.dad
 
-  What goes here when design lands: a Tailwind 4 `@theme` block with the brand
-  tokens (colors, type scale, fonts), plus any base element styles.
+   A token is a disc. Every mark in this system is a disc stamped with a
+   different face, in the lineage of the Mexico City metro pictograms and the
+   Pokemon TCG type symbols: a small fixed vocabulary of wordless marks that
+   each carry exactly one meaning.
 
-  @theme {
-    --color-*: ...;
-    --font-*: ...;
+   Two themes, designed separately rather than inverted. Dark is the real one.
+   No gradients. No glows. No shadows. Depth is expressed only as a hairline.
+--------------------------------------------------------------------------- */
+
+/* --- Theme values. Dark is the default; light is an override, not an inversion. */
+:root {
+  color-scheme: dark light;
+
+  --c-ground: #0b0d12;   /* near-black with a breath of blue: a gallery at night */
+  --c-lift:   #141821;   /* code blocks, quoted matter */
+  --c-rule:   #262d3a;   /* hairlines. the only depth cue in the system */
+  --c-ink:    #edeae3;   /* warm ivory, not white: paper under gallery light */
+  --c-muted:  #949caa;
+  --c-mark:   #4c79ff;   /* saturated cobalt. the glyph stroke and the focus ring */
+  --c-link:   #7fa0ff;   /* a lighter cobalt, because links are small text */
+  --c-alert:  #ff4b3a;   /* corrections only. appears almost never */
+  --c-knock:  transparent;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Limestone, not white. The hues survive; every value is re-chosen for
+       paper, and the glyphs stop being line art and become enamel plaques. */
+    --c-ground: #f4f1e9;
+    --c-lift:   #eae6da;
+    --c-rule:   #d2cbba;
+    --c-ink:    #12141a;
+    --c-muted:  #585e6a;
+    --c-mark:   #1b3fd8;
+    --c-link:   #1b3fd8;
+    --c-alert:  #c0271a;
+    --c-knock:  #f4f1e9;
   }
-*/
+}
+
+/* --- Brand tokens. `static` so Tailwind emits every variable even when no
+       utility references it: the glyph colours are consumed by hand-written
+       rules and inline SVG, and a tree-shake would silently drop them. */
+@theme static {
+  --font-display: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-text: 'Piazzolla Variable', Georgia, 'Times New Roman', serif;
+  --font-meta: 'Martian Mono Variable', ui-monospace, 'SF Mono', monospace;
+
+  --color-ground: var(--c-ground);
+  --color-lift: var(--c-lift);
+  --color-rule: var(--c-rule);
+  --color-ink: var(--c-ink);
+  --color-muted: var(--c-muted);
+  --color-mark: var(--c-mark);
+  --color-link: var(--c-link);
+  --color-alert: var(--c-alert);
+  --color-knock: var(--c-knock);
+
+  /* Reading measure and the two column widths. Gallery, not dashboard. */
+  --spacing-measure: 36rem;
+  --spacing-rail: 42rem;
+
+  --text-meta: 0.6875rem;
+  --text-small: 0.875rem;
+  --text-body: 1.1875rem;
+  --text-lede: 1.3125rem;
+
+  --ease-strike: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* --------------------------------------------------------------- base */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-text);
+    font-optical-sizing: auto;
+    font-size: var(--text-body);
+    line-height: 1.75;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-stretch: 108%;
+    letter-spacing: -0.012em;
+    line-height: 1.14;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: var(--color-link);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    transition: color 120ms linear, text-decoration-color 120ms linear;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-mark);
+    outline-offset: 3px;
+    border-radius: 0;
+  }
+
+  ::selection {
+    background: var(--color-mark);
+    color: var(--color-ground);
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+    margin: 0;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* --------------------------------------------------------- the shell */
+.shell {
+  width: 100%;
+  max-width: var(--spacing-rail);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.masthead {
+  padding-block: 2.25rem 0;
+  text-align: center;
+}
+
+.masthead-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem; /* never a literal space: compressHTML strips those */
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  font-stretch: 100%;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.masthead-wordmark:hover {
+  color: var(--color-link);
+}
+
+.masthead-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2.25rem;
+  list-style: none;
+  margin: 1.125rem 0 0;
+  padding: 0;
+}
+
+.masthead-nav a {
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.masthead-nav a:hover,
+.masthead-nav a[aria-current='page'] {
+  color: var(--color-link);
+}
+
+main {
+  flex: 1 0 auto;
+  padding-block: 4.5rem 6rem;
+}
+
+@media (min-width: 48rem) {
+  main {
+    padding-block: 7rem 9rem;
+  }
+}
+
+.colophon {
+  border-top: 1px solid var(--color-rule);
+  padding-block: 2.25rem 3rem;
+}
+
+.colophon-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.colophon-row a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.colophon-row a:hover {
+  color: var(--color-link);
+}
+
+/* ----------------------------------------------------------- the plate
+   Every page opens with a museum wall label: the token, the name of the
+   place, one line of wall text. Centred on every page type, always. */
+.plate {
+  text-align: center;
+  max-width: var(--spacing-measure);
+  margin-inline: auto;
+}
+
+.plate-title {
+  margin-top: 2.5rem;
+  font-size: clamp(2rem, 1.25rem + 3vw, 3rem);
+  font-stretch: 112%;
+}
+
+.plate-title--post {
+  font-size: clamp(1.75rem, 1.15rem + 2.5vw, 2.5rem);
+  font-stretch: 106%;
+}
+
+.plate-lede {
+  margin-top: 1.5rem;
+  font-size: var(--text-lede);
+  line-height: 1.55;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+.plate-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ------------------------------------------------------------- tokens */
+.token {
+  display: inline-flex;
+  color: var(--color-mark);
+}
+
+.plate .token-face {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+body[data-section='home'] .plate .token-face {
+  width: 7rem;
+  height: 7rem;
+}
+
+.token--chip {
+  flex: none;
+}
+
+.token--chip .token-face {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* In light, a token stops being line art and becomes an enamel plaque:
+   solid blue with the stamp knocked out in paper, the way the CDMX station
+   signs are made. This is the proof that light is its own design and not an
+   inversion of dark — the same system, manufactured a different way. */
+@media (prefers-color-scheme: light) {
+  .token {
+    background: var(--color-mark);
+    color: var(--color-knock);
+    padding: 0.625rem;
+  }
+
+  .token--chip {
+    padding: 0.1875rem;
+  }
+}
+
+.token-ring,
+.token-stamp {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.token-ring {
+  stroke-width: 2;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.token-stamp {
+  stroke-width: 1.6;
+}
+
+.token-stamp .solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+.stamp {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.stamp .solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+.stamp--alert {
+  color: var(--color-alert);
+}
+
+/* -------------------------------------------------- the authored moment
+   One thing happens on arrival: the token is struck. The ring draws itself
+   around, the stamp lands inside it, the title settles. Then the site is
+   still, permanently — no scroll reveals, no hover transforms, nothing. */
+@keyframes strike-ring {
+  from {
+    stroke-dashoffset: 133;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes strike-stamp {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.token-ring {
+  stroke-dasharray: 133;
+  animation: strike-ring 560ms var(--ease-strike) both;
+}
+
+.token-stamp {
+  animation: strike-stamp 220ms linear 340ms both;
+}
+
+/* The masthead token is furniture, not an arrival. It never moves. */
+.token-ring--still,
+.token-stamp--still {
+  animation: none;
+  stroke-dasharray: none;
+}
+
+.plate-title,
+.plate-lede,
+.plate-meta {
+  animation: settle 400ms var(--ease-strike) both;
+}
+
+.plate-title {
+  animation-delay: 100ms;
+}
+
+.plate-lede {
+  animation-delay: 180ms;
+}
+
+.plate-meta {
+  animation-delay: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .token-ring,
+  .token-stamp,
+  .plate-title,
+  .plate-lede,
+  .plate-meta {
+    animation: none;
+  }
+
+  .token-ring {
+    stroke-dasharray: none;
+  }
+
+  a {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------- rails
+   The index is a rail of stations, not a grid of cards. Glyph, then date,
+   then title, then one line. A hairline between. No shadow, no radius. */
+.rail-head {
+  display: block;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 2rem;
+}
+
+.rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--color-rule);
+}
+
+.rail-item {
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.rail-link {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  padding-block: 2rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.rail-link .stamp {
+  color: var(--color-mark);
+  margin-top: 0.25rem;
+}
+
+.rail-date {
+  display: block;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 0.625rem;
+}
+
+.rail-title {
+  display: block;
+  font-size: 1.3125rem;
+  font-stretch: 106%;
+  line-height: 1.24;
+}
+
+.rail-link:hover .rail-title {
+  color: var(--color-link);
+}
+
+.rail-dek {
+  display: block;
+  margin-top: 0.625rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+.rail-more {
+  display: block;
+  margin-top: 2.5rem;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.rail-empty {
+  padding-block: 2rem;
+  color: var(--color-muted);
+}
+
+/* ------------------------------------------------------------- the key
+   The vocabulary, spelled out once, on the About page. Museums put the key
+   on the wall; the reader who noticed there was a system gets paid off. */
+.key {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .key {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.key .stamp {
+  color: var(--color-mark);
+  margin-inline: auto;
+}
+
+.key .stamp--alert {
+  color: var(--color-alert);
+}
+
+.key-name {
+  display: block;
+  margin-top: 0.875rem;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* --------------------------------------------------------- section rule */
+.divider {
+  margin: 4rem 0;
+  border-top: 1px solid var(--color-rule);
+}
+
+@media (min-width: 48rem) {
+  .divider {
+    margin-block: 5.5rem;
+  }
+}
+
+/* --------------------------------------------------------------- prose
+   The reading surface. 19px Piazzolla at a 36rem measure is roughly 64
+   characters, which is where an 1,800 word post stops being work. */
+.prose {
+  max-width: var(--spacing-measure);
+  margin-inline: auto;
+  text-wrap: pretty;
+}
+
+.prose > * + * {
+  margin-top: 1.5rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-stretch: 104%;
+  margin-top: 3.5rem;
+}
+
+.prose h3 {
+  font-size: 1.1875rem;
+  font-stretch: 104%;
+  margin-top: 2.5rem;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: 1rem;
+}
+
+.prose strong {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose a {
+  text-decoration-color: color-mix(in oklab, var(--color-link) 45%, transparent);
+}
+
+.prose a:hover {
+  text-decoration-color: var(--color-link);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+}
+
+.prose li + li {
+  margin-top: 0.5rem;
+}
+
+.prose li::marker {
+  color: var(--color-mark);
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--color-mark);
+  color: var(--color-muted);
+}
+
+.prose code {
+  font-family: var(--font-meta);
+  font-size: 0.8em;
+  font-stretch: 87.5%;
+  background: var(--color-lift);
+  padding: 0.15em 0.35em;
+}
+
+.prose pre {
+  background: var(--color-lift);
+  border-left: 2px solid var(--color-rule);
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.prose pre code {
+  font-stretch: 75%;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prose hr {
+  margin-block: 3rem;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  line-height: 1.5;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 0.75rem 1rem 0.75rem 0;
+  border-bottom: 1px solid var(--color-rule);
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Numbers are the point of this site, so the data cells get the instrument
+   face and tabular figures. A cost table should look like a readout. */
+.prose td {
+  font-family: var(--font-meta);
+  font-size: 0.75rem;
+  font-stretch: 87.5%;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Astro ships Shiki with the github-dark theme baked into inline styles on
+   the <pre> and on every token span. Retheming it is a markdown-config
+   change and the design may only touch the seven shipped files, so the
+   inline styles are overridden here instead. Code ends up monochrome, which
+   is the right answer anyway: a rainbow of unmanaged hues inside a two-hue
+   system is exactly the bad palette selection this design exists to avoid. */
+.prose pre.astro-code,
+.prose pre.astro-code span {
+  background-color: transparent !important;
+  color: var(--color-ink) !important;
+}
+
+.prose pre.astro-code {
+  background-color: var(--color-lift) !important;
+}
+
+/* ------------------------------------------------------------- the tags
+   Stamp and word together, once, in the post header. That is where the
+   reader learns the vocabulary they then meet wordlessly in the index. */
+.tags {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.tag .stamp {
+  color: var(--color-mark);
+}
+
+/* ------------------------------------------------------------ pending */
+.pending {
+  max-width: var(--spacing-measure);
+  margin-inline: auto;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+/* The blog index needs the breathing room a divider would have given it, but
+   not the hairline: the rail carries its own top rule. */
+.plate-gap {
+  height: 4rem;
+}
+
+@media (min-width: 48rem) {
+  .plate-gap {
+    height: 5.5rem;
+  }
+}
