@@ -5,29 +5,80 @@ import { getPublishedPosts } from '../lib/posts';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 const posts = (await getPublishedPosts()).slice(0, 5);
+
+// The glyph and the colour are one code, read off the post's own tags: a post
+// that carries receipts gets the meter, the genesis post gets the source, and
+// everything else gets the signal. Shape and hue always agree, so the code
+// never depends on colour alone.
+const channelOf = (tags: string[]) =>
+  tags.includes('receipts')
+    ? { glyph: 'g-meter', color: 'var(--color-ch-meter)' }
+    : tags.includes('genesis')
+      ? { glyph: 'g-source', color: 'var(--color-ch-source)' }
+      : { glyph: 'g-signal', color: 'var(--color-ch-signal)' };
+
+const key = [
+  { glyph: 'g-source', label: 'Source', color: 'var(--color-ch-source)' },
+  { glyph: 'g-signal', label: 'Writing', color: 'var(--color-ch-signal)' },
+  { glyph: 'g-meter', label: 'Measured', color: 'var(--color-ch-meter)' },
+  { glyph: 'g-patched', label: 'Pending', color: 'var(--color-label)' },
+  { glyph: 'g-feed', label: 'Feed', color: 'var(--color-label)' },
+  { glyph: 'g-ground', label: 'End', color: 'var(--color-label)' },
+];
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <section>
-    <h1>{SITE_TITLE}</h1>
-    <p>{SITE_DESCRIPTION}</p>
+  <section class="bleed">
+    <div class="field ticked">
+      <i class="field-enamel" aria-hidden="true"></i>
+      <svg class="field-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#g-source"></use></svg>
+      <h1>{SITE_TITLE}</h1>
+      <p>{SITE_DESCRIPTION}</p>
+    </div>
   </section>
 
-  <section>
-    <h2>Writing</h2>
+  <section class="wide section">
+    <div class="head" style="--color-ch: var(--color-ch-signal)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-signal"></use></svg>
+      <h2>Writing</h2>
+    </div>
+
     {posts.length === 0 ? (
-      <p>Nothing published yet.</p>
+      <p class="lede">Nothing published yet.</p>
     ) : (
-      <ul>
-        {posts.map((post) => (
-          <li>
-            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-            <FormattedDate date={post.data.pubDate} />
-            <p>{post.data.description}</p>
-          </li>
-        ))}
+      <ul class="channels">
+        {posts.map((post) => {
+          const ch = channelOf(post.data.tags);
+          return (
+            <li class="channel" style={`--color-ch: ${ch.color}`}>
+              <svg class="channel-glyph" viewBox="0 0 24 24" aria-hidden="true"><use href={`#${ch.glyph}`}></use></svg>
+              <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
+              <p class="channel-meta">
+                <span class="tick"></span>
+                <FormattedDate date={post.data.pubDate} />
+              </p>
+              <p>{post.data.description}</p>
+            </li>
+          );
+        })}
       </ul>
     )}
-    <a href="/blog/">All writing</a>
+
+    <a class="panel-link" href="/blog/">
+      <span>All writing</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-next"></use></svg>
+    </a>
+  </section>
+
+  <section class="wide legend">
+    <h2>Key</h2>
+    <ul class="legend-set">
+      {key.map((k) => (
+        <li style={`--color-ch: ${k.color}`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href={`#${k.glyph}`}></use></svg>
+          <span>{k.label}</span>
+        </li>
+      ))}
+    </ul>
   </section>
 </BaseLayout>

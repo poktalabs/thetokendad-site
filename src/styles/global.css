@@ -1,17 +1,1181 @@
-@import 'tailwindcss';
+/* Content detection is scoped to `src/` on purpose. Tailwind 4 auto-detects
+   every non-ignored file in the project, which means a prose document that
+   merely NAMES a utility mints it: DESIGN.md listing `gradient`, `drop-shadow`
+   and `blur` among this world's bans put all three into the shipped
+   stylesheet. The design docs are not content. */
+@import 'tailwindcss' source(none);
+@source '../**/*.{astro,ts,mdx}';
 
-/*
-  DESIGN IS DELIBERATELY ABSENT.
+/* ==========================================================================
+   THE PANEL — thetoken.dad
+   Direction seed 4c4c46e2 (impeccable, scope=direction, mode=read, index 3).
 
-  This file carries no visual direction on purpose. The canvas's look is being
-  designed by hand (Mel, via /impeccable) on top of this scaffold, and anything
-  opinionated here would just be work to undo.
+   The world is an instrument faceplate: a dark enamelled panel, silkscreened
+   micro-caps, engraved hairlines, saturated functional colour, and a printed
+   legend of glyphs that carry meaning without words. Density lives in the
+   *production* (labels, ticks, coded colour, a real symbol system); the
+   *listening* stays unhurried (gallery spacing, symmetric composition, one
+   authored moment on arrival and then stillness).
 
-  What goes here when design lands: a Tailwind 4 `@theme` block with the brand
-  tokens (colors, type scale, fonts), plus any base element styles.
+   Single styling entry point. Tokens below; everything after them is written
+   against the tokens, never against a raw value.
+   ========================================================================== */
 
-  @theme {
-    --color-*: ...;
-    --font-*: ...;
+@theme static {
+  /* --- Faces -------------------------------------------------------------
+     Archivo and Faustina, both Omnibus-Type, both drawn for screen text.
+     Archivo is the silkscreen: the panel has ONE printed voice, used from
+     10px legend caps to the 84px title. Its width axis is driven from 'wdth'
+     84 on the tightest tracked micro-caps up to 'wdth' 94 on running headings
+     — a narrow working band inside the face's full 62-125 range, because the
+     panel's condensed grade is a nudge, not a costume.
+     Faustina is the manual: a low-contrast reading serif, not a display
+     serif, carrying the 1,800-word post. ------------------------------- */
+  --font-panel: 'Archivo Variable', ui-sans-serif, sans-serif;
+  --font-read: 'Faustina Variable', ui-serif, Georgia, serif;
+
+  /* --- Panel values (dark: the real theme) ------------------------------ */
+  --color-panel: #14181e;
+  --color-plate: #1b212a;
+  --color-engrave: #313c4a;
+  --color-silk: #ece9e3;
+  --color-label: #97a2b1;
+
+  /* --- Channel colours ---------------------------------------------------
+     Coded, not decorative. A channel's colour and its glyph always agree,
+     so the code never depends on colour alone. --------------------------- */
+  --color-ch-source: #2fbfa0;
+  --color-ch-meter: #f2a93b;
+  --color-ch-signal: #9a86f5;
+
+  /* --- Ribbon bays -------------------------------------------------------
+     The console's colour coding, and the site's mark. Three bays, one per
+     coded channel, in the legend's own order: source, writing, measured.
+     They carry no text, so they stay saturated in both themes instead of
+     being darkened for contrast. ------------------------------------------ */
+  --color-bay-a: #2fbfa0;
+  --color-bay-b: #9a86f5;
+  --color-bay-c: #f2a93b;
+
+  /* --- The readout ------------------------------------------------------
+     A code block is the panel's lit display. It does not change with the
+     theme, because a readout does not: these values are fixed, and the
+     syntax highlighter's imported palette is remapped onto them below. --- */
+  --color-readout: #12171f;
+  --color-readout-edge: #2b3542;
+  --color-readout-ink: #e6e3dd;
+  --color-readout-a: #4fd0b2;
+  --color-readout-b: #a996ff;
+  --color-readout-c: #8d99a8;
+  --color-readout-d: #ffc46b;
+  --color-readout-e: #ff8a75;
+
+  /* --- The drenched fields ----------------------------------------------
+     A plate's enamel IS its channel code. The home page and About are the
+     source channel; the writing index is the writing channel. On a coded
+     enamel the glyph is knocked out in ink and never re-states the hue --
+     the plate has already said it. ---------------------------------------- */
+  --color-field-signal: #342a6e;
+  --color-field: #0e5f57;
+  --color-field-ink: #ece9e3;
+  --color-field-mute: #bcd6d0;
+  --color-field-mark: #6fe0c2;
+
+  /* --- Measure and rhythm ----------------------------------------------- */
+  --measure-wide: 68rem;
+  --measure-read: 36rem;
+  --measure-lede: 34rem;
+  --rail-h: 3.5rem;
+}
+
+/* ==========================================================================
+   Second theme — the panel as printed artwork
+   Not an inversion. Both themes drench the plate, but the value relationship
+   flips: dark lays light ink on a deep enamel, light lays dark ink on a pale
+   one. The channel hues are re-picked for board rather than lightened from
+   the dark set. The bays are re-declared too, but re-picked to stay saturated
+   rather than muted for text they never carry. Only the eight readout tokens
+   genuinely skip this block: a lit display does not change with the room.
+   ========================================================================== */
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --color-panel: #e9ebe9;
+    --color-plate: #d7ddd8;
+    --color-engrave: #b8c1bb;
+    --color-silk: #131a19;
+    --color-label: #556059;
+    --color-ch-source: #0a6a5e;
+    --color-ch-meter: #8a5a06;
+    --color-ch-signal: #4f3ab8;
+    --color-bay-a: #0e8f78;
+    --color-bay-b: #5a45c4;
+    --color-bay-c: #d08a10;
+    --color-field-signal: #bdb2ef;
+    --color-field: #7ec0ad;
+    --color-field-ink: #0f1c1a;
+    --color-field-mute: #22403a;
+    --color-field-mark: #0a4d43;
+    color-scheme: light;
   }
-*/
+}
+
+:root[data-theme='light'] {
+  --color-panel: #e9ebe9;
+  --color-plate: #d7ddd8;
+  --color-engrave: #b8c1bb;
+  --color-silk: #131a19;
+  --color-label: #556059;
+  --color-ch-source: #0a6a5e;
+  --color-ch-meter: #8a5a06;
+  --color-ch-signal: #4f3ab8;
+  --color-bay-a: #0e8f78;
+  --color-bay-b: #5a45c4;
+  --color-bay-c: #d08a10;
+  --color-field-signal: #bdb2ef;
+  --color-field: #7ec0ad;
+  --color-field-ink: #0f1c1a;
+  --color-field-mute: #22403a;
+  --color-field-mark: #0a4d43;
+  color-scheme: light;
+}
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+  }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  html {
+    background: var(--color-panel);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-panel);
+    color: var(--color-silk);
+    font-family: var(--font-panel);
+    font-variation-settings: 'wdth' 100;
+    font-feature-settings: 'tnum' 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ch-meter);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-ch-source);
+    color: var(--color-panel);
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   Panel primitives
+   ========================================================================== */
+
+@layer components {
+  /* --- The channel ribbon: the site's wordless mark ----------------------
+     Three flat bays in unequal widths, the way a console codes its strips.
+     One bay per coded channel, in the legend's order, so the mark decodes
+     against the key printed on the home page. --------------------------- */
+  .ribbon {
+    display: flex;
+    height: 4px;
+    width: 100%;
+    flex: none;
+  }
+
+  .ribbon > i {
+    display: block;
+    height: 100%;
+    transform-origin: left center;
+    animation: bay-in 320ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+
+  .ribbon > i:nth-child(1) {
+    flex: 6;
+    background: var(--color-bay-a);
+  }
+  .ribbon > i:nth-child(2) {
+    flex: 4;
+    background: var(--color-bay-b);
+    animation-delay: 70ms;
+  }
+  .ribbon > i:nth-child(3) {
+    flex: 3;
+    background: var(--color-bay-c);
+    animation-delay: 140ms;
+  }
+  /* --- Rail (header) ---------------------------------------------------- */
+  .rail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: var(--rail-h);
+    padding-inline: var(--gutter);
+    border-bottom: 1px solid var(--color-engrave);
+    background: var(--color-panel);
+  }
+
+  .rail-mark {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    color: var(--color-silk);
+    text-decoration: none;
+  }
+
+  .rail-mark svg {
+    width: 22px;
+    height: 22px;
+    color: var(--color-ch-source);
+  }
+
+  .rail-mark span {
+    font-size: 0.8125rem;
+    font-weight: 650;
+    font-variation-settings: 'wdth' 86;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .rail-side {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .rail-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .rail-nav a {
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variation-settings: 'wdth' 88;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-label);
+    text-decoration: none;
+    padding-block: 0.5rem;
+    border-bottom: 1px solid transparent;
+    transition: color 140ms linear, border-color 140ms linear;
+  }
+
+  .rail-nav a:hover,
+  .rail-nav a[aria-current='page'] {
+    color: var(--color-silk);
+    border-bottom-color: var(--color-ch-source);
+  }
+
+  /* --- The switch: a wordless two-position panel control ---------------- */
+  .switch {
+    --knob: 0;
+    display: block;
+    width: 34px;
+    height: 18px;
+    padding: 0;
+    border: 1px solid var(--color-engrave);
+    background: var(--color-plate);
+    cursor: pointer;
+    flex: none;
+  }
+
+  .switch::after {
+    content: '';
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin: 1px;
+    background: var(--color-label);
+    transform: translateX(calc(var(--knob) * 16px));
+    transition: transform 160ms cubic-bezier(0.2, 0.9, 0.25, 1), background 160ms linear;
+  }
+
+  .switch:hover::after {
+    background: var(--color-ch-source);
+  }
+
+  :root[data-theme='light'] .switch {
+    --knob: 1;
+  }
+
+  /* --- Page shell ------------------------------------------------------- */
+  .shell {
+    --gutter: clamp(1.25rem, 5vw, 3rem);
+  }
+
+  .wide {
+    width: 100%;
+    max-width: var(--measure-wide);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  main {
+    flex: 1 1 auto;
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(4.5rem, 10vw, 8rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4rem, 9vw, 7.5rem);
+  }
+
+  .bleed {
+    width: 100%;
+    max-width: var(--measure-wide);
+    margin-inline: auto;
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.25rem, 4.5vw, 3.5rem);
+  }
+
+  .post {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.75rem, 6vw, 4.25rem);
+  }
+
+  .lede {
+    font-family: var(--font-read);
+    font-size: clamp(1.0625rem, 0.5vw + 0.95rem, 1.25rem);
+    line-height: 1.62;
+    color: var(--color-label);
+    max-width: var(--measure-lede);
+    margin-inline: auto;
+    text-align: center;
+    text-wrap: pretty;
+  }
+
+  /* An honest unpatched module: the panel's own empty state. */
+  .pending {
+    width: 100%;
+    max-width: var(--measure-read);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 3rem);
+    border: 1px solid var(--color-engrave);
+    color: var(--color-label);
+  }
+
+  .pending svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .pending p {
+    font-family: var(--font-read);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  /* --- Registration ticks: silkscreen corner marks on a plate ----------- */
+  .ticked {
+    position: relative;
+  }
+
+  .ticked::before,
+  .ticked::after,
+  .field-enamel::before,
+  .field-enamel::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: currentColor;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .ticked::before {
+    top: 10px;
+    left: 10px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .ticked::after {
+    bottom: 10px;
+    right: 10px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+  }
+
+  .field-enamel::before {
+    top: 10px;
+    right: 10px;
+    border-top: 1px solid;
+    border-right: 1px solid;
+    color: var(--color-field-ink);
+  }
+
+  .field-enamel::after {
+    bottom: 10px;
+    left: 10px;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    color: var(--color-field-ink);
+  }
+
+  /* --- The drenched hero plate ------------------------------------------ */
+  .field {
+    position: relative;
+    isolation: isolate;
+    color: var(--color-field-ink);
+    text-align: center;
+    padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 6vw, 4.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  /* The enamel itself is its own element: .ticked already owns ::before and
+     ::after on this box, and a pseudo-element can only be claimed once. */
+  .field-enamel {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-field);
+    animation: field-in 620ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
+  }
+
+  /* The sprite: authored glyphs, referenced by <use> everywhere else. */
+  .sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  /* stroke-dashoffset is an inherited SVG property, so animating it on the
+     <svg> host reaches the shapes inside a <use> shadow tree. */
+  .field-mark {
+    width: clamp(56px, 9vw, 84px);
+    height: clamp(56px, 9vw, 84px);
+    color: var(--color-field-mark);
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+    animation: draw 900ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both;
+  }
+
+  .field h1 {
+    font-size: clamp(2.5rem, 8.5vw, 5.25rem);
+    font-weight: 700;
+    font-variation-settings: 'wdth' 88;
+    letter-spacing: -0.03em;
+    line-height: 0.94;
+    text-wrap: balance;
+    max-width: 14ch;
+  }
+
+  .field p {
+    font-family: var(--font-read);
+    font-size: clamp(1.0625rem, 0.5vw + 0.95rem, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-field-mute);
+    max-width: var(--measure-lede);
+    text-wrap: pretty;
+  }
+
+  /* The same enamel plate at page-header scale, so every page type is held
+     by the world's own surface instead of opening on bare panel. */
+  .field-sm {
+    padding: clamp(2.25rem, 5.5vw, 3.75rem) clamp(1.5rem, 5vw, 3rem);
+    gap: 1.125rem;
+  }
+
+  /* The channel plate: the enamel carries the code. */
+  .field-signal {
+    --color-field: var(--color-field-signal);
+  }
+
+  /* Only the home plate gets the drawn mint mark. On a page-header plate the
+     glyph is knocked out in the plate's own ink, so the hero stays singular. */
+  .field-sm .field-mark {
+    width: clamp(34px, 4vw, 42px);
+    height: clamp(34px, 4vw, 42px);
+    color: var(--color-field-ink);
+  }
+
+  .field-sm h1 {
+    font-size: clamp(1.875rem, 4.5vw, 3rem);
+    font-weight: 660;
+    font-variation-settings: 'wdth' 92;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    max-width: 20ch;
+  }
+
+  /* --- Section heading -------------------------------------------------- */
+  .head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .head svg {
+    width: 30px;
+    height: 30px;
+    color: var(--color-ch, var(--color-label));
+  }
+
+  .head h1,
+  .head h2 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 650;
+    font-variation-settings: 'wdth' 92;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  /* --- Channel entries: the post list ------------------------------------
+     Rows on a panel, not cards. No box, no shadow, no radius: an engraved
+     hairline above each, a glyph in the row's own channel colour, and a
+     great deal of air. ---------------------------------------------------- */
+  .channels {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    margin: 0;
+    padding: 0;
+  }
+
+  .channel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--color-engrave);
+  }
+
+  .channel:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .channel-glyph {
+    width: 34px;
+    height: 34px;
+    color: var(--color-ch);
+  }
+
+  .channel-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-label);
+  }
+
+  .channel-meta .tick {
+    width: 18px;
+    height: 1px;
+    background: var(--color-ch);
+    flex: none;
+  }
+
+  .channel-meta .sep {
+    color: var(--color-engrave);
+  }
+
+  .channel h2 {
+    font-size: clamp(1.375rem, 2.8vw, 2rem);
+    font-weight: 620;
+    font-variation-settings: 'wdth' 94;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    text-wrap: balance;
+    max-width: 24ch;
+  }
+
+  .channel h2 a {
+    color: var(--color-silk);
+    text-decoration: underline;
+    text-decoration-color: var(--color-ch);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    transition: text-decoration-thickness 160ms linear;
+  }
+
+  .channel h2 a:hover {
+    text-decoration-thickness: 3px;
+  }
+
+  .channel p {
+    font-family: var(--font-read);
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--color-label);
+    max-width: var(--measure-lede);
+    text-wrap: pretty;
+  }
+
+  /* --- The legend ---------------------------------------------------------
+     Museum wayfinding, printed on the panel. The glyphs are used in place
+     across the site; this is where they are decoded. -------------------- */
+  .legend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.75rem, 4vw, 2.75rem);
+  }
+
+  .legend > h2 {
+    font-size: 0.6875rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-label);
+  }
+
+  .legend-set {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3.5rem);
+    width: 100%;
+    max-width: 46rem;
+  }
+
+  .legend-set li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .legend-set svg {
+    width: 28px;
+    height: 28px;
+    color: var(--color-ch, var(--color-label));
+  }
+
+  .legend-set span {
+    font-size: 0.625rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-label);
+  }
+
+  /* --- Panel link (the one control that is not a nav item) -------------- */
+  .panel-link {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid var(--color-engrave);
+    color: var(--color-label);
+    text-decoration: none;
+    font-size: 0.6875rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: color 160ms linear, border-color 160ms linear;
+  }
+
+  .panel-link svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .panel-link:hover {
+    color: var(--color-silk);
+    border-color: var(--color-ch-source);
+  }
+
+  /* --- Post header plate ------------------------------------------------ */
+  .post-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+    padding-bottom: clamp(2rem, 5vw, 3.25rem);
+    border-bottom: 1px solid var(--color-engrave);
+  }
+
+  .post-head svg.channel-glyph {
+    width: 38px;
+    height: 38px;
+  }
+
+  .post-head h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 680;
+    font-variation-settings: 'wdth' 90;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+
+  .tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .tags li {
+    border: 1px solid var(--color-engrave);
+    padding: 0.3125rem 0.625rem;
+    font-size: 0.625rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-label);
+  }
+
+  /* --- End mark --------------------------------------------------------- */
+  .endmark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+    padding-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid var(--color-engrave);
+  }
+
+  .endmark > svg {
+    width: 24px;
+    height: 24px;
+    color: var(--color-label);
+  }
+
+  /* --- Footer: the ground plate ----------------------------------------- */
+  .ground {
+    border-top: 1px solid var(--color-engrave);
+    padding-block: 2rem;
+  }
+
+  .ground-in {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .ground-mark {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-label);
+  }
+
+  .ground-mark svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ground-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .ground-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-label);
+    text-decoration: none;
+    transition: color 140ms linear;
+  }
+
+  .ground-links a svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .ground-links a:hover {
+    color: var(--color-silk);
+  }
+}
+
+/* ==========================================================================
+   Prose — the reading surface
+   Faustina at a 66ch measure. Sectioning is done with the panel's own
+   engraved tick, never with a rule across the column.
+   ========================================================================== */
+
+@layer components {
+  .prose {
+    width: 100%;
+    max-width: var(--measure-read);
+    margin-inline: auto;
+    font-family: var(--font-read);
+    font-size: clamp(1.0625rem, 0.35vw + 1rem, 1.1875rem);
+    line-height: 1.72;
+    color: var(--color-silk);
+    text-wrap: pretty;
+  }
+
+  .prose > * + * {
+    margin-top: 1.4em;
+  }
+
+  .prose h2 {
+    font-family: var(--font-panel);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 650;
+    font-variation-settings: 'wdth' 94;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    margin-top: 2.75em;
+    position: relative;
+    text-wrap: balance;
+  }
+
+  .prose h2::before {
+    content: '';
+    position: absolute;
+    left: -1.25rem;
+    top: 0.55em;
+    width: 3px;
+    height: 0.85em;
+    background: var(--color-ch, var(--color-ch-source));
+  }
+
+  .prose h3 {
+    font-family: var(--font-panel);
+    font-size: 1.125rem;
+    font-weight: 680;
+    font-variation-settings: 'wdth' 94;
+    letter-spacing: -0.01em;
+    margin-top: 2.25em;
+    color: var(--color-silk);
+  }
+
+  .prose h2 + *,
+  .prose h3 + * {
+    margin-top: 0.85em;
+  }
+
+  .prose a {
+    color: var(--color-silk);
+    text-decoration: underline;
+    text-decoration-color: var(--color-ch, var(--color-ch-source));
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-thickness 140ms linear;
+  }
+
+  .prose a:hover {
+    text-decoration-thickness: 3px;
+  }
+
+  .prose strong {
+    font-weight: 650;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.5rem;
+  }
+
+  .prose ul {
+    list-style: none;
+  }
+
+  .prose ul > li {
+    position: relative;
+  }
+
+  .prose ul > li::before {
+    content: '';
+    position: absolute;
+    left: -1.25rem;
+    top: 0.72em;
+    width: 8px;
+    height: 1px;
+    background: var(--color-ch, var(--color-ch-source));
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose ol > li::marker {
+    font-family: var(--font-panel);
+    font-size: 0.8em;
+    font-weight: 620;
+    color: var(--color-label);
+  }
+
+  .prose li + li {
+    margin-top: 0.5em;
+  }
+
+  .prose blockquote {
+    border-left: 1px solid var(--color-ch, var(--color-ch-source));
+    padding-left: 1.5rem;
+    color: var(--color-label);
+    font-style: italic;
+  }
+
+  .prose code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em;
+    background: var(--color-plate);
+    border: 1px solid var(--color-engrave);
+    padding: 0.1em 0.35em;
+    color: var(--color-silk);
+  }
+
+  .prose pre {
+    background: var(--color-readout);
+    border: 1px solid var(--color-readout-edge);
+    color: var(--color-readout-ink);
+    padding: 1.125rem 1.25rem;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .prose pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* The highlighter ships github-dark as inline styles. Remap its palette
+     onto the readout so the display belongs to this panel and clears the
+     contrast floor, which github-dark's comment grey does not. */
+  .prose pre[class*='astro-code'] {
+    background-color: var(--color-readout) !important;
+    color: var(--color-readout-ink) !important;
+  }
+
+  .prose pre span[style*='#E1E4E8'],
+  .prose pre span[style*='#e1e4e8'] {
+    color: var(--color-readout-ink) !important;
+  }
+
+  .prose pre span[style*='#9ECBFF'],
+  .prose pre span[style*='#85E89D'] {
+    color: var(--color-readout-a) !important;
+  }
+
+  .prose pre span[style*='#B392F0'] {
+    color: var(--color-readout-b) !important;
+  }
+
+  .prose pre span[style*='#6A737D'] {
+    color: var(--color-readout-c) !important;
+  }
+
+  .prose pre span[style*='#79B8FF'],
+  .prose pre span[style*='#FFAB70'] {
+    color: var(--color-readout-d) !important;
+  }
+
+  .prose pre span[style*='#F97583'] {
+    color: var(--color-readout-e) !important;
+  }
+
+  .prose hr {
+    border: 0;
+    height: 1px;
+    background: var(--color-engrave);
+    margin-block: 2.75em;
+  }
+
+  .prose img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Tables are receipts. They get the panel's own scale treatment: engraved
+     rules, silkscreen caps in the head, tabular figures in the body. */
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-panel);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose th {
+    text-align: left;
+    font-size: 0.625rem;
+    font-weight: 620;
+    font-variation-settings: 'wdth' 84;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-label);
+    padding: 0.5rem 0.875rem 0.5rem 0;
+    border-bottom: 1px solid var(--color-ch, var(--color-ch-source));
+    white-space: nowrap;
+  }
+
+  .prose td {
+    padding: 0.6875rem 0.875rem 0.6875rem 0;
+    border-bottom: 1px solid var(--color-engrave);
+    vertical-align: top;
+  }
+
+  .prose table :is(th, td):last-child {
+    padding-right: 0;
+  }
+}
+
+/* ==========================================================================
+   The one authored moment
+   Ribbon bays snap in, the enamel field wipes across behind copy that was
+   never hidden, the mark draws its stroke once. Then the site is still:
+   nothing animates on scroll and nothing moves on hover but colour.
+   ========================================================================== */
+
+@keyframes bay-in {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes field-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ==========================================================================
+   Narrow
+   ========================================================================== */
+
+@media (max-width: 30rem) {
+  .rail {
+    gap: 1rem;
+  }
+
+  .rail-mark {
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .rail-mark svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .rail-mark span {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+  }
+
+  .rail-side {
+    gap: 0.875rem;
+  }
+
+  .rail-nav {
+    gap: 0.875rem;
+  }
+
+  .rail-nav a {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (max-width: 40rem) {
+  /* Only where the measure genuinely cannot hold them do receipts scroll. */
+  .prose table {
+    display: block;
+    width: fit-content;
+    min-width: 100%;
+    overflow-x: auto;
+  }
+
+  .legend-set {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ground-in {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .prose h2::before {
+    left: -0.875rem;
+    width: 2px;
+  }
+}

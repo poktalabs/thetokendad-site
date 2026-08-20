@@ -5,22 +5,46 @@ import { getPublishedPosts } from '../../lib/posts';
 import { SITE_TITLE } from '../../consts';
 
 const posts = await getPublishedPosts();
+
+// Same code as the home page: the glyph and the colour are read off the post's
+// own tags, so shape and hue always agree.
+const channelOf = (tags: string[]) =>
+  tags.includes('receipts')
+    ? { glyph: 'g-meter', color: 'var(--color-ch-meter)' }
+    : tags.includes('genesis')
+      ? { glyph: 'g-source', color: 'var(--color-ch-source)' }
+      : { glyph: 'g-signal', color: 'var(--color-ch-signal)' };
 ---
 
 <BaseLayout title={`Writing · ${SITE_TITLE}`} description="Posts from The Token Dad.">
-  <h1>Writing</h1>
+  <section class="bleed">
+    <div class="field field-sm field-signal ticked">
+      <i class="field-enamel" aria-hidden="true"></i>
+      <svg class="field-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#g-signal"></use></svg>
+      <h1>Writing</h1>
+    </div>
+  </section>
 
-  {posts.length === 0 ? (
-    <p>Nothing published yet.</p>
-  ) : (
-    <ul>
-      {posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-          <FormattedDate date={post.data.pubDate} />
-          <p>{post.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  )}
+  <section class="wide section">
+    {posts.length === 0 ? (
+      <p class="lede">Nothing published yet.</p>
+    ) : (
+      <ul class="channels">
+        {posts.map((post) => {
+          const ch = channelOf(post.data.tags);
+          return (
+            <li class="channel" style={`--color-ch: ${ch.color}`}>
+              <svg class="channel-glyph" viewBox="0 0 24 24" aria-hidden="true"><use href={`#${ch.glyph}`}></use></svg>
+              <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
+              <p class="channel-meta">
+                <span class="tick"></span>
+                <FormattedDate date={post.data.pubDate} />
+              </p>
+              <p>{post.data.description}</p>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </section>
 </BaseLayout>

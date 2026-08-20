@@ -11,21 +11,51 @@ interface Props {
 }
 
 const { title, description, pubDate, updatedDate, tags } = Astro.props;
+
+// Same code as the index surfaces: glyph and colour read off the post's tags.
+const channelOf = (t: string[]) =>
+  t.includes('receipts')
+    ? { glyph: 'g-meter', color: 'var(--color-ch-meter)' }
+    : t.includes('genesis')
+      ? { glyph: 'g-source', color: 'var(--color-ch-source)' }
+      : { glyph: 'g-signal', color: 'var(--color-ch-signal)' };
+
+const ch = channelOf(tags);
 ---
 
 <BaseLayout title={title} description={description}>
-  <article>
-    <h1>{title}</h1>
-    <p>
-      <FormattedDate date={pubDate} />
-      {updatedDate && (<span> · updated <FormattedDate date={updatedDate} /></span>)}
-    </p>
-    {tags.length > 0 && (
-      <ul>
-        {tags.map((tag) => (<li>{tag}</li>))}
-      </ul>
-    )}
+  <article class="wide post" style={`--color-ch: ${ch.color}`}>
+    <header class="post-head">
+      <svg class="channel-glyph" viewBox="0 0 24 24" aria-hidden="true"><use href={`#${ch.glyph}`}></use></svg>
+      <h1>{title}</h1>
+      <p class="channel-meta">
+        <span class="tick"></span>
+        <FormattedDate date={pubDate} />
+        {updatedDate && (
+          <Fragment>
+            <span class="sep">/</span>
+            <span>Updated</span>
+            <FormattedDate date={updatedDate} />
+          </Fragment>
+        )}
+      </p>
+      {tags.length > 0 && (
+        <ul class="tags">
+          {tags.map((tag) => (<li>{tag}</li>))}
+        </ul>
+      )}
+    </header>
 
-    <slot />
+    <div class="prose">
+      <slot />
+    </div>
+
+    <div class="endmark">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-ground"></use></svg>
+      <a class="panel-link" href="/blog/">
+        <span>All writing</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-back"></use></svg>
+      </a>
+    </div>
   </article>
 </BaseLayout>

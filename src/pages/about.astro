@@ -4,9 +4,23 @@ import { SITE_TITLE } from '../consts';
 
 // CONTENT PENDING — the bio is blocked on TASK-005 (brand basics).
 // The route exists so the structure is real; the prose is Mel's to write.
+// The design does not fill the gap with invented copy: the page shows the
+// panel's own unpatched state instead, keyed by the PENDING glyph.
 ---
 
 <BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is.">
-  <h1>About</h1>
-  <p>Bio pending — see TASK-005.</p>
+  <section class="bleed">
+    <div class="field field-sm ticked">
+      <i class="field-enamel" aria-hidden="true"></i>
+      <svg class="field-mark" viewBox="0 0 24 24" aria-hidden="true"><use href="#g-source"></use></svg>
+      <h1>About</h1>
+    </div>
+  </section>
+
+  <section class="wide section">
+    <div class="pending">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#g-patched"></use></svg>
+      <p>Bio pending — see TASK-005.</p>
+    </div>
+  </section>
 </BaseLayout>

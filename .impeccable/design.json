@@ -1,0 +1,931 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-20T02:44:18Z",
+  "title": "Design System: The Token Dad",
+  "extensions": {
+    "colorMeta": {
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel Slate",
+        "canonical": "oklch(0.2076 0.0135 258.37)",
+        "hexDark": "#14181e",
+        "tonalRamp": [
+          "oklch(0.15 0.0135 258.37)",
+          "oklch(0.26 0.0135 258.37)",
+          "oklch(0.37 0.0135 258.37)",
+          "oklch(0.48 0.0135 258.37)",
+          "oklch(0.59 0.0135 258.37)",
+          "oklch(0.7 0.0135 258.37)",
+          "oklch(0.83 0.0135 258.37)",
+          "oklch(0.95 0.0135 258.37)"
+        ],
+        "purpose": "The board itself: html, body and rail background; also the ::selection foreground.",
+        "hexLight": "#e9ebe9"
+      },
+      "plate": {
+        "role": "neutral",
+        "displayName": "Plate",
+        "canonical": "oklch(0.2459 0.0194 258.36)",
+        "hexDark": "#1b212a",
+        "tonalRamp": [
+          "oklch(0.15 0.0194 258.36)",
+          "oklch(0.26 0.0194 258.36)",
+          "oklch(0.37 0.0194 258.36)",
+          "oklch(0.48 0.0194 258.36)",
+          "oklch(0.59 0.0194 258.36)",
+          "oklch(0.7 0.0194 258.36)",
+          "oklch(0.83 0.0194 258.36)",
+          "oklch(0.95 0.0194 258.36)"
+        ],
+        "purpose": "The one surface tone above the board. Switch body and inline code background. There is no plate-2.",
+        "hexLight": "#d7ddd8"
+      },
+      "engrave": {
+        "role": "neutral",
+        "displayName": "Engrave",
+        "canonical": "oklch(0.3521 0.0286 254.62)",
+        "hexDark": "#313c4a",
+        "tonalRamp": [
+          "oklch(0.15 0.0286 254.62)",
+          "oklch(0.26 0.0286 254.62)",
+          "oklch(0.37 0.0286 254.62)",
+          "oklch(0.48 0.0286 254.62)",
+          "oklch(0.59 0.0286 254.62)",
+          "oklch(0.7 0.0286 254.62)",
+          "oklch(0.83 0.0286 254.62)",
+          "oklch(0.95 0.0286 254.62)"
+        ],
+        "purpose": "Every 1px hairline in the system, and the .sep slash in meta rows.",
+        "hexLight": "#b8c1bb"
+      },
+      "silk": {
+        "role": "neutral",
+        "displayName": "Silk",
+        "canonical": "oklch(0.9347 0.0087 84.57)",
+        "hexDark": "#ece9e3",
+        "tonalRamp": [
+          "oklch(0.15 0.0087 84.57)",
+          "oklch(0.26 0.0087 84.57)",
+          "oklch(0.37 0.0087 84.57)",
+          "oklch(0.48 0.0087 84.57)",
+          "oklch(0.59 0.0087 84.57)",
+          "oklch(0.7 0.0087 84.57)",
+          "oklch(0.83 0.0087 84.57)",
+          "oklch(0.95 0.0087 84.57)"
+        ],
+        "purpose": "Primary ink: body, every heading, prose, link text, and the hover state for label-coloured links.",
+        "hexLight": "#131a19"
+      },
+      "label": {
+        "role": "neutral",
+        "displayName": "Label",
+        "canonical": "oklch(0.7083 0.0252 256.13)",
+        "hexDark": "#97a2b1",
+        "tonalRamp": [
+          "oklch(0.15 0.0252 256.13)",
+          "oklch(0.26 0.0252 256.13)",
+          "oklch(0.37 0.0252 256.13)",
+          "oklch(0.48 0.0252 256.13)",
+          "oklch(0.59 0.0252 256.13)",
+          "oklch(0.7 0.0252 256.13)",
+          "oklch(0.83 0.0252 256.13)",
+          "oklch(0.95 0.0252 256.13)"
+        ],
+        "purpose": "Secondary ink: every silkscreen micro-cap, every lede and description, and every non-channel-coded glyph.",
+        "hexLight": "#556059"
+      },
+      "ch-source": {
+        "role": "secondary",
+        "displayName": "Source Teal",
+        "canonical": "oklch(0.7234 0.1264 174.29)",
+        "hexDark": "#2fbfa0",
+        "tonalRamp": [
+          "oklch(0.15 0.1264 174.29)",
+          "oklch(0.26 0.1264 174.29)",
+          "oklch(0.37 0.1264 174.29)",
+          "oklch(0.48 0.1264 174.29)",
+          "oklch(0.59 0.1264 174.29)",
+          "oklch(0.7 0.1264 174.29)",
+          "oklch(0.83 0.1264 174.29)",
+          "oklch(0.95 0.1264 174.29)"
+        ],
+        "purpose": "The genesis channel, and the site's ambient accent: rail mark, nav underline, switch knob hover, panel-link hover border, ::selection background, and the prose channel fallback.",
+        "hexLight": "#0a6a5e"
+      },
+      "ch-meter": {
+        "role": "secondary",
+        "displayName": "Meter Amber",
+        "canonical": "oklch(0.7871 0.1471 73.02)",
+        "hexDark": "#f2a93b",
+        "tonalRamp": [
+          "oklch(0.15 0.1471 73.02)",
+          "oklch(0.26 0.1471 73.02)",
+          "oklch(0.37 0.1471 73.02)",
+          "oklch(0.48 0.1471 73.02)",
+          "oklch(0.59 0.1471 73.02)",
+          "oklch(0.7 0.1471 73.02)",
+          "oklch(0.83 0.1471 73.02)",
+          "oklch(0.95 0.1471 73.02)"
+        ],
+        "purpose": "The receipts channel, and the only focus-visible outline colour site-wide.",
+        "hexLight": "#8a5a06"
+      },
+      "ch-signal": {
+        "role": "secondary",
+        "displayName": "Signal Violet",
+        "canonical": "oklch(0.6863 0.1596 289.81)",
+        "hexDark": "#9a86f5",
+        "tonalRamp": [
+          "oklch(0.15 0.1596 289.81)",
+          "oklch(0.26 0.1596 289.81)",
+          "oklch(0.37 0.1596 289.81)",
+          "oklch(0.48 0.1596 289.81)",
+          "oklch(0.59 0.1596 289.81)",
+          "oklch(0.7 0.1596 289.81)",
+          "oklch(0.83 0.1596 289.81)",
+          "oklch(0.95 0.1596 289.81)"
+        ],
+        "purpose": "The default writing channel: any post that is neither receipts nor genesis.",
+        "hexLight": "#4f3ab8"
+      },
+      "bay-a": {
+        "role": "tertiary",
+        "displayName": "Bay A",
+        "canonical": "oklch(0.7234 0.1264 174.29)",
+        "hexDark": "#2fbfa0",
+        "tonalRamp": [
+          "oklch(0.15 0.1264 174.29)",
+          "oklch(0.26 0.1264 174.29)",
+          "oklch(0.37 0.1264 174.29)",
+          "oklch(0.48 0.1264 174.29)",
+          "oklch(0.59 0.1264 174.29)",
+          "oklch(0.7 0.1264 174.29)",
+          "oklch(0.83 0.1264 174.29)",
+          "oklch(0.95 0.1264 174.29)"
+        ],
+        "purpose": "Ribbon segment 1, flex 6 — source teal. One bay per coded channel, in the printed Key's order, so the mark decodes against the legend. Re-picked for the light board but never muted: the bays carry no text.",
+        "hexLight": "#0e8f78"
+      },
+      "bay-b": {
+        "role": "tertiary",
+        "displayName": "Bay B",
+        "canonical": "oklch(0.6863 0.1596 289.81)",
+        "hexDark": "#9a86f5",
+        "tonalRamp": [
+          "oklch(0.15 0.1596 289.81)",
+          "oklch(0.26 0.1596 289.81)",
+          "oklch(0.37 0.1596 289.81)",
+          "oklch(0.48 0.1596 289.81)",
+          "oklch(0.59 0.1596 289.81)",
+          "oklch(0.7 0.1596 289.81)",
+          "oklch(0.83 0.1596 289.81)",
+          "oklch(0.95 0.1596 289.81)"
+        ],
+        "purpose": "Ribbon segment 2, flex 4 — writing violet. Re-picked for the light board but never muted.",
+        "hexLight": "#5a45c4"
+      },
+      "bay-c": {
+        "role": "tertiary",
+        "displayName": "Bay C",
+        "canonical": "oklch(0.7871 0.1471 73.02)",
+        "hexDark": "#f2a93b",
+        "tonalRamp": [
+          "oklch(0.15 0.1471 73.02)",
+          "oklch(0.26 0.1471 73.02)",
+          "oklch(0.37 0.1471 73.02)",
+          "oklch(0.48 0.1471 73.02)",
+          "oklch(0.59 0.1471 73.02)",
+          "oklch(0.7 0.1471 73.02)",
+          "oklch(0.83 0.1471 73.02)",
+          "oklch(0.95 0.1471 73.02)"
+        ],
+        "purpose": "Ribbon segment 3, flex 3 — measured amber. Re-picked for the light board but never muted.",
+        "hexLight": "#d08a10"
+      },
+      "field": {
+        "role": "primary",
+        "displayName": "Drenched Teal Field",
+        "canonical": "oklch(0.4385 0.0732 184.55)",
+        "hexDark": "#0e5f57",
+        "tonalRamp": [
+          "oklch(0.15 0.0732 184.55)",
+          "oklch(0.26 0.0732 184.55)",
+          "oklch(0.37 0.0732 184.55)",
+          "oklch(0.48 0.0732 184.55)",
+          "oklch(0.59 0.0732 184.55)",
+          "oklch(0.7 0.0732 184.55)",
+          "oklch(0.83 0.0732 184.55)",
+          "oklch(0.95 0.0732 184.55)"
+        ],
+        "purpose": "The source channel's enamel and the default plate colour: the home hero at display scale and the About header at page-header scale.",
+        "hexLight": "#7ec0ad"
+      },
+      "field-ink": {
+        "role": "primary",
+        "displayName": "Field Ink",
+        "canonical": "oklch(0.9347 0.0087 84.57)",
+        "hexDark": "#ece9e3",
+        "tonalRamp": [
+          "oklch(0.15 0.0087 84.57)",
+          "oklch(0.26 0.0087 84.57)",
+          "oklch(0.37 0.0087 84.57)",
+          "oklch(0.48 0.0087 84.57)",
+          "oklch(0.59 0.0087 84.57)",
+          "oklch(0.7 0.0087 84.57)",
+          "oklch(0.83 0.0087 84.57)",
+          "oklch(0.95 0.0087 84.57)"
+        ],
+        "purpose": "Title and registration ticks laid on the field.",
+        "hexLight": "#0f1c1a"
+      },
+      "field-mute": {
+        "role": "primary",
+        "displayName": "Field Mute",
+        "canonical": "oklch(0.8551 0.029 180.15)",
+        "hexDark": "#bcd6d0",
+        "tonalRamp": [
+          "oklch(0.15 0.029 180.15)",
+          "oklch(0.26 0.029 180.15)",
+          "oklch(0.37 0.029 180.15)",
+          "oklch(0.48 0.029 180.15)",
+          "oklch(0.59 0.029 180.15)",
+          "oklch(0.7 0.029 180.15)",
+          "oklch(0.83 0.029 180.15)",
+          "oklch(0.95 0.029 180.15)"
+        ],
+        "purpose": "The premise line under the title, on the field only.",
+        "hexLight": "#22403a"
+      },
+      "field-mark": {
+        "role": "primary",
+        "displayName": "Field Mark",
+        "canonical": "oklch(0.8319 0.113 173.79)",
+        "hexDark": "#6fe0c2",
+        "tonalRamp": [
+          "oklch(0.15 0.113 173.79)",
+          "oklch(0.26 0.113 173.79)",
+          "oklch(0.37 0.113 173.79)",
+          "oklch(0.48 0.113 173.79)",
+          "oklch(0.59 0.113 173.79)",
+          "oklch(0.7 0.113 173.79)",
+          "oklch(0.83 0.113 173.79)",
+          "oklch(0.95 0.113 173.79)"
+        ],
+        "purpose": "The drawn mark on the home hero only. Page-header plates knock their glyph out in field-ink instead, so the hero stays singular.",
+        "hexLight": "#0a4d43"
+      },
+      "readout": {
+        "role": "neutral",
+        "displayName": "Readout Ground",
+        "canonical": "oklch(0.2033 0.0178 259.72)",
+        "hexDark": "#12171f",
+        "tonalRamp": [
+          "oklch(0.15 0.0178 259.72)",
+          "oklch(0.26 0.0178 259.72)",
+          "oklch(0.37 0.0178 259.72)",
+          "oklch(0.48 0.0178 259.72)",
+          "oklch(0.59 0.0178 259.72)",
+          "oklch(0.7 0.0178 259.72)",
+          "oklch(0.83 0.0178 259.72)",
+          "oklch(0.95 0.0178 259.72)"
+        ],
+        "purpose": "pre background. Fixed: never re-declared in a light-theme block.",
+        "fixedAcrossThemes": true
+      },
+      "readout-edge": {
+        "role": "neutral",
+        "displayName": "Readout Edge",
+        "canonical": "oklch(0.3254 0.0269 255.13)",
+        "hexDark": "#2b3542",
+        "tonalRamp": [
+          "oklch(0.15 0.0269 255.13)",
+          "oklch(0.26 0.0269 255.13)",
+          "oklch(0.37 0.0269 255.13)",
+          "oklch(0.48 0.0269 255.13)",
+          "oklch(0.59 0.0269 255.13)",
+          "oklch(0.7 0.0269 255.13)",
+          "oklch(0.83 0.0269 255.13)",
+          "oklch(0.95 0.0269 255.13)"
+        ],
+        "purpose": "The 1px border around pre — the one hairline in the system that is not engrave. Fixed.",
+        "fixedAcrossThemes": true
+      },
+      "readout-ink": {
+        "role": "neutral",
+        "displayName": "Readout Ink",
+        "canonical": "oklch(0.9165 0.0087 84.57)",
+        "hexDark": "#e6e3dd",
+        "tonalRamp": [
+          "oklch(0.15 0.0087 84.57)",
+          "oklch(0.26 0.0087 84.57)",
+          "oklch(0.37 0.0087 84.57)",
+          "oklch(0.48 0.0087 84.57)",
+          "oklch(0.59 0.0087 84.57)",
+          "oklch(0.7 0.0087 84.57)",
+          "oklch(0.83 0.0087 84.57)",
+          "oklch(0.95 0.0087 84.57)"
+        ],
+        "purpose": "Default code text. Fixed.",
+        "fixedAcrossThemes": true
+      },
+      "readout-a": {
+        "role": "tertiary",
+        "displayName": "Readout A",
+        "canonical": "oklch(0.7783 0.1215 174.75)",
+        "hexDark": "#4fd0b2",
+        "tonalRamp": [
+          "oklch(0.15 0.1215 174.75)",
+          "oklch(0.26 0.1215 174.75)",
+          "oklch(0.37 0.1215 174.75)",
+          "oklch(0.48 0.1215 174.75)",
+          "oklch(0.59 0.1215 174.75)",
+          "oklch(0.7 0.1215 174.75)",
+          "oklch(0.83 0.1215 174.75)",
+          "oklch(0.95 0.1215 174.75)"
+        ],
+        "purpose": "Strings and inserted content. Fixed.",
+        "fixedAcrossThemes": true
+      },
+      "readout-b": {
+        "role": "tertiary",
+        "displayName": "Readout B",
+        "canonical": "oklch(0.7328 0.1495 290.53)",
+        "hexDark": "#a996ff",
+        "tonalRamp": [
+          "oklch(0.15 0.1495 290.53)",
+          "oklch(0.26 0.1495 290.53)",
+          "oklch(0.37 0.1495 290.53)",
+          "oklch(0.48 0.1495 290.53)",
+          "oklch(0.59 0.1495 290.53)",
+          "oklch(0.7 0.1495 290.53)",
+          "oklch(0.83 0.1495 290.53)",
+          "oklch(0.95 0.1495 290.53)"
+        ],
+        "purpose": "Functions and entities. Fixed.",
+        "fixedAcrossThemes": true
+      },
+      "readout-c": {
+        "role": "tertiary",
+        "displayName": "Readout C",
+        "canonical": "oklch(0.6783 0.0261 254.01)",
+        "hexDark": "#8d99a8",
+        "tonalRamp": [
+          "oklch(0.15 0.0261 254.01)",
+          "oklch(0.26 0.0261 254.01)",
+          "oklch(0.37 0.0261 254.01)",
+          "oklch(0.48 0.0261 254.01)",
+          "oklch(0.59 0.0261 254.01)",
+          "oklch(0.7 0.0261 254.01)",
+          "oklch(0.83 0.0261 254.01)",
+          "oklch(0.95 0.0261 254.01)"
+        ],
+        "purpose": "Comments, lifted off github-dark's grey which does not clear the contrast floor. Fixed.",
+        "fixedAcrossThemes": true
+      },
+      "readout-d": {
+        "role": "tertiary",
+        "displayName": "Readout D",
+        "canonical": "oklch(0.8561 0.126 75.97)",
+        "hexDark": "#ffc46b",
+        "tonalRamp": [
+          "oklch(0.15 0.126 75.97)",
+          "oklch(0.26 0.126 75.97)",
+          "oklch(0.37 0.126 75.97)",
+          "oklch(0.48 0.126 75.97)",
+          "oklch(0.59 0.126 75.97)",
+          "oklch(0.7 0.126 75.97)",
+          "oklch(0.83 0.126 75.97)",
+          "oklch(0.95 0.126 75.97)"
+        ],
+        "purpose": "Constants and parameters. Fixed.",
+        "fixedAcrossThemes": true
+      },
+      "readout-e": {
+        "role": "tertiary",
+        "displayName": "Readout E",
+        "canonical": "oklch(0.7573 0.1461 31.38)",
+        "hexDark": "#ff8a75",
+        "tonalRamp": [
+          "oklch(0.15 0.1461 31.38)",
+          "oklch(0.26 0.1461 31.38)",
+          "oklch(0.37 0.1461 31.38)",
+          "oklch(0.48 0.1461 31.38)",
+          "oklch(0.59 0.1461 31.38)",
+          "oklch(0.7 0.1461 31.38)",
+          "oklch(0.83 0.1461 31.38)",
+          "oklch(0.95 0.1461 31.38)"
+        ],
+        "purpose": "Keywords. Fixed.",
+        "fixedAcrossThemes": true
+      },
+      "field-signal": {
+        "role": "primary",
+        "displayName": "Drenched Violet Field",
+        "canonical": "oklch(0.3376 0.1132 285.31)",
+        "hexDark": "#342a6e",
+        "hexLight": "#bdb2ef",
+        "tonalRamp": [
+          "oklch(0.15 0.1132 285.31)",
+          "oklch(0.26 0.1132 285.31)",
+          "oklch(0.37 0.1132 285.31)",
+          "oklch(0.48 0.1132 285.31)",
+          "oklch(0.59 0.1132 285.31)",
+          "oklch(0.7 0.1132 285.31)",
+          "oklch(0.83 0.1132 285.31)",
+          "oklch(0.95 0.1132 285.31)"
+        ],
+        "purpose": "The writing channel's enamel, on the blog index header. Never applied directly: the .field-signal modifier rebinds --color-field to it, so one plate implementation serves both channels."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The site name on the hero plate. Archivo 700 / wdth 88, tracking -0.03em, leading 0.94, balance, max 14ch. One instance, home page only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The post title. Archivo 680 / wdth 90, tracking -0.03em, leading 1.02, balance, max 20ch."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "A centred in-page section heading under a 30px glyph that inherits var(--color-ch, var(--color-label)). One live instance: the home page's Writing head, which sets --color-ch: var(--color-ch-signal) inline so the glyph matches the Key."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "A post title in the channel list. Archivo 620 / wdth 94, balance, max 24ch."
+      },
+      "prose-heading": {
+        "displayName": "Prose Heading",
+        "purpose": "The panel voice interrupting the reading serif. Archivo 650 / wdth 94, margin-top 2.75em, with a 3px channel-coloured bar in the left margin.",
+        "measured": "Built post at 390px: 20px / weight 650 / rgb(236,233,227) / Archivo Variable."
+      },
+      "prose-subheading": {
+        "displayName": "Prose Subheading",
+        "purpose": "Sentence case, 1.125rem / weight 680 / wdth 94 in silk — heavier and larger than the body it heads. Deliberately not uppercase and not label-coloured: a subheading quieter than its own paragraph is not a heading.",
+        "measured": "Built post at 390px: 18px / weight 680 / rgb(236,233,227) / Archivo Variable / text-transform none."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Post prose in Faustina at a 36rem measure (~66ch), text-wrap pretty. strong steps to 650; blockquote is real italic from the wght-italic file.",
+        "measured": "Built post at 390px: 17.4px / weight 400 / rgb(236,233,227) / Faustina Variable."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Faustina at a 34rem measure, centred. Leading 1.6 in field-mute as the hero premise; leading 1.62 in label as .lede, which now carries only the empty-list line."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "The rail wordmark. Archivo 650 / wdth 86, uppercase. Drops to 0.6875rem / 0.1em tracking at 30rem."
+      },
+      "nav": {
+        "displayName": "Nav",
+        "purpose": "Rail nav links. Archivo 600 / wdth 88, uppercase, label colour. Drops to 0.6875rem / 0.1em tracking at 30rem."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "The workhorse silkscreen cap. Tracking is part of the role: 0.16em on channel-meta and panel-link, 0.14em in the footer, 0.22em on the legend heading."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "The smallest printed cap: legend labels at 0.2em, tags and table heads at 0.14em."
+      },
+      "readout": {
+        "displayName": "Readout",
+        "purpose": "System monospace, used only inside code. Inline code sits on plate with an engrave hairline; block code sits on the fixed readout ground."
+      },
+      "page-header": {
+        "displayName": "Page Header",
+        "purpose": "The title on a .field-sm page-header plate ('Writing', 'About'). Archivo 660 / wdth 92, tracking -0.025em, leading 1.02, max 20ch."
+      }
+    },
+    "fonts": [
+      {
+        "role": "panel",
+        "family": "Archivo Variable",
+        "package": "@fontsource-variable/archivo",
+        "version": "5.3.0",
+        "import": "@fontsource-variable/archivo/wdth.css",
+        "axes": "wght 100–900, wdth 62–125 (font-stretch 62%–125%)",
+        "axisValuesUsed": "wdth 84 / 86 / 88 / 90 / 92 / 94, plus 100 as the body default — a narrow working band; 62–125 is headroom the system does not spend. wght 600 / 620 / 650 / 660 / 680 / 700",
+        "stack": "'Archivo Variable', ui-sans-serif, sans-serif",
+        "token": "--font-panel",
+        "notes": "wdth is applied via font-variation-settings using raw axis units, never via font-stretch percentages. The condensed grade is a nudge that makes tight labels sit right, not a costume."
+      },
+      {
+        "role": "read",
+        "family": "Faustina Variable",
+        "package": "@fontsource-variable/faustina",
+        "version": "5.3.0",
+        "import": "@fontsource-variable/faustina/wght.css + @fontsource-variable/faustina/wght-italic.css",
+        "axes": "wght 300–800 (upright and italic)",
+        "axisValuesUsed": "wght 400 body, 650 strong",
+        "stack": "'Faustina Variable', ui-serif, Georgia, serif",
+        "token": "--font-read",
+        "notes": "The italic file is loaded so blockquote italics are real italics, not a synthesised slant."
+      },
+      {
+        "role": "readout",
+        "family": "system monospace",
+        "package": null,
+        "version": null,
+        "import": null,
+        "axes": null,
+        "axisValuesUsed": null,
+        "stack": "ui-monospace, SFMono-Regular, Menlo, monospace",
+        "token": null,
+        "notes": "No webfont. Used only inside code elements."
+      }
+    ],
+    "shadows": [],
+    "elevation": "None. The stylesheet contains no box-shadow, text-shadow, filter, backdrop-filter, gradient or glow. Depth is carried by a 1px engrave hairline on one edge, a single plate surface tone, and the one drenched field, which reads as a different material rather than a raised one.",
+    "motion": [
+      {
+        "name": "bay-in",
+        "value": "320ms cubic-bezier(0.2, 0.9, 0.25, 1) both; transform: scaleX(0) -> 1 from transform-origin left center; stagger 0 / 70 / 140ms",
+        "purpose": "Arrival part 1: the three ribbon bays snap in like strips being seated."
+      },
+      {
+        "name": "field-in",
+        "value": "620ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both; clip-path: inset(0 100% 0 0) -> inset(0 0 0 0)",
+        "purpose": "Arrival part 2: the enamel wipes across behind copy that was never hidden, because the enamel is a separate z-index:-1 element. Runs on every page type, at whichever plate scale that page uses."
+      },
+      {
+        "name": "draw",
+        "value": "900ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both; stroke-dashoffset: 100 -> 0 against stroke-dasharray: 100",
+        "purpose": "Arrival part 3: the plate's mark draws once, on every page type. stroke-dashoffset is inherited, so it reaches shapes inside the <use> shadow tree; pathLength=100 on every shape makes multi-path glyphs draw evenly."
+      },
+      {
+        "name": "state-fast",
+        "value": "140ms linear",
+        "purpose": "Nav link colour and border-colour, footer link colour, prose link text-decoration-thickness."
+      },
+      {
+        "name": "state-control",
+        "value": "160ms linear (colour) / 160ms cubic-bezier(0.2, 0.9, 0.25, 1) (transform)",
+        "purpose": "panel-link colour and border-colour; the channel title's underline thickening 1px -> 3px; the switch knob's travel and fill."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: 1ms !important } }",
+        "purpose": "The arrival moment is removed, not shortened. Every page arrives finished with nothing missing, because the plate copy was never hidden and the mark's dashoffset rests at 0."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "30rem / 480px",
+        "purpose": "max-width query. Tightens the rail only: gaps, mark glyph 22->19px, wordmark and nav type down one step with tracking 0.14em -> 0.1em."
+      },
+      {
+        "name": "compact",
+        "value": "40rem / 640px",
+        "purpose": "max-width query. .prose table switches to display:block / fit-content / overflow-x:auto so receipts scroll only where the measure cannot hold them; legend grid 3 -> 2 columns; footer row -> left-aligned column; the prose h2 channel bar moves to left -0.875rem and 2px wide."
+      }
+    ],
+    "glyphs": {
+      "grammar": "viewBox='0 0 24 24', fill='none', stroke='currentColor', stroke-width='1.75'. No stroke-linecap or stroke-linejoin is authored, so all nine render with SVG defaults: butt caps and miter joins. Every drawn shape carries pathLength='100' so one stroke-dasharray:100 on the host normalises the draw animation. Colour is always inherited from the host's color property.",
+      "delivery": "Authored inline in BaseLayout.astro as a hidden <svg class='sprite'> holding a <defs> of <symbol> elements; referenced everywhere by <use href='#id'>. Sprite is position:absolute; width:0; height:0; overflow:hidden and aria-hidden.",
+      "set": [
+        {
+          "id": "g-source",
+          "meaning": "Source / genesis — the site's own mark",
+          "drawing": "circle r=10.25 with a three-lobe sine wave through it",
+          "usedIn": "rail wordmark 22px ch-source; hero field-mark clamp(56px,9vw,84px) field-mark; the About plate clamp(34px,4vw,42px) field-ink; genesis channel; the Key"
+        },
+        {
+          "id": "g-signal",
+          "meaning": "Writing / signal — the default channel",
+          "drawing": "vertical bar at x=4.5 plus a closed right-pointing triangle x=9 to x=20.5",
+          "usedIn": "the blog index plate clamp(34px,4vw,42px) field-ink on the violet enamel; the home page Writing head 30px with --color-ch: ch-signal set inline; any post not tagged receipts or genesis 34px ch-signal; the Key"
+        },
+        {
+          "id": "g-meter",
+          "meaning": "Measured / receipts — the numbers channel",
+          "drawing": "baseline plus three rising bars at x=7.25, 12, 16.75 and a 1.5-unit tick above the centre bar",
+          "usedIn": "any post tagged receipts 34px ch-meter; the Key"
+        },
+        {
+          "id": "g-patched",
+          "meaning": "Pending / unpatched — the empty state",
+          "drawing": "dashed lead line (stroke-dasharray 2.5 3) into a jack: circle r=5 with an r=1.25 core",
+          "usedIn": "the .pending block 30px label; the Key"
+        },
+        {
+          "id": "g-feed",
+          "meaning": "Feed / RSS",
+          "drawing": "two concentric arcs and an r=1.5 dot at the origin corner",
+          "usedIn": "footer RSS link 15px label; the Key"
+        },
+        {
+          "id": "g-ground",
+          "meaning": "End / ground",
+          "drawing": "a stem into three descending horizontal bars, 16 / 10 / 4 units wide",
+          "usedIn": "post endmark 24px label; footer copyright mark 20px label; the Key"
+        },
+        {
+          "id": "g-next",
+          "meaning": "Forward",
+          "drawing": "horizontal shaft with a chevron head at the right",
+          "usedIn": "the 'All writing' panel-link on the home page, 15px"
+        },
+        {
+          "id": "g-back",
+          "meaning": "Return",
+          "drawing": "the mirror of g-next",
+          "usedIn": "the 'All writing' panel-link at the foot of a post, 15px"
+        },
+        {
+          "id": "g-out",
+          "meaning": "Leaves the site",
+          "drawing": "open-cornered box with a diagonal arrow escaping the top-right",
+          "usedIn": "footer Instagram link 15px label"
+        }
+      ],
+      "key": "Six of the nine are decoded in the printed Key on the home page — g-source 'Source', g-signal 'Writing', g-meter 'Measured', g-patched 'Pending', g-feed 'Feed', g-ground 'End'. The three directional glyphs are omitted because arrows need no decoding.",
+      "inheritance": "Every host that can name a channel resolves colour the same way — var(--color-ch, <neutral fallback>). .channel-glyph takes var(--color-ch); .head svg takes var(--color-ch, var(--color-label)); .legend-set svg takes var(--color-ch, var(--color-label)). A glyph on a channelled surface is always the Key's colour; a glyph on a neutral surface is always label."
+    },
+    "channelCoding": {
+      "derivation": "channelOf(tags): tags.includes('receipts') -> { glyph: 'g-meter', color: var(--color-ch-meter) }; else tags.includes('genesis') -> { glyph: 'g-source', color: var(--color-ch-source) }; else { glyph: 'g-signal', color: var(--color-ch-signal) }.",
+      "application": "The result is written to the row or article root as an inline style='--color-ch: …', and every coded element reads var(--color-ch).",
+      "consumers": [
+        ".channel-glyph",
+        ".head svg (fallback --color-label)",
+        ".channel-meta .tick",
+        ".channel h2 a text-decoration-color",
+        ".legend-set svg (fallback --color-label)",
+        ".prose h2::before",
+        ".prose ul > li::before",
+        ".prose a text-decoration-color",
+        ".prose blockquote border-left",
+        ".prose th border-bottom"
+      ],
+      "fallback": "Inside .prose every read is var(--color-ch, var(--color-ch-source)), so prose outside an article still resolves.",
+      "duplication": "The same function is authored three times — src/pages/index.astro, src/pages/blog/index.astro and src/layouts/PostLayout.astro — because src/lib/ and src/components/ are outside the file set this design is permitted to touch. It is a scoping artefact, not a pattern: keep the three copies byte-identical, and collapse them to one import the moment src/lib/ comes into scope. A divergence silently breaks the agreement between shape and hue on one surface only."
+    },
+    "themes": {
+      "mechanism": "Tokens are declared in an @theme static block in src/styles/global.css (the single styling entry point). The light theme re-declares them twice, identically: once under @media (prefers-color-scheme: light) :root:not([data-theme='dark']) and once under :root[data-theme='light']. color-scheme is set to dark on :root and :root[data-theme='dark'] and to light in both light blocks.",
+      "switch": "A blocking inline script in <head> reads localStorage['panel-theme'] and sets document.documentElement.dataset.theme before first paint, so there is no flash. The .switch button writes the new value back on click and keeps aria-pressed in sync. Both storage reads and writes are wrapped in try/catch so a storage-less browser falls through to the system preference.",
+      "fixed": "The eight readout-* tokens are declared once and never re-declared in a light block: a lit display does not change with the room. The three bay-* tokens ARE re-declared for the pale board, but keep full saturation rather than being muted, because they carry no text and have no contrast obligation. (The stylesheet comment claims the bays do not change; the token values say otherwise, and the tokens are the build.)",
+      "relationship": "Both themes drench the plate; the value relationship flips. Dark lays light ink on a deep enamel (field #0e5f57 under field-ink #ece9e3); light lays dark ink on a pale one (field #7ec0ad under field-ink #0f1c1a). The light theme is not an inversion and not a tint — every themed hue is re-picked for the pale board."
+    },
+    "syntaxRemap": {
+      "reason": "The highlighter ships github-dark as inline style attributes. Attribute selectors on the literal source hex remap them onto the readout tokens with !important, which also lifts the comment grey above the contrast floor.",
+      "map": {
+        "#E1E4E8 / #e1e4e8": "readout-ink",
+        "#9ECBFF, #85E89D": "readout-a",
+        "#B392F0": "readout-b",
+        "#6A737D": "readout-c",
+        "#79B8FF, #FFAB70": "readout-d",
+        "#F97583": "readout-e"
+      },
+      "caution": "The map is keyed to the highlighter's output values, not to token names. Changing the highlighter theme requires re-deriving it."
+    },
+    "buildConstraints": [
+      "compressHTML: 'jsx' strips whitespace between adjacent inline elements at build time. All inline spacing must come from flex + gap; never from a literal space or &nbsp;.",
+      "trailingSlash: 'always'. Internal links must agree.",
+      "Tailwind content detection is scoped on purpose: the stylesheet opens `@import 'tailwindcss' source(none);` then `@source '../**/*.{astro,ts,mdx}';`. Tailwind 4 otherwise auto-detects every non-ignored file in the project, so a prose document that merely NAMES a utility mints it — this design's own ban list, naming gradient, drop-shadow and blur, shipped all three into the stylesheet before the scope was narrowed. Design docs are not content; never widen the glob to the project root."
+    ],
+    "fieldScale": {
+      "field": "Display scale. padding clamp(3rem,8vw,6rem) clamp(1.5rem,6vw,4.5rem); gap clamp(1.5rem,3vw,2.25rem); mark clamp(56px,9vw,84px) in field-mark; h1 clamp(2.5rem,8.5vw,5.25rem) / 700 / wdth 88 / -0.03em / 0.94 / max 14ch. Carries a lede.",
+      "field-sm": "Page-header scale, composed as class='field field-sm ticked'. Overrides three things only: padding clamp(2.25rem,5.5vw,3.75rem) clamp(1.5rem,5vw,3rem); gap 1.125rem; mark clamp(34px,4vw,42px) recoloured to field-ink. h1 becomes clamp(1.875rem,4.5vw,3rem) / 660 / wdth 92 / -0.025em / 1.02 / max 20ch. Carries a glyph and a title, no lede.",
+      "field-signal": "Channel modifier, one declaration: --color-field: var(--color-field-signal). The plate implementation is unchanged; only the enamel token it resolves changes.",
+      "reach": "/ uses .field with g-source on the teal source enamel; /about/ uses .field field-sm with g-source on the same teal; /blog/ uses .field field-sm field-signal with g-signal on the violet writing enamel; a post uses .post-head instead, which is a hairline plate rather than an enamel one.",
+      "codedEnamel": "A plate's enamel is its channel code. Because the plate has already stated the hue, the glyph on a coded enamel is knocked out in field-ink and never re-states it — only the home hero's mark carries field-mark. A new page type picks its enamel from its channel, never for variety."
+    }
+  },
+  "components": [
+    {
+      "name": "Ribbon",
+      "kind": "custom",
+      "description": "The site's wordless mark: three unequal flat bays, one per coded channel in the printed Key's order, 4px tall, painted first on every page and staggered in on arrival.",
+      "html": "<div class=\"ds-ribbon\" aria-hidden=\"true\"><i></i><i></i><i></i></div>",
+      "css": ".ds-ribbon { display: flex; height: 4px; width: 100%; flex: none; } .ds-ribbon > i { display: block; height: 100%; transform-origin: left center; animation: ds-bay-in 320ms cubic-bezier(0.2,0.9,0.25,1) both; } .ds-ribbon > i:nth-child(1) { flex: 6; background: var(--color-bay-a, #2fbfa0); } .ds-ribbon > i:nth-child(2) { flex: 4; background: var(--color-bay-b, #9a86f5); animation-delay: 70ms; } .ds-ribbon > i:nth-child(3) { flex: 3; background: var(--color-bay-c, #f2a93b); animation-delay: 140ms; } @keyframes ds-bay-in { from { transform: scaleX(0); } } @media (prefers-reduced-motion: reduce) { .ds-ribbon > i { animation: none; } }"
+    },
+    {
+      "name": "Rail Nav Link",
+      "kind": "nav",
+      "refersTo": "rail-nav-link",
+      "description": "A primary nav item. Hover and aria-current='page' render identically: silk text over a source-teal bottom hairline.",
+      "html": "<nav class=\"ds-rail-nav\" aria-label=\"Primary\"><a href=\"/blog/\" aria-current=\"page\">Writing</a><a href=\"/about/\">About</a></nav>",
+      "css": ".ds-rail-nav { display: flex; align-items: center; gap: 1.25rem; } .ds-rail-nav a { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.75rem; font-weight: 600; font-variation-settings: 'wdth' 88; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-label, #97a2b1); text-decoration: none; padding-block: 0.5rem; border-bottom: 1px solid transparent; transition: color 140ms linear, border-color 140ms linear; } .ds-rail-nav a:hover, .ds-rail-nav a[aria-current='page'] { color: var(--color-silk, #ece9e3); border-bottom-color: var(--color-ch-source, #2fbfa0); } .ds-rail-nav a:focus-visible { outline: 2px solid var(--color-ch-meter, #f2a93b); outline-offset: 3px; }"
+    },
+    {
+      "name": "Switch",
+      "kind": "button",
+      "refersTo": "switch",
+      "description": "The wordless two-position theme control. No sun, no moon, no label text; state is carried by aria-pressed and by the knob's position.",
+      "html": "<button class=\"ds-switch\" type=\"button\" aria-pressed=\"false\" aria-label=\"Switch between the dark and light panel\"></button>",
+      "css": ".ds-switch { --knob: 0; display: block; width: 34px; height: 18px; padding: 0; border: 1px solid var(--color-engrave, #313c4a); background: var(--color-plate, #1b212a); cursor: pointer; flex: none; border-radius: 0; } .ds-switch::after { content: ''; display: block; width: 14px; height: 14px; margin: 1px; background: var(--color-label, #97a2b1); transform: translateX(calc(var(--knob) * 16px)); transition: transform 160ms cubic-bezier(0.2,0.9,0.25,1), background 160ms linear; } .ds-switch:hover::after { background: var(--color-ch-source, #2fbfa0); } .ds-switch[aria-pressed='true'] { --knob: 1; } .ds-switch:focus-visible { outline: 2px solid var(--color-ch-meter, #f2a93b); outline-offset: 3px; }"
+    },
+    {
+      "name": "Field",
+      "kind": "card",
+      "refersTo": "field",
+      "description": "The world's own surface and the opening block of every page type. Its background is a separate z-index:-1 child so the container's pseudo-elements stay free for registration ticks; a plate's enamel is its channel code.",
+      "html": "<div class=\"ds-field ds-ticked\"><i class=\"ds-field-enamel\" aria-hidden=\"true\"></i><svg class=\"ds-field-mark\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10.25\" pathLength=\"100\"></circle><path d=\"M3.2 12c1.47-5.2 4.4-5.2 5.87 0s4.4 5.2 5.87 0 4.4-5.2 5.87 0\" pathLength=\"100\"></path></svg><h1>The Token Dad</h1><p>A dad automating his way out of the overwhelm — and publishing what it costs.</p></div>",
+      "css": ".ds-field { position: relative; isolation: isolate; color: var(--color-field-ink, #ece9e3); text-align: center; padding: clamp(3rem,8vw,6rem) clamp(1.5rem,6vw,4.5rem); display: flex; flex-direction: column; align-items: center; gap: clamp(1.5rem,3vw,2.25rem); } .ds-field-enamel { position: absolute; inset: 0; z-index: -1; background: var(--color-field, #0e5f57); animation: ds-field-in 620ms cubic-bezier(0.16,1,0.3,1) 100ms both; } @keyframes ds-field-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } } .ds-ticked::before, .ds-ticked::after, .ds-field-enamel::before, .ds-field-enamel::after { content: ''; position: absolute; width: 14px; height: 14px; border-color: currentColor; opacity: 0.55; pointer-events: none; } .ds-ticked::before { top: 10px; left: 10px; border-top: 1px solid; border-left: 1px solid; } .ds-ticked::after { bottom: 10px; right: 10px; border-bottom: 1px solid; border-right: 1px solid; } .ds-field-enamel::before { top: 10px; right: 10px; border-top: 1px solid; border-right: 1px solid; color: var(--color-field-ink, #ece9e3); } .ds-field-enamel::after { bottom: 10px; left: 10px; border-bottom: 1px solid; border-left: 1px solid; color: var(--color-field-ink, #ece9e3); } .ds-field-mark { display: block; width: clamp(56px,9vw,84px); height: clamp(56px,9vw,84px); color: var(--color-field-mark, #6fe0c2); stroke-dasharray: 100; stroke-dashoffset: 0; animation: ds-draw 900ms cubic-bezier(0.16,1,0.3,1) 260ms both; } @keyframes ds-draw { from { stroke-dashoffset: 100; } } .ds-field h1 { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: clamp(2.5rem,8.5vw,5.25rem); font-weight: 700; font-variation-settings: 'wdth' 88; letter-spacing: -0.03em; line-height: 0.94; text-wrap: balance; max-width: 14ch; margin: 0; } .ds-field p { font-family: 'Faustina Variable', ui-serif, Georgia, serif; font-size: clamp(1.0625rem,0.5vw + 0.95rem,1.25rem); line-height: 1.6; color: var(--color-field-mute, #bcd6d0); max-width: 34rem; text-wrap: pretty; margin: 0; } @media (prefers-reduced-motion: reduce) { .ds-field-enamel, .ds-field-mark { animation: none; } } .ds-field-sm { padding: clamp(2.25rem,5.5vw,3.75rem) clamp(1.5rem,5vw,3rem); gap: 1.125rem; } .ds-field-sm .ds-field-mark { width: clamp(34px,4vw,42px); height: clamp(34px,4vw,42px); color: var(--color-field-ink, #ece9e3); } .ds-field-sm h1 { font-size: clamp(1.875rem,4.5vw,3rem); font-weight: 660; font-variation-settings: 'wdth' 92; letter-spacing: -0.025em; line-height: 1.02; max-width: 20ch; } .ds-field-signal { --color-field: var(--color-field-signal, #342a6e); }"
+    },
+    {
+      "name": "Field (page header)",
+      "kind": "card",
+      "refersTo": "field-sm",
+      "description": "The same enamel plate at page-header scale, carrying the writing channel's violet enamel. Used by /blog/; /about/ uses the same markup without .ds-field-signal, on the teal source enamel.",
+      "html": "<div class=\"ds-field ds-field-sm ds-field-signal ds-ticked\"><i class=\"ds-field-enamel\" aria-hidden=\"true\"></i><svg class=\"ds-field-mark\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M4.5 4.5v15\" pathLength=\"100\"></path><path d=\"M9 5.5 20.5 12 9 18.5Z\" pathLength=\"100\"></path></svg><h1>Writing</h1></div>",
+      "css": ".ds-field { position: relative; isolation: isolate; color: var(--color-field-ink, #ece9e3); text-align: center; padding: clamp(3rem,8vw,6rem) clamp(1.5rem,6vw,4.5rem); display: flex; flex-direction: column; align-items: center; gap: clamp(1.5rem,3vw,2.25rem); } .ds-field-enamel { position: absolute; inset: 0; z-index: -1; background: var(--color-field, #0e5f57); animation: ds-field-in 620ms cubic-bezier(0.16,1,0.3,1) 100ms both; } @keyframes ds-field-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } } .ds-ticked::before, .ds-ticked::after, .ds-field-enamel::before, .ds-field-enamel::after { content: ''; position: absolute; width: 14px; height: 14px; border-color: currentColor; opacity: 0.55; pointer-events: none; } .ds-ticked::before { top: 10px; left: 10px; border-top: 1px solid; border-left: 1px solid; } .ds-ticked::after { bottom: 10px; right: 10px; border-bottom: 1px solid; border-right: 1px solid; } .ds-field-enamel::before { top: 10px; right: 10px; border-top: 1px solid; border-right: 1px solid; color: var(--color-field-ink, #ece9e3); } .ds-field-enamel::after { bottom: 10px; left: 10px; border-bottom: 1px solid; border-left: 1px solid; color: var(--color-field-ink, #ece9e3); } .ds-field-mark { display: block; width: clamp(56px,9vw,84px); height: clamp(56px,9vw,84px); color: var(--color-field-mark, #6fe0c2); stroke-dasharray: 100; stroke-dashoffset: 0; animation: ds-draw 900ms cubic-bezier(0.16,1,0.3,1) 260ms both; } @keyframes ds-draw { from { stroke-dashoffset: 100; } } .ds-field h1 { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: clamp(2.5rem,8.5vw,5.25rem); font-weight: 700; font-variation-settings: 'wdth' 88; letter-spacing: -0.03em; line-height: 0.94; text-wrap: balance; max-width: 14ch; margin: 0; } .ds-field p { font-family: 'Faustina Variable', ui-serif, Georgia, serif; font-size: clamp(1.0625rem,0.5vw + 0.95rem,1.25rem); line-height: 1.6; color: var(--color-field-mute, #bcd6d0); max-width: 34rem; text-wrap: pretty; margin: 0; } @media (prefers-reduced-motion: reduce) { .ds-field-enamel, .ds-field-mark { animation: none; } } .ds-field-sm { padding: clamp(2.25rem,5.5vw,3.75rem) clamp(1.5rem,5vw,3rem); gap: 1.125rem; } .ds-field-sm .ds-field-mark { width: clamp(34px,4vw,42px); height: clamp(34px,4vw,42px); color: var(--color-field-ink, #ece9e3); } .ds-field-sm h1 { font-size: clamp(1.875rem,4.5vw,3rem); font-weight: 660; font-variation-settings: 'wdth' 92; letter-spacing: -0.025em; line-height: 1.02; max-width: 20ch; } .ds-field-signal { --color-field: var(--color-field-signal, #342a6e); }"
+    },
+    {
+      "name": "Channel Row",
+      "kind": "card",
+      "refersTo": "channel",
+      "description": "A post entry: a row on a panel, not a card. The glyph and the hue come from one derivation off the post's tags, written to the row root as --color-ch. The date follows the title — a letterspaced uppercase line above a heading is a kicker, and this system does not ship one. A rule appears only between entries: .ds-channel:first-child drops its border-top and padding-top, because a hairline above the first item separates it from nothing.",
+      "html": "<li class=\"ds-channel\" style=\"--color-ch: #f2a93b\"><svg class=\"ds-channel-glyph\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M3 20.25h18\" pathLength=\"100\"></path><path d=\"M7.25 20.25v-5.5\" pathLength=\"100\"></path><path d=\"M12 20.25V6.5\" pathLength=\"100\"></path><path d=\"M16.75 20.25v-9\" pathLength=\"100\"></path><path d=\"M12 3.25v1.5\" pathLength=\"100\"></path></svg><h2><a href=\"/blog/two-hosts/\">I deployed the same site to two hosts and got two different URL structures</a></h2><p class=\"ds-channel-meta\"><span class=\"ds-tick\"></span><time datetime=\"2026-08-08\">August 8, 2026</time></p><p>What it cost, what broke, and the method behind every number.</p></li>",
+      "css": ".ds-channel:first-child { padding-top: 0; border-top: 0; } .ds-channel { list-style: none; display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; padding-top: clamp(2.5rem,5vw,4rem); border-top: 1px solid var(--color-engrave, #313c4a); } .ds-channel-glyph { display: block; width: 34px; height: 34px; color: var(--color-ch); } .ds-channel-meta { display: flex; align-items: center; gap: 0.75rem; font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.6875rem; font-weight: 620; font-variation-settings: 'wdth' 84; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-label, #97a2b1); margin: 0; } .ds-channel-meta .ds-tick { width: 18px; height: 1px; background: var(--color-ch); flex: none; } .ds-channel h2 { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: clamp(1.375rem,2.8vw,2rem); font-weight: 620; font-variation-settings: 'wdth' 94; letter-spacing: -0.02em; line-height: 1.12; text-wrap: balance; max-width: 24ch; margin: 0; } .ds-channel h2 a { color: var(--color-silk, #ece9e3); text-decoration: underline; text-decoration-color: var(--color-ch); text-decoration-thickness: 1px; text-underline-offset: 0.18em; transition: text-decoration-thickness 160ms linear; } .ds-channel h2 a:hover { text-decoration-thickness: 3px; } .ds-channel h2 a:focus-visible { outline: 2px solid var(--color-ch-meter, #f2a93b); outline-offset: 3px; } .ds-channel > p:last-child { font-family: 'Faustina Variable', ui-serif, Georgia, serif; font-size: 1.0625rem; line-height: 1.62; color: var(--color-label, #97a2b1); max-width: 34rem; text-wrap: pretty; margin: 0; }"
+    },
+    {
+      "name": "Panel Link",
+      "kind": "button",
+      "refersTo": "panel-link",
+      "description": "The system's entire button vocabulary: one outlined control, label text first, 15px directional glyph second. There is no filled button.",
+      "html": "<a class=\"ds-panel-link\" href=\"/blog/\"><span>All writing</span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M3.5 12h16\" pathLength=\"100\"></path><path d=\"m13.5 6 6 6-6 6\" pathLength=\"100\"></path></svg></a>",
+      "css": ".ds-panel-link { align-self: center; display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; border: 1px solid var(--color-engrave, #313c4a); border-radius: 0; background: transparent; color: var(--color-label, #97a2b1); text-decoration: none; font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.6875rem; font-weight: 620; font-variation-settings: 'wdth' 84; letter-spacing: 0.16em; text-transform: uppercase; transition: color 160ms linear, border-color 160ms linear; } .ds-panel-link svg { display: block; width: 15px; height: 15px; } .ds-panel-link:hover { color: var(--color-silk, #ece9e3); border-color: var(--color-ch-source, #2fbfa0); } .ds-panel-link:focus-visible { outline: 2px solid var(--color-ch-meter, #f2a93b); outline-offset: 3px; }"
+    },
+    {
+      "name": "Tags",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Printed labels on the post head. Not links, not filters — they have no hover and no selected state.",
+      "html": "<ul class=\"ds-tags\"><li>receipts</li><li>hosting</li><li>method</li></ul>",
+      "css": ".ds-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; } .ds-tags li { border: 1px solid var(--color-engrave, #313c4a); border-radius: 0; padding: 0.3125rem 0.625rem; font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.625rem; font-weight: 620; font-variation-settings: 'wdth' 84; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-label, #97a2b1); }"
+    },
+    {
+      "name": "Pending",
+      "kind": "custom",
+      "refersTo": "pending",
+      "description": "The panel's honest unpatched module and the system's only empty state. The design never fills a content gap with invented copy.",
+      "html": "<div class=\"ds-pending\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M2 12h9\" stroke-dasharray=\"2.5 3\" pathLength=\"100\"></path><circle cx=\"16.75\" cy=\"12\" r=\"5\" pathLength=\"100\"></circle><circle cx=\"16.75\" cy=\"12\" r=\"1.25\" pathLength=\"100\"></circle></svg><p>Bio pending — see TASK-005.</p></div>",
+      "css": ".ds-pending { width: 100%; max-width: 36rem; margin-inline: auto; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; text-align: center; padding: clamp(2.5rem,6vw,4.5rem) clamp(1.5rem,5vw,3rem); border: 1px solid var(--color-engrave, #313c4a); border-radius: 0; color: var(--color-label, #97a2b1); } .ds-pending svg { display: block; width: 30px; height: 30px; } .ds-pending p { font-family: 'Faustina Variable', ui-serif, Georgia, serif; font-size: 1.0625rem; line-height: 1.6; margin: 0; }"
+    },
+    {
+      "name": "Legend",
+      "kind": "custom",
+      "description": "The signature component: museum wayfinding printed on the panel. The glyphs are used in place across the site; this is the one surface where they are decoded.",
+      "html": "<section class=\"ds-legend\"><h2>Key</h2><ul class=\"ds-legend-set\"><li style=\"--color-ch: #2fbfa0\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10.25\" pathLength=\"100\"></circle><path d=\"M3.2 12c1.47-5.2 4.4-5.2 5.87 0s4.4 5.2 5.87 0 4.4-5.2 5.87 0\" pathLength=\"100\"></path></svg><span>Source</span></li><li style=\"--color-ch: #9a86f5\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M4.5 4.5v15\" pathLength=\"100\"></path><path d=\"M9 5.5 20.5 12 9 18.5Z\" pathLength=\"100\"></path></svg><span>Writing</span></li><li style=\"--color-ch: #f2a93b\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M3 20.25h18\" pathLength=\"100\"></path><path d=\"M7.25 20.25v-5.5\" pathLength=\"100\"></path><path d=\"M12 20.25V6.5\" pathLength=\"100\"></path><path d=\"M16.75 20.25v-9\" pathLength=\"100\"></path><path d=\"M12 3.25v1.5\" pathLength=\"100\"></path></svg><span>Measured</span></li></ul></section>",
+      "css": ".ds-legend { display: flex; flex-direction: column; align-items: center; gap: clamp(1.75rem,4vw,2.75rem); } .ds-legend > h2 { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.6875rem; font-weight: 620; font-variation-settings: 'wdth' 84; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-label, #97a2b1); margin: 0; } .ds-legend-set { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(1.75rem,4vw,3rem) clamp(1.25rem,4vw,3.5rem); width: 100%; max-width: 46rem; } .ds-legend-set li { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; } .ds-legend-set svg { display: block; width: 28px; height: 28px; color: var(--color-ch, var(--color-label, #97a2b1)); } .ds-legend-set span { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.625rem; font-weight: 620; font-variation-settings: 'wdth' 84; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-label, #97a2b1); } @media (max-width: 40rem) { .ds-legend-set { grid-template-columns: repeat(2, minmax(0,1fr)); } }"
+    },
+    {
+      "name": "Prose",
+      "kind": "custom",
+      "description": "The reading surface: Faustina at a 36rem measure, sectioned by a channel-coloured margin bar rather than a rule across the column.",
+      "html": "<div class=\"ds-prose\" style=\"--color-ch: #f2a93b\"><p>The first host kept the trailing slash. The second one dropped it, and every internal link I had written stopped agreeing with itself.</p><h2>What it actually cost</h2><p>Two deploys, one afternoon, and <a href=\"/blog/\">a number I had to correct in public</a>.</p><ul><li>Host A: $16.18 for the month.</li><li>Host B: $0, with a caveat.</li></ul><blockquote>Every published number carries its method.</blockquote><pre><code>astro build --site https://thetoken.dad</code></pre></div>",
+      "css": ".ds-prose { width: 100%; max-width: 36rem; margin-inline: auto; font-family: 'Faustina Variable', ui-serif, Georgia, serif; font-size: clamp(1.0625rem,0.35vw + 1rem,1.1875rem); line-height: 1.72; color: var(--color-silk, #ece9e3); text-wrap: pretty; } .ds-prose > * + * { margin-top: 1.4em; } .ds-prose h2 { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: clamp(1.25rem,2vw,1.5rem); font-weight: 650; font-variation-settings: 'wdth' 94; letter-spacing: -0.015em; line-height: 1.2; margin-top: 2.75em; position: relative; text-wrap: balance; } .ds-prose h2::before { content: ''; position: absolute; left: -1.25rem; top: 0.55em; width: 3px; height: 0.85em; background: var(--color-ch, var(--color-ch-source, #2fbfa0)); } .ds-prose h2 + *, .ds-prose h3 + * { margin-top: 0.85em; } .ds-prose h3 { font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 1.125rem; font-weight: 680; font-variation-settings: 'wdth' 94; letter-spacing: -0.01em; margin-top: 2.25em; color: var(--color-silk, #ece9e3); } .ds-prose table { width: 100%; border-collapse: collapse; font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.875rem; font-variant-numeric: tabular-nums; } @media (max-width: 40rem) { .ds-prose table { display: block; width: fit-content; min-width: 100%; overflow-x: auto; } } .ds-prose a { color: var(--color-silk, #ece9e3); text-decoration: underline; text-decoration-color: var(--color-ch, var(--color-ch-source, #2fbfa0)); text-decoration-thickness: 1px; text-underline-offset: 0.2em; transition: text-decoration-thickness 140ms linear; } .ds-prose a:hover { text-decoration-thickness: 3px; } .ds-prose ul { list-style: none; padding-left: 1.5rem; } .ds-prose ul > li { position: relative; } .ds-prose ul > li::before { content: ''; position: absolute; left: -1.25rem; top: 0.72em; width: 8px; height: 1px; background: var(--color-ch, var(--color-ch-source, #2fbfa0)); } .ds-prose li + li { margin-top: 0.5em; } .ds-prose blockquote { border-left: 1px solid var(--color-ch, var(--color-ch-source, #2fbfa0)); padding-left: 1.5rem; color: var(--color-label, #97a2b1); font-style: italic; } .ds-prose pre { background: #12171f; border: 1px solid #2b3542; color: #e6e3dd; padding: 1.125rem 1.25rem; overflow-x: auto; font-size: 0.8125rem; line-height: 1.6; border-radius: 0; } .ds-prose pre code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: none; border: 0; padding: 0; font-size: inherit; } @media (max-width: 40rem) { .ds-prose h2::before { left: -0.875rem; width: 2px; } }"
+    },
+    {
+      "name": "Ground",
+      "kind": "nav",
+      "refersTo": "ground",
+      "description": "The footer plate: a ground glyph and the copyright on the left, RSS and an outbound link on the right, both in silkscreen caps.",
+      "html": "<footer class=\"ds-ground\"><div class=\"ds-ground-in\"><p class=\"ds-ground-mark\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M12 3.5v8.5\" pathLength=\"100\"></path><path d=\"M4 12h16\" pathLength=\"100\"></path><path d=\"M7 16.25h10\" pathLength=\"100\"></path><path d=\"M10 20.5h4\" pathLength=\"100\"></path></svg><span>© 2026 The Token Dad</span></p><div class=\"ds-ground-links\"><a href=\"/rss.xml\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M4.5 4.5c8.28 0 15 6.72 15 15\" pathLength=\"100\"></path><path d=\"M4.5 11c4.7 0 8.5 3.8 8.5 8.5\" pathLength=\"100\"></path><circle cx=\"5.5\" cy=\"18.5\" r=\"1.5\" pathLength=\"100\"></circle></svg><span>RSS</span></a><a href=\"https://instagram.com/thetokendad\" rel=\"me noopener\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M11.5 4.5H4.5v15h15v-7\" pathLength=\"100\"></path><path d=\"M14.5 4.5h5v5\" pathLength=\"100\"></path><path d=\"M19.5 4.5 11 13\" pathLength=\"100\"></path></svg><span>Instagram</span></a></div></div></footer>",
+      "css": ".ds-ground { border-top: 1px solid var(--color-engrave, #313c4a); padding-block: 2rem; background: var(--color-panel, #14181e); } .ds-ground-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem; } .ds-ground-mark { display: flex; align-items: center; gap: 0.75rem; font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.6875rem; font-weight: 620; font-variation-settings: 'wdth' 84; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-label, #97a2b1); margin: 0; } .ds-ground-mark svg { display: block; width: 20px; height: 20px; } .ds-ground-links { display: flex; align-items: center; gap: 1.5rem; } .ds-ground-links a { display: flex; align-items: center; gap: 0.5rem; font-family: 'Archivo Variable', ui-sans-serif, sans-serif; font-size: 0.6875rem; font-weight: 620; font-variation-settings: 'wdth' 84; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-label, #97a2b1); text-decoration: none; transition: color 140ms linear; } .ds-ground-links a svg { display: block; width: 15px; height: 15px; } .ds-ground-links a:hover { color: var(--color-silk, #ece9e3); } .ds-ground-links a:focus-visible { outline: 2px solid var(--color-ch-meter, #f2a93b); outline-offset: 3px; } @media (max-width: 40rem) { .ds-ground-in { flex-direction: column; align-items: flex-start; gap: 1.5rem; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrument Faceplate",
+    "overview": "The site is a panel off a piece of well-made equipment: a dark enamelled board, silkscreened micro-caps, hairlines engraved rather than drawn, saturated colour used as code rather than as decoration, and a printed legend that teaches the reader the symbols before the words. Density lives in the *production* — the labels, the registration ticks, the coded channels, the authored symbol set. The *listening* stays unhurried: gallery-scale spacing, symmetric centred composition, one authored moment on arrival and then complete stillness. The reader is a tired parent, not a student; the panel does the signalling so the prose does not have to. All four page types open on the same enamel plate, so no surface arrives on bare board.\n\nThe world is deliberately positioned against two references, and both refusals are load-bearing. It refuses **the dated blog column** — display serif masthead, hairline rule under a kicker, a list of dated links — because that shape reads as a publication rather than a person. It equally refuses **the terminal mono grid**, the opposite cliché, where monospace is worn as a costume to signal technical credibility. Here monospace exists in exactly one place: inside actual code, on a lit readout that never changes with the theme. Everything else that looks technical is a real drawn symbol or a real hairline.\n\nThere are two themes and neither is a tint of the other. **Both themes drench the plate; what flips is the value relationship** — the dark theme lays light ink on a deep enamel, the light theme lays dark ink on a pale one. The channel hues are re-picked for a pale board rather than lightened copies of the dark set. One thing is genuinely fixed across both: the readout, because a code block does not change when you turn the room lights on. The three ribbon bays are re-picked like everything else, but they stay fully saturated rather than being muted for legibility, because they carry no text. (The stylesheet comment claims the bays do not change; the tokens say otherwise, and the tokens are the build.)",
+    "keyCharacteristics": [
+      "Flat by construction: no gradient, no glow, no shadow, no blur, no border-radius anywhere in the system.",
+      "Structure is carried entirely by 1px engraved hairlines, generous vertical air, and centred symmetry.",
+      "Two variable faces, one voice each: Archivo for every printed panel label from 10px caps to the 84px title, Faustina for every word the reader actually reads.",
+      "Colour is a code, not a palette: a post's tags derive its glyph and its hue together, so shape and hue always agree — and the three-bay ribbon at the top of every page carries the same three channel hues in the printed Key's own order.",
+      "Nine authored SVG glyphs on a shared 24×24 grid, decoded in a printed Key on the home page.",
+      "Every page type opens on the enamel plate: the hero at display scale, the blog index and About at page-header scale.",
+      "One arrival animation in three staged parts, then the site is still — nothing animates on scroll, and hover changes only colour and stroke weight."
+    ],
+    "rules": [
+      {
+        "name": "The Agreement Rule",
+        "body": "A post's channel is derived from its own tags, and the derivation returns the glyph and the colour together, from one function, in one place: `tags.includes('receipts')` → `g-meter` + `ch-meter`; else `tags.includes('genesis')` → `g-source` + `ch-source`; else `g-signal` + `ch-signal`. The result is written to the row's root as an inline `--color-ch` custom property, and every coded element on that row reads `var(--color-ch)`. Shape and hue always agree, so the code never depends on colour alone, and a colour-blind reader loses nothing. Never introduce a channel colour without its glyph, and never let a surface pick a channel hue independently of the glyph it shows. Section heads obey the same rule: `.head svg` reads `var(--color-ch, var(--color-label))`, so a head that names a channel sets `--color-ch` inline and its glyph matches the Key at the point of use, not only inside the Key.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Field Rule",
+        "body": "Exactly one drenched colour field exists **per page** — the home hero at display scale, the blog index and About headers at page-header scale via `.field-sm`. It is always the page's opening surface, never a mid-page band, and every surface below it is `panel` with hairlines on it. A second field on the same page would make the first stop meaning anything.",
+        "section": "colors"
+      },
+      {
+        "name": "The Coded Enamel Rule",
+        "body": "A plate's enamel *is* its channel code. The home page and About are the source channel and take `field`; the writing index is the writing channel and takes `field-signal` via the `.field-signal` modifier. Because the plate has already stated the hue, the glyph on a coded enamel is knocked out in `field-ink` and never re-states it — only the home hero's mark carries `field-mark`. A new page type picks its enamel from its channel, never for variety.",
+        "section": "colors"
+      },
+      {
+        "name": "The Fixed Readout Rule",
+        "body": "Code blocks do not theme. The eight `readout-*` tokens are declared once, in the base `@theme` block, and never re-declared in a light-theme block. A future surface that is genuinely an instrument display (a log, a meter, a terminal capture) may join them; ordinary content may not.",
+        "section": "colors"
+      },
+      {
+        "name": "The Saturated Bay Rule",
+        "body": "The ribbon's three bays are re-picked for the light board like every other themed token, but they keep their full saturation because they carry no text and therefore have no contrast obligation. There is one bay per coded channel, in the Key's order — source, writing, measured — so adding a bay means adding a channel, and adding a channel means authoring its glyph. Every token that *does* carry or sit behind text is re-picked for the pale board rather than lightened.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Printed Voice Rule",
+        "body": "The panel has exactly one sans face and it is used at every printed size, 10px to 84px, differentiated by width axis and tracking rather than by swapping families. Do not add a third family. Do not reach for a display face for the title — the title is Archivo at `wdth` 88.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono-Is-Code Rule",
+        "body": "Monospace appears only inside `code`. It is never used for labels, metadata, nav, timestamps, tags, or headings, because monospace-as-costume is exactly the cliché this world refuses. If something needs to look technical, give it a glyph and a hairline, not a mono font.",
+        "section": "typography"
+      },
+      {
+        "name": "The Width-Tracks-Size Rule",
+        "body": "Width and tracking move in opposite directions to size. Big type goes narrower and tighter (`wdth` 88, tracking `-0.03em`); small caps go narrowest and widest (`wdth` 84, tracking `0.14`–`0.22em`). The mid-scale titles sit at `wdth` 92–94. A new role picks its `wdth` by where it falls on that ramp, not arbitrarily.",
+        "section": "typography"
+      },
+      {
+        "name": "The Narrow Band Rule",
+        "body": "The whole system lives in `wdth` 84–94 of an axis that runs 62–125. The condensed grade is a nudge that makes tight labels sit right, not a costume: never reach below 84 for effect, and never let a role's width be chosen for variety rather than by the ramp above.",
+        "section": "typography"
+      },
+      {
+        "name": "The Serif-Reads Rule",
+        "body": "Every string the reader actually *reads* — lede, description, post body, empty-state sentence — is Faustina. Every string that *labels* something is Archivo caps. Headings are the exception that proves it: they are Archivo, and prose `h3` is Archivo in sentence case at `silk`, because a heading labels and is read at once. If a new element is ambiguous, ask whether a reader would read it aloud.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Kicker Rule",
+        "body": "Letterspaced uppercase metadata never sits above the heading it belongs to. The date row (`.channel-meta`) renders *after* the `h2` on both index surfaces and after the `h1` in the post head — a small caps line stacked above a title is a kicker, and this system does not ship one.",
+        "section": "typography"
+      },
+      {
+        "name": "The Centred Panel Rule",
+        "body": "Every block on the site is centred on the measure and internally centre-aligned, except prose body copy, table cells, and the footer's two flex ends. A left-aligned marketing section would read as a different site.",
+        "section": "layout"
+      },
+      {
+        "name": "The Air-Before-Rule Rule",
+        "body": "Separation is achieved by space first and a hairline second. A `.channel` row carries `clamp(2.5rem, 5vw, 4rem)` of padding above its 1px rule and the same again as gap below the previous row — the rule is a registration mark on the air, not a divider doing the work. A separator therefore only ever appears *between* siblings: `.channel:first-child` zeroes its own rule and padding, because a hairline above the first item separates it from nothing.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Board Rule",
+        "body": "Nothing on this site casts, glows, blurs or lifts. If a new element seems to need separation, it gets a hairline, more air, or the `plate` tone — in that order. A shadow would immediately break the faceplate reading, because a faceplate is a single machined surface.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Authored Symbol Rule",
+        "body": "Every symbol on this site is drawn in this repo on the 24×24 / 1.75-stroke / `pathLength=100` grid. No unicode arrows, no emoji, no icon font, no third-party icon package. A new symbol is authored into the sprite to that grammar, or it does not ship.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Inherited Colour Rule",
+        "body": "A glyph never carries its own colour. It inherits `currentColor` from a host that sets `color`, which is what lets one `<symbol>` appear as `ch-meter` on one row, `label` in the footer, and `field-mark` on a page plate without duplication. Every host that can name a channel resolves it the same way — `var(--color-ch, …)` with a neutral fallback — so a glyph on a channelled surface is always the Key's colour and a glyph on a neutral one is always `label`.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Square Corner Rule",
+        "body": "Radius is zero and stroke caps are butt. A rounded corner or a rounded cap anywhere reads as a different, softer product.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** derive a post's glyph and its channel colour from one function reading the post's own tags, and write the result to the row root as an inline `--color-ch`. Shape and hue always agree.",
+      "**Do** keep every symbol on the 24×24 / `stroke-width: 1.75` / `pathLength=\"100\"` grid with default butt caps and miter joins, authored into the `BaseLayout.astro` sprite and referenced by `<use>`.",
+      "**Do** colour glyphs by setting `color` on the host `<svg>` and letting `currentColor` inherit.",
+      "**Do** separate blocks with air first and a single 1px `engrave` hairline second, on one edge only.",
+      "**Do** keep the whole panel in one sans face, differentiating roles with the `wdth` axis (84 for micro-caps, 88–94 for headings) and tracking (`0.14`–`0.22em` for caps, `-0.015` to `-0.03em` for headings) rather than by adding a family.",
+      "**Do** set every string a reader actually reads in Faustina, and every string that labels something in Archivo uppercase caps.",
+      "**Do** keep prose at the 36rem measure and the lede at 34rem, both centred.",
+      "**Do** get all inline spacing from `flex` + `gap`; the build strips whitespace between adjacent inline elements.",
+      "**Do** state a content gap honestly with the `.pending` block and the `g-patched` glyph, naming where the missing work is tracked.",
+      "**Do** keep the `readout-*` tokens out of both light-theme blocks; a lit display does not change with the room.",
+      "**Do** re-pick every themed hue for the pale board rather than lightening the dark value, and keep the three ribbon bays saturated when you do — they carry no text and so have no contrast obligation. Only the eight `readout-*` tokens skip the light block entirely.",
+      "**Do** give a link its underline at rest and let hover only thicken it (1px → 3px). Hover may change a colour, a border colour or a stroke weight; it may not be the first moment a link looks like a link.",
+      "**Do** open every page on the enamel plate — `.field` at display scale for the home hero, `.field field-sm` at page-header scale for everything else — and pick its enamel from the page's channel, adding `.field-signal` for the writing channel.",
+      "**Do** put the date row *after* the heading it belongs to, on every surface that has one.",
+      "**Do** keep the three `channelOf` copies byte-identical, and delete two of them the moment `src/lib/` comes into the permitted file set."
+    ],
+    "donts": [
+      "**Don't** add `border-radius` anywhere. Radius is zero by construction and there is no radius token.",
+      "**Don't** add `box-shadow`, `text-shadow`, `filter`, `backdrop-filter`, a gradient, or a glow. The system has no elevation at all; use a hairline, more air, or the `plate` tone.",
+      "**Don't** use monospace outside `code`. No mono labels, no mono timestamps, no mono nav — monospace-as-costume is a refused reference.",
+      "**Don't** ship a unicode arrow, an emoji, an icon font, or a third-party icon package. Author the symbol into the sprite or drop it.",
+      "**Don't** put a second drenched field on one page, or use a field anywhere but as the page's opening surface.",
+      "**Don't** introduce a filled button. The only control surface is the outlined `.panel-link`; extra weight comes from a channel-coloured border, never a solid fill.",
+      "**Don't** wrap post rows in cards, boxes, or backgrounds. They are rows on a panel with a hairline above them.",
+      "**Don't** section prose with a rule across the column. Use the `h2` channel bar; `hr` is content, not structure.",
+      "**Don't** signal state with colour alone — a channel colour always arrives with its glyph, in section heads as well as in rows.",
+      "**Don't** stack letterspaced uppercase metadata above a heading. That is a kicker, and this system does not ship one.",
+      "**Don't** set a subheading quieter than the text it heads — `h3` is 18px / 680 / `silk`, not a `label`-coloured micro-cap.",
+      "**Don't** add a colour token without a consumer. The palette is 24 colour tokens and all 24 are referenced; a reserved swatch is a decoration waiting to happen.",
+      "**Don't** re-state a plate's hue in its glyph. On a coded enamel the mark is knocked out in `field-ink`; only the home hero carries `field-mark`.",
+      "**Don't** add an animation. The site has exactly one authored moment, replayed at each page's plate, and is otherwise still: nothing animates on scroll and nothing moves on hover.",
+      "**Don't** left-align a section. Everything is centred on the measure.",
+      "**Don't** fill a content gap with invented copy or placeholder prose.",
+      "**Don't** re-declare a `readout-*` token in a theme block, and don't re-key the highlighter remap without re-deriving it from the highlighter's actual output hexes.",
+      "**Don't** add a breakpoint. Two `max-width` queries (40rem, 30rem) exist for real overflow; everything else is `clamp()`.",
+      "**Don't** widen Tailwind's `@source` glob beyond `src/`. With `source(none)` removed or the glob loosened, naming a utility in prose ships it — this file's own ban list once minted `gradient`, `drop-shadow` and `blur`.",
+      "**Don't** reach outside `wdth` 84–94. The rest of the axis is headroom, not a range to explore.",
+      "**Don't** rule above the first item in a list. `.channel:first-child` carries no `border-top` and no `padding-top`."
+    ]
+  }
+}
