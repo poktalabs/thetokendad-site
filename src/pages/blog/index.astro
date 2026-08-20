@@ -8,19 +8,51 @@ const posts = await getPublishedPosts();
 ---
 
 <BaseLayout title={`Writing · ${SITE_TITLE}`} description="Posts from The Token Dad.">
-  <h1>Writing</h1>
+  <div class="mx-auto max-w-shell px-6 pt-16 pb-24 md:px-10 md:pt-24 md:pb-32">
+    <!-- Three bars inside the circle: the collection of writing. One bar, on a
+         post page, is one piece of it. -->
+    <header class="text-center">
+      <svg
+        class="mark mark-lg draw mx-auto size-14 text-accent"
+        viewBox="0 0 24 24"
+        role="img"
+        aria-label="Writing"
+      >
+        <circle cx="12" cy="12" r="8.25" pathLength="1" data-draw></circle>
+        <line x1="7.4" y1="9.4" x2="16.6" y2="9.4" pathLength="1" data-draw></line>
+        <line x1="7.4" y1="12" x2="16.6" y2="12" pathLength="1" data-draw></line>
+        <line x1="7.4" y1="14.6" x2="13.4" y2="14.6" pathLength="1" data-draw></line>
+      </svg>
 
-  {posts.length === 0 ? (
-    <p>Nothing published yet.</p>
-  ) : (
-    <ul>
-      {posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-          <FormattedDate date={post.data.pubDate} />
-          <p>{post.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  )}
+      <h1
+        class="rise rise-1 mt-8 font-display text-[clamp(2rem,6vw,3rem)] leading-[1.05] font-semibold tracking-[-0.02em] font-stretch-[116%]"
+      >
+        Writing
+      </h1>
+    </header>
+
+    {
+      posts.length === 0 ? (
+        <p class="mx-auto mt-16 max-w-measure text-center text-muted">
+          Nothing published yet.
+        </p>
+      ) : (
+        <ul class="mx-auto mt-20 max-w-measure md:mt-24">
+          {posts.map((post, index) => (
+            <li class={index > 0 ? 'mt-12 border-t border-rule pt-12' : ''}>
+              <p class="label">
+                <FormattedDate date={post.data.pubDate} />
+              </p>
+              <h2 class="mt-4 font-display text-2xl leading-[1.15] text-balance font-semibold tracking-[-0.01em] font-stretch-[108%]">
+                <a href={`/blog/${post.id}/`} class="link-title">
+                  {post.data.title}
+                </a>
+              </h2>
+              <p class="mt-4 text-base text-muted">{post.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
 </BaseLayout>

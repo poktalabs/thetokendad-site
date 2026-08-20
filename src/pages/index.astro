@@ -8,26 +8,71 @@ const posts = (await getPublishedPosts()).slice(0, 5);
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <section>
-    <h1>{SITE_TITLE}</h1>
-    <p>{SITE_DESCRIPTION}</p>
+  <!-- The arrival. The origin mark draws itself once, the name and the line
+       behind it rise, and then the page is still. -->
+  <section class="mx-auto max-w-shell px-6 pt-16 pb-24 text-center md:px-10 md:pt-24 md:pb-36">
+    <svg
+      class="mark mark-lg draw mx-auto size-20 text-accent md:size-24"
+      viewBox="0 0 24 24"
+      role="img"
+      aria-label="The Token Dad"
+    >
+      <circle cx="12" cy="12" r="8.25" pathLength="1" data-draw></circle>
+      <circle cx="12" cy="12" r="2.3" data-solid></circle>
+    </svg>
+
+    <h1
+      class="rise rise-1 mt-10 font-display text-[clamp(2.5rem,8vw,4rem)] leading-[0.98] font-semibold tracking-[-0.02em] font-stretch-[116%] md:mt-12"
+    >
+      {SITE_TITLE}
+    </h1>
+
+    <p class="rise rise-2 mx-auto mt-7 max-w-[34rem] text-base text-balance text-muted md:text-lg">
+      {SITE_DESCRIPTION}
+    </p>
+
+    <p class="rise rise-3 mt-10">
+      <a href="/blog/" class="link inline-flex items-baseline gap-2">
+        <span>Read the writing</span>
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </p>
   </section>
 
-  <section>
-    <h2>Writing</h2>
-    {posts.length === 0 ? (
-      <p>Nothing published yet.</p>
-    ) : (
-      <ul>
-        {posts.map((post) => (
-          <li>
-            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-            <FormattedDate date={post.data.pubDate} />
-            <p>{post.data.description}</p>
-          </li>
-        ))}
-      </ul>
-    )}
-    <a href="/blog/">All writing</a>
+  <section class="border-t border-rule">
+    <div class="mx-auto max-w-shell px-6 py-16 md:px-10 md:py-24">
+      <h2 class="label">Writing</h2>
+
+      {
+        posts.length === 0 ? (
+          <p class="mt-8 max-w-measure text-muted">Nothing published yet.</p>
+        ) : (
+          <ul class="mt-10 md:mt-14">
+            {posts.map((post, index) => (
+              <li class={index > 0 ? 'mt-10 border-t border-rule pt-10' : ''}>
+                <p class="label">
+                  <FormattedDate date={post.data.pubDate} />
+                </p>
+                <h3
+                  class:list={[
+                    'mt-4 font-display font-semibold tracking-[-0.01em] text-balance font-stretch-[108%]',
+                    index === 0
+                      ? 'max-w-[22ch] text-2xl leading-[1.12] md:text-3xl'
+                      : 'max-w-[26ch] text-xl leading-[1.2]',
+                  ]}
+                >
+                  <a href={`/blog/${post.id}/`} class="link-title">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p class="mt-4 max-w-measure text-base text-muted">
+                  {post.data.description}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
   </section>
 </BaseLayout>

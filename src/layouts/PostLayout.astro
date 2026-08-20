@@ -14,18 +14,83 @@ const { title, description, pubDate, updatedDate, tags } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
-  <article>
-    <h1>{title}</h1>
-    <p>
-      <FormattedDate date={pubDate} />
-      {updatedDate && (<span> · updated <FormattedDate date={updatedDate} /></span>)}
-    </p>
-    {tags.length > 0 && (
-      <ul>
-        {tags.map((tag) => (<li>{tag}</li>))}
-      </ul>
-    )}
+  <article class="mx-auto max-w-shell px-6 pt-16 pb-24 md:px-10 md:pt-20 md:pb-32">
+    <header class="text-center">
+      <!-- One dot and one bar: a single item out of the list. The index carries
+           the list itself, three bars. A single centred bar was the first try
+           and it read as a "no entry" sign, so it lost the argument. -->
+      <svg
+        class="mark mark-lg draw mx-auto size-11 text-accent"
+        viewBox="0 0 24 24"
+        role="img"
+        aria-label="A post"
+      >
+        <circle cx="12" cy="12" r="8.25" pathLength="1" data-draw></circle>
+        <circle cx="9.1" cy="12" r="1.15" data-solid></circle>
+        <line x1="11.6" y1="12" x2="16.5" y2="12" pathLength="1" data-draw></line>
+      </svg>
 
-    <slot />
+      <h1
+        class="rise rise-1 mx-auto mt-8 max-w-[24ch] text-balance font-display text-[clamp(1.85rem,4.6vw,2.65rem)] leading-[1.12] font-semibold tracking-[-0.02em] font-stretch-[112%]"
+      >
+        {title}
+      </h1>
+
+      <!-- The attribute marks. A filled circle is published, a diamond is
+           updated. Both carry the word for anyone the mark does not reach. -->
+      <div
+        class="rise rise-2 mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-3"
+      >
+        <p class="label flex items-center gap-2.5">
+          <svg class="mark-attr size-[9px] text-accent" viewBox="0 0 12 12" aria-hidden="true">
+            <circle cx="6" cy="6" r="3.4"></circle>
+          </svg>
+          <span class="sr-only">Published</span>
+          <FormattedDate date={pubDate} />
+        </p>
+
+        {
+          updatedDate && (
+            <p class="label flex items-center gap-2.5">
+              <svg class="mark-attr size-[10px] text-accent" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="M6 2.1 9.9 6 6 9.9 2.1 6Z" />
+              </svg>
+              <span class="sr-only">Updated</span>
+              <FormattedDate date={updatedDate} />
+            </p>
+          )
+        }
+      </div>
+
+      {
+        tags.length > 0 && (
+          <ul class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {tags.map((tag, index) => (
+              <li
+                class:list={[
+                  'label',
+                  index < tags.length - 1 && 'border-r border-rule pr-4',
+                ]}
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <hr class="mx-auto mt-14 max-w-measure border-0 border-t border-rule md:mt-16" />
+
+    <div class="prose mx-auto mt-14 max-w-measure md:mt-16">
+      <slot />
+    </div>
+
+    <footer class="mx-auto mt-20 max-w-measure border-t border-rule pt-10 md:mt-24">
+      <a href="/blog/" class="link inline-flex items-baseline gap-2">
+        <span aria-hidden="true">&larr;</span>
+        <span>Writing</span>
+      </a>
+    </footer>
   </article>
 </BaseLayout>

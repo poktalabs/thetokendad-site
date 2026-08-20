@@ -4,9 +4,129 @@ import { SITE_TITLE } from '../consts';
 
 // CONTENT PENDING — the bio is blocked on TASK-005 (brand basics).
 // The route exists so the structure is real; the prose is Mel's to write.
+//
+// Design note: the bio copy is not invented here. The page is composed as an
+// honest empty state, and it carries the one thing that genuinely belongs on it
+// today: the key to the marks the rest of the site navigates by. A museum puts
+// the legend on the wall by the door.
+//
+// Two groups, because the grammar of the system is exactly this split: a mark
+// inside a circle names a place you can go to, a bare mark qualifies something
+// you are looking at. Interleaving them in one grid hid that, so they are two
+// lists with air between them rather than one list with rules through it.
+const places = [
+  { label: 'Home', kind: 'origin' },
+  { label: 'Writing', kind: 'writing' },
+  { label: 'A post', kind: 'entry' },
+  { label: 'About', kind: 'self' },
+  { label: 'Feed', kind: 'feed' },
+] as const;
+
+const attributes = [
+  { label: 'Published', kind: 'published' },
+  { label: 'Updated', kind: 'updated' },
+] as const;
 ---
 
 <BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is.">
-  <h1>About</h1>
-  <p>Bio pending — see TASK-005.</p>
+  <div class="mx-auto max-w-shell px-6 pt-16 pb-24 md:px-10 md:pt-24 md:pb-32">
+    <header class="text-center">
+      <!-- A figure inside the circle: the person. -->
+      <svg
+        class="mark mark-lg draw mx-auto size-14 text-accent"
+        viewBox="0 0 24 24"
+        role="img"
+        aria-label="About"
+      >
+        <circle cx="12" cy="12" r="8.25" pathLength="1" data-draw></circle>
+        <circle cx="12" cy="9.5" r="2.35" pathLength="1" data-draw></circle>
+        <path d="M7.5 18.1a4.5 4.5 0 0 1 9 0" pathLength="1" data-draw></path>
+      </svg>
+
+      <h1
+        class="rise rise-1 mt-8 font-display text-[clamp(2rem,6vw,3rem)] leading-[1.05] font-semibold tracking-[-0.02em] font-stretch-[116%]"
+      >
+        About
+      </h1>
+
+      <p class="rise rise-2 mx-auto mt-8 max-w-[34rem] text-base text-balance text-muted md:text-lg">
+        Bio pending — see TASK-005.
+      </p>
+    </header>
+
+    <section class="mt-24 border-t border-rule pt-16 md:mt-32 md:pt-20">
+      <h2 class="label text-center">A key to the marks</h2>
+
+      <div class="mx-auto mt-14 flex w-fit flex-col gap-14">
+        <ul class="flex flex-col gap-7">
+          {
+            places.map((mark) => (
+              <li class="flex items-center gap-6">
+                <span class="flex size-7 shrink-0 items-center justify-center text-accent">
+                  {mark.kind === 'origin' && (
+                    <svg class="mark size-7" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="12" r="8.25" />
+                      <circle cx="12" cy="12" r="2.3" data-solid />
+                    </svg>
+                  )}
+                  {mark.kind === 'writing' && (
+                    <svg class="mark size-7" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="12" r="8.25" />
+                      <line x1="7.4" y1="9.4" x2="16.6" y2="9.4" />
+                      <line x1="7.4" y1="12" x2="16.6" y2="12" />
+                      <line x1="7.4" y1="14.6" x2="13.4" y2="14.6" />
+                    </svg>
+                  )}
+                  {mark.kind === 'entry' && (
+                    <svg class="mark size-7" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="12" r="8.25" />
+                      <circle cx="9.1" cy="12" r="1.15" data-solid />
+                      <line x1="11.6" y1="12" x2="16.5" y2="12" />
+                    </svg>
+                  )}
+                  {mark.kind === 'self' && (
+                    <svg class="mark size-7" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="12" r="8.25" />
+                      <circle cx="12" cy="9.5" r="2.35" />
+                      <path d="M7.5 18.1a4.5 4.5 0 0 1 9 0" />
+                    </svg>
+                  )}
+                  {mark.kind === 'feed' && (
+                    <svg class="mark size-7" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="8.6" cy="15.6" r="1.35" data-solid />
+                      <path d="M8.4 11.2a4.4 4.4 0 0 1 4.4 4.4" />
+                      <path d="M8.4 7.6a8 8 0 0 1 8 8" />
+                    </svg>
+                  )}
+                </span>
+                <span class="label">{mark.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <ul class="flex flex-col gap-7">
+          {
+            attributes.map((mark) => (
+              <li class="flex items-center gap-6">
+                <span class="flex size-7 shrink-0 items-center justify-center text-accent">
+                  {mark.kind === 'published' && (
+                    <svg class="mark-attr size-3" viewBox="0 0 12 12" aria-hidden="true">
+                      <circle cx="6" cy="6" r="3.4" />
+                    </svg>
+                  )}
+                  {mark.kind === 'updated' && (
+                    <svg class="mark-attr size-[13px]" viewBox="0 0 12 12" aria-hidden="true">
+                      <path d="M6 2.1 9.9 6 6 9.9 2.1 6Z" />
+                    </svg>
+                  )}
+                </span>
+                <span class="label">{mark.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </div>
 </BaseLayout>

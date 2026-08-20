@@ -1,17 +1,498 @@
 @import 'tailwindcss';
 
-/*
-  DESIGN IS DELIBERATELY ABSENT.
+/* Typefaces. Loaded from local packages, never from a CDN link tag.
+   - Archivo Variable carries a width axis (62%-125%), which is the whole point:
+     the display voice is an expanded grotesque, the signage lineage this site
+     borrows from. `wdth.css` is the only entry point that ships that axis.
+   - Literata Variable is the reading face. It was drawn for long-form reading
+     on screens, which is what the primary surface of this site actually is.
+     `wght.css` (not `opsz.css`) keeps the latin payload at ~52KB per style.
+   - Geist Mono Variable carries numbers, code and metadata marks. */
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/literata/wght.css';
+@import '@fontsource-variable/literata/wght-italic.css';
+@import '@fontsource-variable/geist-mono/wght.css';
 
-  This file carries no visual direction on purpose. The canvas's look is being
-  designed by hand (Mel, via /impeccable) on top of this scaffold, and anything
-  opinionated here would just be work to undo.
+/* ---------------------------------------------------------------------------
+   TOKENS
 
-  What goes here when design lands: a Tailwind 4 `@theme` block with the brand
-  tokens (colors, type scale, fonts), plus any base element styles.
+   `static` is deliberate. Without it Tailwind tree-shakes theme variables that
+   no utility references, and the light-theme overrides below would then reassign
+   variables that never got emitted, silently dropping half the palette.
 
-  @theme {
-    --color-*: ...;
-    --font-*: ...;
+   Values are the DARK theme. Dark is the real one here; light is a second theme
+   with its own decisions, applied further down, not an inversion of these.
+   --------------------------------------------------------------------------- */
+@theme static {
+  /* Ground and ink. Deep petrol, warm ivory. No pure black, no pure white. */
+  --color-surface: oklch(0.215 0.021 195);
+  --color-raised: oklch(0.262 0.021 195);
+  --color-ink: oklch(0.945 0.012 85);
+  --color-muted: oklch(0.74 0.018 195);
+  --color-rule: oklch(0.345 0.021 195);
+
+  /* One accent, locked for the whole site: amber against the petrol ground. */
+  --color-accent: oklch(0.8 0.145 78);
+
+  --font-display: 'Archivo Variable', ui-sans-serif, sans-serif;
+  --font-prose: 'Literata Variable', Georgia, serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1.4;
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.6;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.7;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.75;
+  --text-xl: 1.4375rem;
+  --text-xl--line-height: 1.4;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 1.25;
+  --text-3xl: 2.25rem;
+  --text-3xl--line-height: 1.15;
+
+  /* Two widths only: the shell everything sits in, and the reading measure. */
+  --container-shell: 64rem;
+  --container-measure: 38rem;
+
+  /* One radius, near-sharp, everywhere. Geometry, not softness. */
+  --radius-mark: 3px;
+
+  --ease-authored: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light theme. Its own decisions: a gallery-plaster ground rather than an
+   inverted petrol, and a bronze accent rather than the dark theme's amber,
+   because amber cannot hold 4.5:1 against plaster and a link has to be read. */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-surface: oklch(0.968 0.006 160);
+    --color-raised: oklch(0.938 0.01 160);
+    --color-ink: oklch(0.235 0.026 195);
+    --color-muted: oklch(0.47 0.022 195);
+    --color-rule: oklch(0.865 0.012 190);
+    --color-accent: oklch(0.51 0.104 68);
   }
-*/
+}
+
+@layer base {
+  :root {
+    color-scheme: dark light;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      color-scheme: light;
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-prose);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-surface);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-mark);
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+@layer components {
+  /* -------------------------------------------------------------------------
+     THE MARKS
+
+     A small symbol system, not decoration. Two classes, and the distinction
+     between them is the grammar:
+
+     - Place marks are a circle at 24x24 with one element inside. They name a room
+       of the site, and the same mark appears small in the header and large at
+       the head of the page it names, so the association is teachable.
+       One dot at the centre is the origin. One bar is one piece of writing.
+       Three bars are the collection of them. A figure is the person.
+     - Attribute marks are bare, 12x12, uncircled. They qualify a thing rather
+       than name a place: a filled circle is published, a diamond is updated.
+       The Pokemon TCG rarity symbols work exactly this way, and that reference
+       is in the brief by name.
+
+     Every mark carries a visually-hidden word, so the wordless layer is an
+     addition for people who can see it and never a subtraction for anyone else.
+     ------------------------------------------------------------------------- */
+  .mark {
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  .mark [data-solid] {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .mark-lg {
+    stroke-width: 1.15;
+  }
+
+  .mark-attr {
+    display: block;
+    fill: currentColor;
+    stroke: none;
+    flex: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Link voice. One rule for every text link on the site. */
+  .link {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+    transition: text-decoration-color 160ms var(--ease-authored);
+  }
+
+  .link:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  /* Title links stay ink-coloured and pick up the accent only on hover, so an
+     index of posts does not read as a wall of amber. */
+  .link-title {
+    text-decoration: none;
+    transition: color 160ms var(--ease-authored);
+  }
+
+  .link-title:hover {
+    color: var(--color-accent);
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* -------------------------------------------------------------------------
+     PROSE
+
+     Styling for MDX output. The post bodies are fixed published writing and are
+     not edited here; this only has to receive whatever they contain.
+     ------------------------------------------------------------------------- */
+  /* 19px is the right reading size on a laptop and too big in a 342px column,
+     so the measure sets the size rather than the other way round. */
+  .prose {
+    font-size: var(--text-base);
+    line-height: 1.75;
+  }
+
+  @media (width >= 48rem) {
+    .prose {
+      font-size: var(--text-lg);
+      line-height: 1.78;
+    }
+  }
+
+  .prose > * + * {
+    margin-top: 1.5em;
+  }
+
+  .prose h2 {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 600;
+    font-size: var(--text-xl);
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    margin-top: 2.6em;
+    margin-bottom: -0.4em;
+  }
+
+  .prose h3 {
+    font-family: var(--font-display);
+    font-stretch: 106%;
+    font-weight: 600;
+    font-size: var(--text-base);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-top: 2.2em;
+    margin-bottom: -0.5em;
+  }
+
+  .prose strong {
+    font-weight: 650;
+  }
+
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+    transition: text-decoration-color 160ms var(--ease-authored);
+  }
+
+  .prose a:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.4em;
+  }
+
+  .prose li + li {
+    margin-top: 0.5em;
+  }
+
+  .prose ul {
+    list-style: none;
+  }
+
+  .prose ul > li {
+    position: relative;
+  }
+
+  .prose ul > li::before {
+    content: '';
+    position: absolute;
+    left: -1.25em;
+    top: 0.72em;
+    width: 0.32em;
+    height: 0.32em;
+    background-color: var(--color-accent);
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose ol::marker {
+    font-family: var(--font-mono);
+  }
+
+  .prose blockquote {
+    border-left: 2px solid var(--color-accent);
+    padding-left: 1.4em;
+    font-style: italic;
+    color: var(--color-muted);
+  }
+
+  .prose blockquote p + p {
+    margin-top: 1em;
+  }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background-color: var(--color-raised);
+    border-radius: var(--radius-mark);
+    padding: 0.15em 0.4em;
+  }
+
+  .prose pre {
+    background-color: var(--color-raised);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-mark);
+    padding: 1.15rem 1.25rem;
+    overflow-x: auto;
+    font-size: var(--text-sm);
+    line-height: 1.65;
+  }
+
+  .prose pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* Astro highlights fenced code with Shiki's `github-dark` theme and writes it
+     as inline styles, which means a hard-coded dark box with a purple-and-blue
+     token palette sitting inside a light page. The theme belongs in
+     `markdown.shikiConfig`, and that file is out of scope for the design, so the
+     palette is reclaimed here instead: three tones, all from the site's own
+     tokens, all above 4.5:1 on the raised surface in both themes.
+
+     If the config ever opens up, the honest fix is two lines there and this
+     block can be deleted. */
+  .prose pre.astro-code {
+    background-color: var(--color-raised) !important;
+    color: var(--color-ink) !important;
+  }
+
+  .prose pre.astro-code span {
+    color: var(--color-ink) !important;
+  }
+
+  /* Comments and punctuation greys step back. */
+  .prose pre.astro-code span[style*='#6A737D'],
+  .prose pre.astro-code span[style*='#6a737d'] {
+    color: var(--color-muted) !important;
+  }
+
+  /* Strings, numbers and other literals take the accent. */
+  .prose pre.astro-code span[style*='#9ECBFF'],
+  .prose pre.astro-code span[style*='#79B8FF'],
+  .prose pre.astro-code span[style*='#85E89D'],
+  .prose pre.astro-code span[style*='#FFAB70'] {
+    color: var(--color-accent) !important;
+  }
+
+  /* Real numbers are a commitment on this site, so tables are set in mono and
+     given room to scroll on a narrow screen rather than being squeezed. */
+  .prose table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose thead th {
+    font-weight: 500;
+    font-size: var(--text-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    text-align: left;
+    padding: 0 1.4em 0.7em 0;
+    border-bottom: 1px solid var(--color-rule);
+    white-space: nowrap;
+  }
+
+  .prose tbody td {
+    padding: 0.7em 1.4em 0.7em 0;
+    vertical-align: top;
+  }
+
+  .prose tbody tr + tr td {
+    border-top: 1px solid color-mix(in oklab, var(--color-rule) 60%, transparent);
+  }
+
+  .prose tbody td:first-child {
+    color: var(--color-muted);
+  }
+
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+    margin-top: 3em;
+    margin-bottom: 3em;
+  }
+
+  .prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-mark);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   THE ONE AUTHORED MOMENT
+
+   On arrival the page's own mark draws itself, the centre element lands, and the
+   heading block rises behind it. Roughly 1.2 seconds, once, and then the site is
+   completely still: no scroll animation, no hover transforms, no loops.
+
+   The reason it is the mark and not the headline: the mark is the thing the
+   reader has to learn, and watching it get made is the cheapest way to teach it.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .draw [data-draw] {
+    stroke-dasharray: 1;
+    animation: mark-draw 900ms var(--ease-authored) both;
+  }
+
+  .draw [data-solid] {
+    animation: mark-land 420ms var(--ease-authored) 620ms both;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .rise {
+    animation: rise 620ms var(--ease-authored) both;
+  }
+
+  .rise-1 {
+    animation-delay: 340ms;
+  }
+
+  .rise-2 {
+    animation-delay: 460ms;
+  }
+
+  .rise-3 {
+    animation-delay: 580ms;
+  }
+}
+
+@keyframes mark-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes mark-land {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
