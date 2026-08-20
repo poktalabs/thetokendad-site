@@ -31,6 +31,7 @@ const STAMP: Record<string, string> = {
   postmortem: 'repair',
 };
 const stampFor = (tag: string) => STAMP[tag.toLowerCase()] ?? 'mark';
+const stampClass = (tag: string) => (stampFor(tag) === 'repair' ? 'stamp stamp--alert' : 'stamp');
 ---
 
 <BaseLayout title={title} description={description} section="post" stamp={stampFor(tags[0] ?? "")}>
@@ -53,7 +54,7 @@ const stampFor = (tag: string) => STAMP[tag.toLowerCase()] ?? 'mark';
         <ul class="tags">
           {tags.map((tag) => (
             <li class="tag">
-              <svg class="stamp" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <svg class={stampClass(tag)} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <use href={`#s-${stampFor(tag)}`} />
               </svg>
               <span>{tag}</span>

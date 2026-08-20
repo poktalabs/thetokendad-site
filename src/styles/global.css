@@ -75,7 +75,6 @@
   --spacing-rail: 42rem;
 
   --text-meta: 0.6875rem;
-  --text-small: 0.875rem;
   --text-body: 1.1875rem;
   --text-lede: 1.3125rem;
 
@@ -106,7 +105,7 @@
     -webkit-font-smoothing: antialiased;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100svh;
   }
 
   h1,
@@ -139,11 +138,10 @@
   :focus-visible {
     outline: 2px solid var(--color-mark);
     outline-offset: 3px;
-    border-radius: 0;
   }
 
   ::selection {
-    background: var(--color-mark);
+    background: var(--color-link);
     color: var(--color-ground);
   }
 
@@ -168,7 +166,7 @@
   top: -100%;
   z-index: 10;
   padding: 0.875rem 1rem;
-  background: var(--color-mark);
+  background: var(--color-link);
   color: var(--color-ground);
   font-family: var(--font-meta);
   font-size: var(--text-meta);
@@ -411,6 +409,27 @@ body[data-section='home'] .plate .token-face {
   stroke: none;
 }
 
+/* Stamp sizes live here rather than as width/height attributes in four
+   different files, so the scale is one thing in one place. */
+.stamp {
+  color: var(--color-mark);
+  width: 1.625rem;
+  height: 1.625rem;
+}
+
+.tag .stamp {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.key .stamp {
+  width: 2.125rem;
+  height: 2.125rem;
+}
+
+/* Declared after every context rule, all of which are :where()-wrapped and
+   therefore carry no specificity, so the modifier always wins. This is the
+   one place a second hue is allowed, and it must survive everywhere. */
 .stamp--alert {
   color: var(--color-alert);
 }
@@ -457,16 +476,18 @@ body[data-section='home'] .plate .token-face {
   animation: strike-stamp 220ms linear 340ms both;
 }
 
-/* The masthead token is furniture, not an arrival. It never moves. */
-.token-ring--still,
-.token-stamp--still {
+/* The masthead token is furniture, not an arrival. It never moves. Scored
+   above .token-ring so appending a later rule cannot re-animate it. */
+.token--chip .token-ring--still,
+.token--chip .token-stamp--still {
   animation: none;
   stroke-dasharray: none;
 }
 
 .plate-title,
 .plate-lede,
-.plate-meta {
+.plate-meta,
+.tags {
   animation: settle 400ms var(--ease-strike) both;
 }
 
@@ -482,12 +503,17 @@ body[data-section='home'] .plate .token-face {
   animation-delay: 240ms;
 }
 
+.tags {
+  animation-delay: 300ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .token-ring,
   .token-stamp,
   .plate-title,
   .plate-lede,
-  .plate-meta {
+  .plate-meta,
+  .tags {
     animation: none;
   }
 
@@ -535,8 +561,7 @@ body[data-section='home'] .plate .token-face {
   text-decoration: none;
 }
 
-.rail-link .stamp {
-  color: var(--color-mark);
+.rail-link :where(.stamp) {
   margin-top: 0.25rem;
 }
 
@@ -562,15 +587,27 @@ body[data-section='home'] .plate .token-face {
   color: var(--color-link);
 }
 
-/* A read post steps back to the muted value. Information carried by value,
-   not by a new hue, so the two-hue palette survives — and a returning reader
-   sees what they have already read without a word being spent on it. */
+/* A read post steps back, but not all the way to the muted value: dropping
+   the title to `muted` would flatten it into the date and the dek and the row
+   would stop having a hierarchy. A third step, mixed from the two tokens the
+   system already has, keeps the title a title. The mark goes quiet too, which
+   is the more on-system half of the signal: the station you have visited stops
+   being lit. Information carried by value, never by a new hue. */
 .rail-link:visited .rail-title {
+  color: color-mix(in oklab, var(--color-ink) 72%, var(--color-ground));
+}
+
+.rail-link:visited .stamp {
   color: var(--color-muted);
 }
 
-.rail-link:visited:hover .rail-title {
+.rail-link:visited:hover .rail-title,
+.rail-link:hover .rail-title {
   color: var(--color-link);
+}
+
+.rail-link:hover .stamp {
+  color: var(--color-mark);
 }
 
 .rail-dek {
@@ -592,7 +629,12 @@ body[data-section='home'] .plate .token-face {
   font-stretch: 100%;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-link) 40%, transparent);
+}
+
+.rail-more:hover {
+  text-decoration-color: var(--color-link);
 }
 
 .rail-empty {
@@ -603,6 +645,13 @@ body[data-section='home'] .plate .token-face {
 /* ------------------------------------------------------------- the key
    The vocabulary, spelled out once, on the About page. Museums put the key
    on the wall; the reader who noticed there was a system gets paid off. */
+/* Label and grid share one left edge, so the block reads as one object
+   rather than as a caption that missed its picture. */
+.key-block {
+  max-width: 27rem;
+  margin-inline: auto;
+}
+
 .key {
   list-style: none;
   margin: 0;
@@ -610,20 +659,13 @@ body[data-section='home'] .plate .token-face {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   gap: 2.5rem 1.5rem;
-  /* Bounded so six marks fall as 3+3 on a wide screen and 2+2+2 on a narrow
-     one. Still no breakpoint: the width does the work. */
-  max-width: 27rem;
-  margin-inline: auto;
+  /* Six marks fall as 3+3 on a wide screen and 2+2+2 on a narrow one.
+     Still no breakpoint: the bounded width does the work. */
   text-align: center;
 }
 
-.key .stamp {
-  color: var(--color-mark);
+.key :where(.stamp) {
   margin-inline: auto;
-}
-
-.key .stamp--alert {
-  color: var(--color-alert);
 }
 
 .key-name {
@@ -721,7 +763,8 @@ body[data-section='home'] .plate .token-face {
   font-size: 0.8em;
   font-stretch: 87.5%;
   background: var(--color-lift);
-  padding: 0.15em 0.35em;
+  padding: 0.125em 0.375em;
+  overflow-wrap: anywhere;
 }
 
 .prose pre {
@@ -762,7 +805,7 @@ body[data-section='home'] .plate .token-face {
   font-family: var(--font-meta);
   font-size: var(--text-meta);
   font-stretch: 100%;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-muted);
   font-weight: 500;
@@ -820,17 +863,7 @@ body[data-section='home'] .plate .token-face {
   color: var(--color-muted);
 }
 
-.tag .stamp {
-  color: var(--color-mark);
-}
 
-/* ------------------------------------------------------------ pending */
-.pending {
-  max-width: var(--spacing-measure);
-  margin-inline: auto;
-  text-align: center;
-  color: var(--color-muted);
-}
 
 /* The blog index needs the breathing room a divider would have given it, but
    not the hairline: the rail carries its own top rule. */

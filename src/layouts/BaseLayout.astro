@@ -15,7 +15,9 @@ interface Props {
 }
 
 const { title, description, section = 'post', stamp } = Astro.props;
-const plateStamp = stamp ?? section;
+// `section` doubles as a stamp id for home / writing / about. There is no
+// `post` stamp by design, so a post must pass one; `mark` is the safe floor.
+const plateStamp = stamp ?? (section === 'post' ? 'mark' : section);
 const path = Astro.url.pathname;
 ---
 
@@ -24,10 +26,10 @@ const path = Astro.url.pathname;
     <BaseHead title={title} description={description} />
   </head>
   <body data-section={section}>
-    <!-- The stamp vocabulary. Defined once, referenced everywhere. Ten marks
+    <!-- The stamp vocabulary. Defined once, referenced everywhere. Nine marks
          on a 24-unit grid, built from the same five primitives — circle, dot,
          rule, square, diagonal — so they read as one language rather than as
-         ten icons. Strokes inherit, which is what makes them theme-aware. -->
+         nine icons. Strokes inherit, which is what makes them theme-aware. -->
     <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
       <defs>
         <g id="s-home"><circle class="solid" cx="12" cy="12" r="4.2"></circle></g>
@@ -72,7 +74,7 @@ const path = Astro.url.pathname;
         <nav aria-label="Sections">
           <ul class="masthead-nav">
             <li>
-              <a href="/blog/" aria-current={path.startsWith('/blog') ? 'page' : undefined}
+              <a href="/blog/" aria-current={path === '/blog/' ? 'page' : undefined}
                 >Writing</a
               >
             </li>
@@ -107,7 +109,7 @@ const path = Astro.url.pathname;
     <footer class="colophon">
       <div class="shell">
         <div class="colophon-row">
-          <span>&copy; {new Date().getFullYear()} {SITE_TITLE}</span>
+          <span>{`© ${new Date().getFullYear()} ${SITE_TITLE}`}</span>
           <span aria-hidden="true">&middot;</span>
           <a href="/rss.xml">RSS</a>
         </div>

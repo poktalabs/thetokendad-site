@@ -25,13 +25,13 @@ const KEY = [
 
   <hr class="divider" />
 
-  <section>
+  <section class="key-block">
     <h2 class="rail-head">The key</h2>
     <ul class="key">
       {
         KEY.map((entry) => (
           <li>
-            <svg class={`stamp${entry.stamp === 'repair' ? ' stamp--alert' : ''}`} width="34" height="34" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <svg class={`stamp${entry.stamp === 'repair' ? ' stamp--alert' : ''}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <use href={`#s-${entry.stamp}`} />
             </svg>
             <span class="key-name">{entry.name}</span>
