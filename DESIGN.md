@@ -125,13 +125,13 @@ The recurring idea in the vision, implemented as an actual language rather than 
 
 ## Spacing & Layout
 
-- **Base unit:** 4px. Every value in the system is a multiple of it.
+- **Base unit:** 4px, with a 2px half-step permitted only at meta scale (the 11px label line, the wordmark gap, hairline offsets), where a 4px jump is visibly coarse. Everything at body scale and above is a clean multiple of 4px. Stated honestly because the alternative — claiming a pure 4px grid the stylesheet does not keep — is a spec that lies.
 - **Density:** gallery. Generous everywhere, consistent from the home page to a long post, few things per screen.
 - **Composition:** symmetric and calm. One centred column. The **plate** — token, page name, one line of wall text — is centred on every page type without exception. Everything below the plate is left-aligned inside that centred column. Centred *composition*, left-aligned *reading*: that is how the vision's symmetry is honoured without falling into the centred-everything slop pattern.
 - **Widths:** `--spacing-rail: 42rem` for the shell, `--spacing-measure: 36rem` for prose (about 64 characters at 19px Piazzolla), `1.5rem` inline padding.
 - **Vertical rhythm:** `main` padding 4.5rem/6rem mobile and 7rem/9rem desktop. Section dividers 4rem mobile, 5.5rem desktop. Rail rows 2rem. Prose paragraph gap 1.5rem, h2 top 3.5rem, h3 top 2.5rem.
 - **Border radius: 0, everywhere.** Signage is sharp.
-- **Breakpoints:** one, at `48rem`. A site this simple does not need more.
+- **Breakpoints:** one, at `48rem`, and nothing else. The glyph key sizes itself with `auto-fit` inside a bounded track rather than taking a second breakpoint.
 
 ## Motion
 
@@ -146,12 +146,15 @@ The recurring idea in the vision, implemented as an actual language rather than 
 - **Focus:** `2px solid var(--color-mark)` with `3px` offset, on `:focus-visible`. Never removed.
 - **Hover:** links change colour and underline thickness. Rail rows tint their title and nothing else moves.
 - **Current page:** the masthead nav link carries `aria-current="page"` and takes the link colour.
+- **Visited:** a post already read drops its rail title from `--color-ink` to `--color-muted`, and returns to the link colour on hover. Value, not a new hue, so a returning reader can see what they have read without a word being spent on it.
 - **Selection:** `--color-mark` ground with `--color-ground` text.
 - **Empty:** "Nothing published yet." in muted, in the rail's own slot. Designed, not a fallback.
 
 ## Accessibility
 
-Above the floor the brief set, this design commits to: every glyph is `aria-hidden` and never the sole carrier of meaning (a stamp always sits beside real text on the surface that teaches it); nav uses a real `<nav aria-label>` with a list; `aria-current="page"` marks position; heading order is unbroken on every page type; the reduced-motion path renders the resting frame rather than a shortened animation; body text is 19px, well above the 16px floor; and colour is never the only encoding — `repair` is the one stamp that uses a second hue, and it is also the only stamp with a distinct silhouette.
+Above the floor the brief set, this design commits to: a **skip link** that sits off-canvas until focused and then renders as a mark-coloured plaque in the top-left, targeting `main` (a keyboard reader otherwise passes the wordmark and the whole nav before reaching an 1,800 word post); a **44px minimum hit area** on the wordmark, both nav links, the RSS link and the rail-more link, achieved with `min-height`/`min-width` so the 11px labels and the 18px mark keep their size and only the target grows; every glyph is `aria-hidden` and never the sole carrier of meaning (a stamp always sits beside real text on the surface that teaches it); nav uses a real `<nav aria-label>` with a list; `aria-current="page"` marks position; heading order is unbroken on every page type; the reduced-motion path renders the resting frame rather than a shortened animation; body text is 19px, well above the 16px floor; and colour is never the only encoding — `repair` is the one stamp that uses a second hue, and it is also the only stamp with a distinct silhouette.
+
+Deliberately **not** done: inline links inside prose are left at their natural ~27px height. WCAG 2.5.8 exempts links inline in a sentence, and inflating them would break the line rhythm of the reading surface, which is this site's primary asset.
 
 ## Files
 
@@ -168,3 +171,5 @@ The design lives in exactly seven files. `src/styles/global.css` is the single s
 | 2026-08-19 | No theme toggle | Needs client-side JS the stack forbids, and adds a control to a site whose thesis is having few controls. |
 | 2026-08-19 | No generic `post` glyph | A post page carries its own subject stamp. Removes an arbitrary mark and ties the large plate to the small mark the reader already met in the index. |
 | 2026-08-19 | Code blocks are monochrome | Astro's Shiki ships `github-dark` as inline styles. A rainbow of unmanaged hues inside a two-hue system is exactly the bad palette selection this design exists to avoid. |
+| 2026-08-19 | 44px hit areas, skip link, visited state added | `/design-review`, confirmed across two independent voices. All three are additions the vision left to the tool ("accessibility beyond the floor" was an open axis). |
+| 2026-08-19 | The About page keeps its placeholder | `/design-review` asked for a real bio to be written. Refused: inventing biographical copy about a real person is outside what a design pass may do. The page gets an honest empty state and the key instead, and the placeholder is escalated as a content blocker. |
