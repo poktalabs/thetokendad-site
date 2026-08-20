@@ -169,13 +169,15 @@
 }
 
 .masthead {
-  padding-block: 2.25rem 0;
+  padding-block: 1.5rem 0;
   text-align: center;
 }
 
 .masthead-wordmark {
   display: inline-flex;
   align-items: center;
+  /* 44px minimum hit area. The mark stays 18px; only the target grows. */
+  min-height: 2.75rem;
   gap: 0.625rem; /* never a literal space: compressHTML strips those */
   font-family: var(--font-meta);
   font-size: var(--text-meta);
@@ -196,11 +198,14 @@
   justify-content: center;
   gap: 2.25rem;
   list-style: none;
-  margin: 1.125rem 0 0;
+  margin: 0;
   padding: 0;
 }
 
 .masthead-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   font-family: var(--font-meta);
   font-size: var(--text-meta);
   font-stretch: 100%;
@@ -228,7 +233,7 @@ main {
 
 .colophon {
   border-top: 1px solid var(--color-rule);
-  padding-block: 2.25rem 3rem;
+  padding-block: 1.5rem 2.5rem;
 }
 
 .colophon-row {
@@ -245,6 +250,11 @@ main {
 }
 
 .colophon-row a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 0.5rem;
+  margin-inline: -0.5rem;
   color: var(--color-muted);
   text-decoration: none;
 }
@@ -534,7 +544,9 @@ body[data-section='home'] .plate .token-face {
 }
 
 .rail-more {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   margin-top: 2.5rem;
   font-family: var(--font-meta);
   font-size: var(--text-meta);
