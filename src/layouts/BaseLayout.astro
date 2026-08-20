@@ -51,6 +51,8 @@ const path = Astro.url.pathname;
       </defs>
     </svg>
 
+    <a class="skip-link" href="#content">Skip to content</a>
+
     <header class="masthead">
       <div class="shell">
         <a class="masthead-wordmark" href="/">
@@ -82,7 +84,7 @@ const path = Astro.url.pathname;
       </div>
     </header>
 
-    <main>
+    <main id="content" tabindex="-1">
       <div class="shell">
         <!-- The wall label. Every page type opens the same way: the token is
              struck, then the name of the place, then one line of wall text. -->

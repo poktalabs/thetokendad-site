@@ -160,6 +160,32 @@
   }
 }
 
+/* A keyboard reader lands on the wordmark and the nav before a 1,800 word
+   post. Off-canvas until focused, then a plaque in the top-left corner. */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  background: var(--color-mark);
+  color: var(--color-ground);
+  font-family: var(--font-meta);
+  font-size: var(--text-meta);
+  font-stretch: 100%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  top: 1rem;
+}
+
+main:focus {
+  outline: none;
+}
+
 /* --------------------------------------------------------- the shell */
 .shell {
   width: 100%;
@@ -253,6 +279,8 @@ main {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
+  min-width: 2.75rem;
+  justify-content: center;
   padding-inline: 0.5rem;
   margin-inline: -0.5rem;
   color: var(--color-muted);
@@ -580,15 +608,9 @@ body[data-section='home'] .plate .token-face {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
   gap: 2.5rem 1.5rem;
   text-align: center;
-}
-
-@media (min-width: 40rem) {
-  .key {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 .key .stamp {
