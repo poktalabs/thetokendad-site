@@ -534,6 +534,17 @@ body[data-section='home'] .plate .token-face {
   color: var(--color-link);
 }
 
+/* A read post steps back to the muted value. Information carried by value,
+   not by a new hue, so the two-hue palette survives — and a returning reader
+   sees what they have already read without a word being spent on it. */
+.rail-link:visited .rail-title {
+  color: var(--color-muted);
+}
+
+.rail-link:visited:hover .rail-title {
+  color: var(--color-link);
+}
+
 .rail-dek {
   display: block;
   margin-top: 0.625rem;
