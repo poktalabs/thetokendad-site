@@ -1,16 +1,16 @@
 {
-  // Frozen version "claude-impeccable" of the canvas. Design run — arm 2, Impeccable
-  // Deploy: bunx wrangler deploy --config archive/wrangler.claude-impeccable.jsonc
+  // Frozen version "claude-impeccable-v1" of the canvas. Design run — arm 2, Impeccable
+  // Deploy: bunx wrangler deploy --config archive/wrangler.claude-impeccable-v1.jsonc
   "$schema": "../node_modules/wrangler/config-schema.json",
-  "name": "thetokendad-claude-impeccable",
+  "name": "thetokendad-claude-impeccable-v1",
   "compatibility_date": "2026-08-19",
   "assets": {
-    "directory": "./claude-impeccable"
+    "directory": "./claude-impeccable-v1"
   },
   // Custom domain declared in-repo, not the dashboard, so a rebuild re-asserts
   // the hostname. Single DNS label — Universal SSL covers one level. Without this
   // the Worker has no route (workers.dev is disabled) and is unreachable.
   "routes": [
-    { "pattern": "claude-impeccable.thetoken.dad", "custom_domain": true }
+    { "pattern": "claude-impeccable-v1.thetoken.dad", "custom_domain": true }
   ]
 }
