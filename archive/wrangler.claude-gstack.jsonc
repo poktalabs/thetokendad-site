@@ -1,0 +1,16 @@
+{
+  // Frozen version "claude-gstack" of the canvas. Design run — arm 4, gstack (design-consultation → design-review)
+  // Deploy: bunx wrangler deploy --config archive/wrangler.claude-gstack.jsonc
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "thetokendad-claude-gstack",
+  "compatibility_date": "2026-08-19",
+  "assets": {
+    "directory": "./claude-gstack"
+  },
+  // Custom domain declared in-repo, not the dashboard, so a rebuild re-asserts
+  // the hostname. Single DNS label — Universal SSL covers one level. Without this
+  // the Worker has no route (workers.dev is disabled) and is unreachable.
+  "routes": [
+    { "pattern": "claude-gstack.thetoken.dad", "custom_domain": true }
+  ]
+}

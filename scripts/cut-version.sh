@@ -51,7 +51,13 @@ cat > "$CFG" <<EOF
   "compatibility_date": "$(date +%Y-%m-%d)",
   "assets": {
     "directory": "./$SLUG"
-  }
+  },
+  // Custom domain declared in-repo, not the dashboard, so a rebuild re-asserts
+  // the hostname. Single DNS label — Universal SSL covers one level. Without this
+  // the Worker has no route (workers.dev is disabled) and is unreachable.
+  "routes": [
+    { "pattern": "$SLUG.thetoken.dad", "custom_domain": true }
+  ]
 }
 EOF
 
