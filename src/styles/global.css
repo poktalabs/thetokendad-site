@@ -167,7 +167,7 @@
   left: 1rem;
   top: -100%;
   z-index: 10;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   background: var(--color-mark);
   color: var(--color-ground);
   font-family: var(--font-meta);
@@ -608,8 +608,12 @@ body[data-section='home'] .plate .token-face {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   gap: 2.5rem 1.5rem;
+  /* Bounded so six marks fall as 3+3 on a wide screen and 2+2+2 on a narrow
+     one. Still no breakpoint: the width does the work. */
+  max-width: 27rem;
+  margin-inline: auto;
   text-align: center;
 }
 
