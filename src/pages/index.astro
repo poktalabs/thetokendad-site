@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Glyph from '../components/Glyph.astro';
 import PostCard from '../components/PostCard.astro';
+import Showcase from '../components/Showcase.astro';
 import SignalKey from '../components/SignalKey.astro';
 import { getPublishedPosts } from '../lib/posts';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
@@ -86,6 +87,8 @@ const posts = (await getPublishedPosts()).slice(0, 5);
     </div>
     <SignalKey variant="plate" class="arrival" />
   </section>
+
+  <Showcase />
 
   <section class="shell stack-section">
     <div class="section-head">

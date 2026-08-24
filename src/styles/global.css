@@ -720,6 +720,120 @@ body {
 }
 
 /* =============================================================================
+   Showcase — the four exhibits
+
+   Same hairline-grid technique as the key plate: 1px gaps on the line colour
+   forming the rules, cells sitting on the ground. One signal accent for the
+   whole section (Open, green) rather than one hue per card — the six signals
+   are a typed vocabulary tied to the writing's tag families, not a palette
+   to spend on decoration. The vote control is the only interactive element
+   this site ships; it renders inert (disabled, dash count) until the script
+   in Showcase.astro proves a backend is actually there.
+   ========================================================================== */
+
+.showcase-intro {
+  margin-bottom: var(--space-block);
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--color-line);
+  border: var(--rule);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+@media (min-width: 40rem) {
+  .showcase-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.showcase-card {
+  background: var(--color-ground);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.showcase-eyebrow {
+  color: var(--color-muted);
+}
+
+.showcase-title {
+  font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+}
+
+.showcase-title-link {
+  font-family: var(--font-display);
+  font-weight: 640;
+  font-stretch: 110%;
+  letter-spacing: -0.015em;
+  color: var(--color-text-strong);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.showcase-title-link:hover {
+  color: var(--color-signal-open);
+}
+
+.showcase-desc {
+  color: var(--color-muted);
+  text-wrap: pretty;
+  flex: 1 0 auto;
+}
+
+.showcase-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
+/* --- Vote button: disabled and dashed until the script proves a backend
+   exists. Never styled to imply a number that was never fetched. ---------- */
+.vote-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: var(--rule);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.65rem;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.vote-btn:hover:not(:disabled) {
+  border-color: var(--color-signal-open);
+  color: var(--color-text-strong);
+}
+
+.vote-btn:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.vote-btn[data-voted='true'] {
+  border-color: var(--color-signal-open);
+  color: var(--color-signal-open);
+  opacity: 1;
+}
+
+.vote-count {
+  color: inherit;
+}
+
+/* =============================================================================
    Post
    ========================================================================== */
 
