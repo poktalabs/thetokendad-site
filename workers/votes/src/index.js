@@ -32,6 +32,17 @@
 
 const EXHIBITS = ['design', 'impeccable', 'taste', 'gstack'];
 
+// Local preview origins allowed to call the API in addition to the production
+// origin (env.ALLOWED_ORIGIN). Safe to allow permanently: a third-party page
+// cannot cause a browser to send `Origin: http://localhost:...`, so this only
+// ever helps someone running the site locally.
+const DEV_ORIGINS = new Set([
+  'http://localhost:4321',
+  'http://127.0.0.1:4321',
+  'http://localhost:4331',
+  'http://127.0.0.1:4331',
+]);
+
 function isExhibit(value) {
   return typeof value === 'string' && EXHIBITS.includes(value);
 }
@@ -44,9 +55,20 @@ async function hashIp(ip) {
     .join('');
 }
 
-function corsHeaders(env) {
+// The CORS origin to echo: the production origin, or a known local dev origin
+// when testing the preview. Anything else falls back to the production origin
+// so the browser blocks it.
+function resolveOrigin(request, env) {
+  const origin = request.headers.get('origin');
+  if (origin && (origin === env.ALLOWED_ORIGIN || DEV_ORIGINS.has(origin))) {
+    return origin;
+  }
+  return env.ALLOWED_ORIGIN;
+}
+
+function corsHeaders(origin) {
   return {
-    'access-control-allow-origin': env.ALLOWED_ORIGIN,
+    'access-control-allow-origin': origin,
     'access-control-allow-methods': 'GET, POST, OPTIONS',
     'access-control-allow-headers': 'content-type',
     'access-control-max-age': '86400',
@@ -54,12 +76,12 @@ function corsHeaders(env) {
   };
 }
 
-function json(body, env, init = {}) {
+function json(body, origin, init = {}) {
   return new Response(JSON.stringify(body), {
     ...init,
     headers: {
       'content-type': 'application/json',
-      ...corsHeaders(env),
+      ...corsHeaders(origin),
       ...(init.headers ?? {}),
     },
   });
@@ -76,22 +98,22 @@ async function getAllCounts(env) {
   return Object.fromEntries(entries);
 }
 
-async function handleVotes(env) {
+async function handleVotes(env, origin) {
   const counts = await getAllCounts(env);
-  return json(counts, env);
+  return json(counts, origin);
 }
 
-async function handleVote(request, env) {
+async function handleVote(request, env, origin) {
   let body;
   try {
     body = await request.json();
   } catch {
-    return json({ error: 'invalid json body' }, env, { status: 400 });
+    return json({ error: 'invalid json body' }, origin, { status: 400 });
   }
 
   const exhibit = body && typeof body === 'object' ? body.exhibit : undefined;
   if (!isExhibit(exhibit)) {
-    return json({ error: 'unknown exhibit' }, env, { status: 400 });
+    return json({ error: 'unknown exhibit' }, origin, { status: 400 });
   }
 
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
@@ -107,7 +129,7 @@ async function handleVote(request, env) {
 
   if (alreadyVoted) {
     // Idempotent: same response shape as a fresh vote, count unchanged.
-    return json({ exhibit, count: counts[exhibit] }, env, { status: 200 });
+    return json({ exhibit, count: counts[exhibit] }, origin, { status: 200 });
   }
 
   const nextCount = counts[exhibit] + 1;
@@ -116,25 +138,26 @@ async function handleVote(request, env) {
     env.VOTES_KV.put(votedKey, '1'),
   ]);
 
-  return json({ exhibit, count: nextCount }, env, { status: 201 });
+  return json({ exhibit, count: nextCount }, origin, { status: 201 });
 }
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const origin = resolveOrigin(request, env);
 
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: corsHeaders(env) });
+      return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
     if (url.pathname === '/votes' && request.method === 'GET') {
-      return handleVotes(env);
+      return handleVotes(env, origin);
     }
 
     if (url.pathname === '/vote' && request.method === 'POST') {
-      return handleVote(request, env);
+      return handleVote(request, env, origin);
     }
 
-    return json({ error: 'not found' }, env, { status: 404 });
+    return json({ error: 'not found' }, origin, { status: 404 });
   },
 };
