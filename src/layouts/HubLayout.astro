@@ -1,0 +1,154 @@
+---
+// Hub-scoped layout for /website-challenge-v1/*.
+//
+// Why this exists instead of BaseLayout: the hub pages need per-page JSON-LD in
+// <head>, and BaseLayout/BaseHead (deliberately) expose no head slot. Rather than
+// edit those shared files (owned by the human design track), this layout mirrors
+// BaseLayout's semantic shell — the same header/nav/footer markup, the same
+// design tokens via global.css, the same variable fonts — and reuses the
+// UNMODIFIED BaseHead for title/description/canonical/OG/Twitter, adding only a
+// JSON-LD injection point. No shared file is touched by this component.
+//
+// Keep this file free of Tailwind utility-shaped words in prose/comments
+// (ring, blur, shadow, gradient, grayscale, invert, ...) — Tailwind 4 scans it.
+import '@fontsource-variable/archivo/standard.css';
+import '@fontsource-variable/faustina/wght.css';
+import '@fontsource-variable/faustina/wght-italic.css';
+
+import BaseHead from '../components/BaseHead.astro';
+import Glyph from '../components/Glyph.astro';
+import { SITE_TITLE, SOCIAL } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  // One JSON-LD object or an array of them. Serialized verbatim into <head>.
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, description, jsonLd } = Astro.props;
+const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href);
+
+const copyright = `© ${new Date().getFullYear()} ${SITE_TITLE}`;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+    {blocks.map((block) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="/">{SITE_TITLE}</a>
+      <nav class="site-nav" aria-label="Sections">
+        <a
+          class="navlink"
+          href="/website-challenge-v1/"
+          aria-current={isCurrent('/website-challenge-v1/') ? 'page' : undefined}
+        >
+          <Glyph name="measure" size={18} />
+          <span>Website Challenge</span>
+        </a>
+        <a
+          class="navlink"
+          href="/blog/"
+          aria-current={isCurrent('/blog/') ? 'page' : undefined}
+        >
+          <Glyph name="writing" size={18} />
+          <span>Writing</span>
+        </a>
+        <a
+          class="navlink"
+          href="/about/"
+          aria-current={isCurrent('/about/') ? 'page' : undefined}
+        >
+          <Glyph name="about" size={18} />
+          <span>About</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      <div class="shell">
+        <div class="prose hub-content">
+          <slot />
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span>{copyright}</span>
+      <a href="/rss.xml">
+        <Glyph name="feed" size={16} />
+        <span>RSS</span>
+      </a>
+      <a href={SOCIAL.instagram} rel="me noopener">
+        <span>Instagram</span>
+      </a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* Hub-only touch-up. Everything here is scoped to this layout: the tokens,
+     type roles and shell/prose measures all come from the unmodified
+     global.css. This just brings the hub's plain semantic HTML (no `class`
+     attributes — written for AEO, not for this design system) into the same
+     rhythm as the rest of the site, without editing the hub pages or any
+     shared file. `:global()` is required because slotted content keeps the
+     child page's own scope, not this layout's. */
+  .hub-content {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 0;
+  }
+
+  .hub-content :global(h1) {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 640;
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    color: var(--color-text-strong);
+    text-wrap: balance;
+    margin-bottom: 1rem;
+  }
+
+  .hub-content :global(article > header) {
+    padding-bottom: var(--space-block);
+    margin-bottom: var(--space-block);
+    border-bottom: var(--rule);
+  }
+
+  .hub-content :global(article > header p) {
+    font-size: var(--text-lede);
+    line-height: 1.55;
+    color: var(--color-muted);
+  }
+
+  .hub-content :global(dl) {
+    margin-top: 1.4em;
+  }
+
+  .hub-content :global(dt) {
+    font-family: var(--font-display);
+    font-weight: 620;
+    font-stretch: 106%;
+    color: var(--color-text-strong);
+    margin-top: 1.6em;
+  }
+
+  .hub-content :global(dt:first-child) {
+    margin-top: 0;
+  }
+
+  .hub-content :global(dd) {
+    margin: 0.35em 0 0;
+    color: var(--color-muted);
+  }
+</style>
