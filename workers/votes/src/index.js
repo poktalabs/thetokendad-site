@@ -1,33 +1,33 @@
 /**
  * thetokendad-votes-api — a minimal standalone Cloudflare Worker.
  *
- * Backs the upvote mechanic on the showcase section of thetoken.dad. This
- * Worker is intentionally isolated from the main site: its own directory,
- * its own wrangler config, its own KV namespace. The main site stays a pure
- * static build regardless of whether this is ever deployed. See
- * ../../SHOWCASE-VOTING-NOTES.md for the full deviation writeup and the
- * sign-off this needs before it goes anywhere near production.
+ * Backs the "which one would you ship" ballot on the showcase section of
+ * thetoken.dad. This Worker is intentionally isolated from the main site: its
+ * own directory, its own wrangler config, its own KV namespace. The main site
+ * stays a pure static build regardless of whether this is ever deployed. See
+ * ../../SHOWCASE-VOTING-NOTES.md for the deviation writeup.
  *
  * Plain JS on purpose: this directory intentionally has no tsconfig of its
  * own and is not wired into the site's TypeScript project, so it can't
  * regress `astro check` for the main build. See README.md.
  *
  * Endpoints
- *   GET  /votes  -> { [exhibitSlug]: number }  — current counts, all exhibits
- *   POST /vote   -> { exhibit } in body -> { exhibit, count } — casts one
- *                    vote, idempotent per (hashed IP, exhibit) pair
+ *   GET  /votes  -> { counts: {slug:number}, youVoted: slug|null } — counts
+ *                    for all exhibits plus this IP's standing choice, if any.
+ *   POST /vote   -> { exhibit } in body -> { youVoted, counts } — casts one
+ *                    vote. ONE VOTE PER IP TOTAL (a ballot, not per-exhibit
+ *                    upvotes): once an IP has voted, every further vote is a
+ *                    no-op that returns the standing choice unchanged.
  *
  * Storage (Workers KV, binding VOTES_KV)
- *   count:<exhibit>          -> string integer, the running total
- *   voted:<exhibit>:<iphash> -> "1", permanent — dedup marker, no raw IP
- *                                ever stored, only a SHA-256 hash of it.
- *                                This is the one-vote-per-IP-per-exhibit control.
+ *   count:<exhibit> -> string integer, the running total.
+ *   voted:<iphash>  -> the chosen exhibit slug, permanent. No raw IP is ever
+ *                      stored, only a SHA-256 hash. One key per IP = one vote.
  *
  * KV is eventually-consistent with no transactions, so a genuine race (two
  * requests from the same IP landing on different edge colos in the same
- * instant) could in principle double-count once before the dedup key is
- * visible everywhere. That is an accepted limitation for a lightweight
- * upvote counter, not a security control — see the notes doc.
+ * instant) could in principle double-count once before the marker is visible
+ * everywhere. Accepted for a lightweight ballot, not a security control.
  */
 
 const EXHIBITS = ['design', 'impeccable', 'taste', 'gstack'];
@@ -98,9 +98,17 @@ async function getAllCounts(env) {
   return Object.fromEntries(entries);
 }
 
-async function handleVotes(env, origin) {
-  const counts = await getAllCounts(env);
-  return json(counts, origin);
+function ipHashFrom(request) {
+  return hashIp(request.headers.get('cf-connecting-ip') ?? 'unknown');
+}
+
+async function handleVotes(request, env, origin) {
+  const ipHash = await ipHashFrom(request);
+  const [counts, youVoted] = await Promise.all([
+    getAllCounts(env),
+    env.VOTES_KV.get(`voted:${ipHash}`),
+  ]);
+  return json({ counts, youVoted: youVoted ?? null }, origin);
 }
 
 async function handleVote(request, env, origin) {
@@ -116,29 +124,29 @@ async function handleVote(request, env, origin) {
     return json({ error: 'unknown exhibit' }, origin, { status: 400 });
   }
 
-  const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
-  const ipHash = await hashIp(ip);
+  const ipHash = await ipHashFrom(request);
 
-  // No coarse rate-limit key: Workers KV rejects any expirationTtl below 60s,
-  // so the intended 3s guard is impossible, and a 60s guard would block a
-  // visitor from upvoting a second exhibit for a full minute. The permanent
-  // per-(exhibit, IP) dedup key below is the real "one vote per IP" control.
-  const votedKey = `voted:${exhibit}:${ipHash}`;
-  const alreadyVoted = await env.VOTES_KV.get(votedKey);
+  // One vote per IP, total — not per exhibit. The ballot is "which one would
+  // you ship", so a single `voted:<iphash>` marker records the chosen exhibit
+  // and locks every further vote from that IP. KV's 60s-minimum TTL rules out
+  // a short rate limit; this permanent marker is the whole control.
+  const votedKey = `voted:${ipHash}`;
+  const already = await env.VOTES_KV.get(votedKey);
   const counts = await getAllCounts(env);
 
-  if (alreadyVoted) {
-    // Idempotent: same response shape as a fresh vote, count unchanged.
-    return json({ exhibit, count: counts[exhibit] }, origin, { status: 200 });
+  if (already) {
+    // Already voted, possibly for a different exhibit. No increment; report
+    // their standing choice and the current counts.
+    return json({ youVoted: already, counts }, origin, { status: 200 });
   }
 
-  const nextCount = counts[exhibit] + 1;
+  counts[exhibit] = counts[exhibit] + 1;
   await Promise.all([
-    env.VOTES_KV.put(`count:${exhibit}`, String(nextCount)),
-    env.VOTES_KV.put(votedKey, '1'),
+    env.VOTES_KV.put(`count:${exhibit}`, String(counts[exhibit])),
+    env.VOTES_KV.put(votedKey, exhibit),
   ]);
 
-  return json({ exhibit, count: nextCount }, origin, { status: 201 });
+  return json({ youVoted: exhibit, counts }, origin, { status: 201 });
 }
 
 export default {
@@ -151,7 +159,7 @@ export default {
     }
 
     if (url.pathname === '/votes' && request.method === 'GET') {
-      return handleVotes(env, origin);
+      return handleVotes(request, env, origin);
     }
 
     if (url.pathname === '/vote' && request.method === 'POST') {

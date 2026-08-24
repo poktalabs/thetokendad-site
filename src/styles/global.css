@@ -716,7 +716,7 @@ body {
 }
 
 .build:hover .build-arrow {
-  transform: translateX(3px);
+  transform: translateY(2px);
 }
 
 /* =============================================================================

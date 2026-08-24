@@ -77,7 +77,7 @@ const EXHIBITS: Exhibit[] = [
 ];
 ---
 
-<section class="shell stack-section">
+<section id="exhibits" class="shell stack-section" style="scroll-margin-top: 2rem">
   <div class="section-head">
     <Glyph name="open" size={18} style="color:var(--color-signal-open)" />
     <span class="label">The exhibits</span>
@@ -131,10 +131,12 @@ const EXHIBITS: Exhibit[] = [
             </a>
 
             {/*
-              An upvote: an up-arrow, the word, and the count. Inert by default
-              (disabled, dash for a count); the script below is the only thing
-              that enables it, and only after a successful fetch. No script, no
-              backend, no network — it stays exactly as it renders here.
+              A single vote: an up-arrow, the word, and the count. It is a
+              ballot — one vote per person across all four — so casting it
+              locks every card. Inert by default (disabled, dash for a count);
+              the script below is the only thing that enables it, and only
+              after a successful fetch. No script, no backend, no network — it
+              stays exactly as it renders here.
             */}
             <button
               class="vote-btn"
@@ -142,13 +144,13 @@ const EXHIBITS: Exhibit[] = [
               data-vote-btn
               data-exhibit={exhibit.slug}
               disabled
-              title="Upvote"
-              aria-label={`Upvote ${exhibit.tool}`}
+              title="Vote for this one"
+              aria-label={`Vote for ${exhibit.tool}`}
             >
               <svg class="vote-arrow" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
                 <path d="M8 3.2 14 12 2 12 Z" />
               </svg>
-              <span class="vote-label" data-vote-label>Upvote</span>
+              <span class="vote-label" data-vote-label>Vote</span>
               <span class="meta vote-count" data-vote-count aria-live="polite">—</span>
             </button>
           </div>
@@ -160,38 +162,34 @@ const EXHIBITS: Exhibit[] = [
 
 <script>
   /**
-   * Progressive-enhancement voting. Vanilla, isolated, no framework.
+   * Progressive-enhancement ballot. Vanilla, isolated, no framework.
    *
-   * Degrades on purpose: any failure here — no `fetch`, network error,
-   * CORS rejection, backend not deployed — is caught and swallowed, leaving
-   * every button exactly as the server rendered it (disabled, dash count).
-   * The showcase cards and their links never depend on any of this running.
+   * One vote per person, total — pick the one you'd ship. Casting a vote locks
+   * all four cards. Degrades on purpose: any failure here — no `fetch`, network
+   * error, CORS rejection, backend not deployed — is caught and swallowed,
+   * leaving every button as the server rendered it (disabled, dash count). The
+   * showcase cards and their links never depend on this running.
    *
-   * Worker origin: see `workers/votes/README.md`. The Worker is NOT
-   * deployed as part of this repo's build or deploy config — see
-   * SHOWCASE-VOTING-NOTES.md at the repo root before ever pointing this at
-   * a live endpoint.
+   * Worker origin + deploy: see `workers/votes/README.md` and
+   * SHOWCASE-VOTING-NOTES.md at the repo root.
    */
   const VOTES_API = 'https://votes.thetoken.dad';
-  const VOTED_KEY = 'thetokendad:voted-exhibits';
+  const VOTED_KEY = 'thetokendad:voted-exhibit';
 
-  function getVoted(): Record<string, boolean> {
+  function getVotedLocal(): string | null {
     try {
-      return JSON.parse(localStorage.getItem(VOTED_KEY) ?? '{}');
+      return localStorage.getItem(VOTED_KEY);
     } catch {
-      return {};
+      return null;
     }
   }
 
-  function setVoted(slug: string) {
+  function setVotedLocal(slug: string) {
     try {
-      const voted = getVoted();
-      voted[slug] = true;
-      localStorage.setItem(VOTED_KEY, JSON.stringify(voted));
+      localStorage.setItem(VOTED_KEY, slug);
     } catch {
-      // localStorage unavailable (private mode, storage blocked) — the
-      // server-side dedup by IP still holds; only the client-side "you
-      // already voted" affordance is lost.
+      // localStorage unavailable — the server-side per-IP dedup still holds;
+      // only the client-side "you already voted" memory is lost.
     }
   }
 
@@ -206,35 +204,60 @@ const EXHIBITS: Exhibit[] = [
     if (buttons.length === 0 || typeof fetch !== 'function') return;
 
     let counts: Record<string, number> = {};
+    let youVoted: string | null = null;
     try {
-      const res = await fetch(`${VOTES_API}/votes`, { headers: { accept: 'application/json' } });
+      const res = await fetch(`${VOTES_API}/votes`, {
+        headers: { accept: 'application/json' },
+      });
       if (!res.ok) return;
       const data = await res.json();
-      if (data && typeof data === 'object') counts = data;
+      if (data && typeof data === 'object') {
+        counts = data.counts ?? {};
+        youVoted = data.youVoted ?? null;
+      }
     } catch {
       // Backend unreachable or not deployed yet. Leave every button inert.
       return;
     }
 
-    const voted = getVoted();
+    // The server (per-IP) is authoritative; localStorage is a fallback for the
+    // affordance when this browser voted but the server read lagged.
+    if (!youVoted) youVoted = getVotedLocal();
 
-    for (const btn of buttons) {
-      const slug = btn.dataset.exhibit;
-      if (!slug) continue;
+    const setCount = (btn: HTMLButtonElement) => {
       const countEl = btn.querySelector<HTMLElement>('[data-vote-count]');
-      const labelEl = btn.querySelector<HTMLElement>('[data-vote-label]');
-      if (countEl) countEl.textContent = formatCount(counts[slug]);
+      if (countEl) countEl.textContent = formatCount(counts[btn.dataset.exhibit ?? '']);
+    };
 
-      btn.disabled = false;
-      if (voted[slug]) {
-        btn.dataset.voted = 'true';
+    // Lock every card; mark the chosen one as voted.
+    const lockAll = (chosen: string | null) => {
+      for (const btn of buttons) {
         btn.disabled = true;
-        if (labelEl) labelEl.textContent = 'Voted';
+        const labelEl = btn.querySelector<HTMLElement>('[data-vote-label]');
+        if (btn.dataset.exhibit === chosen) {
+          btn.dataset.voted = 'true';
+          if (labelEl) labelEl.textContent = 'Voted';
+        } else if (labelEl) {
+          labelEl.textContent = 'Vote';
+        }
       }
+    };
 
+    for (const btn of buttons) setCount(btn);
+
+    if (youVoted) {
+      lockAll(youVoted);
+      return;
+    }
+
+    // Not yet voted: enable all four. The first click wins and locks the rest.
+    for (const btn of buttons) {
+      btn.disabled = false;
       btn.addEventListener('click', async () => {
-        if (btn.disabled) return;
-        btn.disabled = true;
+        const slug = btn.dataset.exhibit;
+        if (!slug || btn.disabled) return;
+        for (const b of buttons) b.disabled = true; // lock immediately
+
         try {
           const res = await fetch(`${VOTES_API}/vote`, {
             method: 'POST',
@@ -242,18 +265,17 @@ const EXHIBITS: Exhibit[] = [
             body: JSON.stringify({ exhibit: slug }),
           });
           if (!res.ok) {
-            btn.disabled = false;
+            for (const b of buttons) b.disabled = false; // allow a retry
             return;
           }
           const data = await res.json();
-          if (countEl) countEl.textContent = formatCount(data?.count);
-          btn.dataset.voted = 'true';
-          if (labelEl) labelEl.textContent = 'Voted';
-          setVoted(slug);
+          const chosen: string = data?.youVoted ?? slug;
+          counts = data?.counts ?? counts;
+          for (const b of buttons) setCount(b);
+          setVotedLocal(chosen);
+          lockAll(chosen);
         } catch {
-          // Network failure mid-click: leave the button clickable again
-          // rather than stranding it disabled with no vote recorded.
-          btn.disabled = false;
+          for (const b of buttons) b.disabled = false;
         }
       });
     }

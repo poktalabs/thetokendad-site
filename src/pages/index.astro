@@ -28,11 +28,12 @@ const posts = (await getPublishedPosts()).slice(0, 5);
     </div>
 
     {/*
-      The featured build. It carries the Measurement mark because what it
-      showcases is a build with its numbers and method published — the same
-      thing that mark means in the key below. The panel is the link; its href
-      resolves once the challenge hub ships. Static: the key holds the site's
-      one authored moment, not this.
+      The featured build, and the way into the vote. It carries the
+      Measurement mark because what it showcases is a build with its numbers
+      and method published — the same thing that mark means in the key below.
+      The panel scrolls to the exhibits, where the reader casts one vote for
+      the one they would ship. Static: the key holds the site's one authored
+      moment, not this.
     */}
     <div class="hero-feature">
       <div class="hero-feature-head">
@@ -40,7 +41,7 @@ const posts = (await getPublishedPosts()).slice(0, 5);
         <span class="label">Latest build</span>
       </div>
 
-      <a class="build" href="/website-challenge-v1/">
+      <a class="build" href="#exhibits">
         <div class="build-inner">
           <div class="build-head">
             <Glyph name="measure" size={40} style="color:var(--color-signal-measure)" />
@@ -51,12 +52,13 @@ const posts = (await getPublishedPosts()).slice(0, 5);
             </span>
           </div>
 
-          <h2 class="build-title">Four AI design tools, one brief</h2>
+          <h2 class="build-title">Four AI design tools built this site. You pick the winner.</h2>
 
           <p class="build-summary">
-            One frozen vision, handed to four AI design tools with everything
-            else held constant. They diverged on process — but every one of
-            them, independently, chose the same typeface.
+            One frozen vision, four AI design tools, everything else held
+            constant. They diverged on process — yet every one chose the same
+            typeface. See what each one built, then cast your vote for the one
+            you would ship.
           </p>
 
           <div class="build-figures meta meta-row">
@@ -68,7 +70,9 @@ const posts = (await getPublishedPosts()).slice(0, 5);
           </div>
 
           <span class="build-cta"
-            >See the challenge<span class="build-arrow" aria-hidden="true">→</span></span
+            >Vote for the one you'd ship<span class="build-arrow" aria-hidden="true"
+              >↓</span
+            ></span
           >
         </div>
       </a>
