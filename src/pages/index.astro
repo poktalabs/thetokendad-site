@@ -11,23 +11,80 @@ const posts = (await getPublishedPosts()).slice(0, 5);
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   {/*
-    The entrance. Two things: the name, set so the definite article is visible
-    as its own word — "the" is the whole positioning — and the premise.
-    Then the key, which is the one thing on this site that moves.
+    The hero, two columns. The name and premise on the left — "the 'the' is
+    load-bearing", so the wordmark still says so — and the latest build on the
+    right, front of house and walkable straight into. The marks key that used
+    to sit here now lives below the fold so the newest build owns the entrance.
+    Stacks to one column on narrow screens: intro, then build.
   */}
-  <section class="shell entrance">
-    <h1>
-      <span class="entrance-mark">The</span>
-      <span class="entrance-name">Token Dad</span>
-    </h1>
-    <p class="entrance-line">{SITE_DESCRIPTION}</p>
-
-    <div class="entrance-key">
-      <div class="key-head">
-        <span class="label">What the marks mean</span>
-      </div>
-      <SignalKey variant="plate" class="arrival" />
+  <section class="shell hero">
+    <div class="hero-intro">
+      <h1>
+        <span class="entrance-mark">The</span>
+        <span class="entrance-name">Token Dad</span>
+      </h1>
+      <p class="entrance-line">{SITE_DESCRIPTION}</p>
     </div>
+
+    {/*
+      The featured build. It carries the Measurement mark because what it
+      showcases is a build with its numbers and method published — the same
+      thing that mark means in the key below. The panel is the link; its href
+      resolves once the challenge hub ships. Static: the key holds the site's
+      one authored moment, not this.
+    */}
+    <div class="hero-feature">
+      <div class="hero-feature-head">
+        <Glyph name="measure" size={18} style="color:var(--color-signal-measure)" />
+        <span class="label">Latest build</span>
+      </div>
+
+      <a class="build" href="/website-challenge-v1/">
+        <div class="build-inner">
+          <div class="build-head">
+            <Glyph name="measure" size={40} style="color:var(--color-signal-measure)" />
+            <span class="meta meta-row">
+              <span>Design run</span>
+              <span class="sep" aria-hidden="true">/</span>
+              <span>v1</span>
+            </span>
+          </div>
+
+          <h2 class="build-title">Four AI design tools, one brief</h2>
+
+          <p class="build-summary">
+            One frozen vision, handed to four AI design tools with everything
+            else held constant. They diverged on process — but every one of
+            them, independently, chose the same typeface.
+          </p>
+
+          <div class="build-figures meta meta-row">
+            <span>726 tool calls</span>
+            <span class="sep" aria-hidden="true">/</span>
+            <span>2.14M tokens</span>
+            <span class="sep" aria-hidden="true">/</span>
+            <span>~$14 modelled</span>
+          </div>
+
+          <span class="build-cta"
+            >See the challenge<span class="build-arrow" aria-hidden="true">→</span></span
+          >
+        </div>
+      </a>
+    </div>
+  </section>
+
+  {/*
+    What the marks mean — moved below the fold. It still teaches the six shapes
+    ahead of the writing list, where they appear wordless on every card; it just
+    no longer competes with the build for the entrance. It keeps the site's one
+    authored moment: the key draws itself on arrival.
+  */}
+  <section class="shell stack-section">
+    <div class="section-head">
+      <span class="label">What the marks mean</span>
+    </div>
+    <SignalKey variant="plate" class="arrival" />
   </section>
 
   <section class="shell stack-section">
