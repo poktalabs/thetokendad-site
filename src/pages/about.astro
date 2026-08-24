@@ -4,28 +4,24 @@ import Glyph from '../components/Glyph.astro';
 import SignalKey from '../components/SignalKey.astro';
 import { SITE_TITLE, SOCIAL } from '../consts';
 
-// CONTENT PENDING — the bio is blocked on TASK-005 (brand basics).
-// The route exists so the structure is real; the prose is Mel's to write.
-//
-// Design note: an empty page is a place to point somewhere, not a place to
-// apologise, so this states the truth in one line and hands the reader the
-// two things that do exist — the writing, and the key to the marks that run
-// through it. No bio has been invented here.
+// The bio, kept deliberately simple: it says who The Token Dad is, not a CV.
+// Identity over specifics — the professional detail is left off on purpose.
 ---
 
 <BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is.">
   <div class="shell page-head">
     <h1 class="page-title">About</h1>
-    <p class="post-lede">
-      This page isn't written yet. The writing is a better introduction anyway.
-    </p>
-    <div class="center-row">
-      <a class="quiet-link" href="/blog/">
-        <Glyph name="writing" size={18} />
-        <span>Read the writing</span>
-      </a>
-    </div>
+    <p class="post-lede">I forget things, so I build machines that don't.</p>
   </div>
+
+  <section class="shell column stack">
+    <p class="lede">
+      I'm Mel. The Token Dad is the part that happens at home — I hand the
+      calendar, the messages and the hundred small handoffs to agents, and I
+      publish what it costs to run them. I get numbers wrong sometimes, and when
+      I do, the correction goes up here too.
+    </p>
+  </section>
 
   <section class="shell column stack">
     <h2 class="section-title">The signs</h2>
@@ -44,12 +40,21 @@ import { SITE_TITLE, SOCIAL } from '../consts';
   <section class="shell column stack stack-section">
     <h2 class="section-title">Elsewhere</h2>
     <div class="marks marks--labelled">
-      <a class="quiet-link" href="/rss.xml">
-        <Glyph name="feed" size={18} />
-        <span>RSS</span>
+      <a class="quiet-link" href={SOCIAL.x} rel="me noopener">
+        <span>X</span>
+      </a>
+      <a class="quiet-link" href={SOCIAL.github} rel="me noopener">
+        <span>GitHub</span>
+      </a>
+      <a class="quiet-link" href={SOCIAL.linkedin} rel="me noopener">
+        <span>LinkedIn</span>
       </a>
       <a class="quiet-link" href={SOCIAL.instagram} rel="me noopener">
         <span>Instagram</span>
+      </a>
+      <a class="quiet-link" href="/rss.xml">
+        <Glyph name="feed" size={18} />
+        <span>RSS</span>
       </a>
     </div>
   </section>
