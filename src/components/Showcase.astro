@@ -1,0 +1,227 @@
+---
+import Glyph from './Glyph.astro';
+
+/**
+ * Showcase — the four exhibits.
+ *
+ * Same brief, four AI design tools, everything else held constant. The cards
+ * are the must-have: plain links to the live exhibits, present in the static
+ * HTML with zero JavaScript. Voting is layered on top as progressive
+ * enhancement — see the inline <script> below and `workers/votes/`. With JS
+ * off, or the vote backend unreachable, every card still renders and every
+ * link still works; the vote button simply sits inert (dash for a count,
+ * disabled) rather than pretending to a number nobody sent.
+ *
+ * One signal accent for the whole section: Open — "work shown while it is
+ * still wrong" — which is exactly what four AI-built sites judged in public
+ * are. It marks the section head and the vote glyph; it does not multiply
+ * into one hue per card, because the six signals are a typed vocabulary, not
+ * a decoration set.
+ */
+
+interface Exhibit {
+  slug: string;
+  tool: string;
+  arm: string;
+  url: string;
+  character: string;
+}
+
+const EXHIBITS: Exhibit[] = [
+  {
+    slug: 'design',
+    tool: 'frontend-design',
+    arm: 'Arm 1',
+    url: 'https://claude-design-v1.thetoken.dad',
+    character:
+      'Asked nothing, filled every gap itself, shipped in one pass — cheapest of the four by a factor of six. It also designed the page you are reading this on.',
+  },
+  {
+    slug: 'impeccable',
+    tool: 'Impeccable',
+    arm: 'Arm 2',
+    url: 'https://claude-impeccable-v1.thetoken.dad',
+    character:
+      'Built, reviewed itself behind a fix-or-ship gate, and documented from source — twice, until it would pass its own review.',
+  },
+  {
+    slug: 'taste',
+    tool: 'Taste',
+    arm: 'Arm 3',
+    url: 'https://claude-taste-v1.thetoken.dad',
+    character:
+      'Interviewed hardest of the four and held the strictest line on copy, then handed over React that had to be translated to ship.',
+  },
+  {
+    slug: 'gstack',
+    tool: 'gstack',
+    arm: 'Arm 4',
+    url: 'https://claude-gstack-v1.thetoken.dad',
+    character:
+      'Ran a structured 13-finding review with a second model as an outside voice — caught a colour that could never have rendered.',
+  },
+];
+---
+
+<section class="shell stack-section">
+  <div class="section-head">
+    <Glyph name="open" size={18} style="color:var(--color-signal-open)" />
+    <span class="label">The exhibits</span>
+  </div>
+
+  <div class="column showcase-intro">
+    <p class="lede" style="text-align:center">
+      One frozen brief, handed to four AI design tools. All four converged on
+      the same typeface. Look at what each one actually built, then say which
+      one you would ship.
+    </p>
+  </div>
+
+  <ul class="showcase-grid">
+    {
+      EXHIBITS.map((exhibit) => (
+        <li class="showcase-card">
+          <div class="showcase-eyebrow meta meta-row">
+            <span>{exhibit.arm}</span>
+            <span class="sep" aria-hidden="true">/</span>
+            <span>{exhibit.tool}</span>
+          </div>
+
+          <h3 class="showcase-title">
+            <a class="showcase-title-link" href={exhibit.url} rel="noopener">
+              {exhibit.tool}
+            </a>
+          </h3>
+
+          <p class="showcase-desc">{exhibit.character}</p>
+
+          <div class="showcase-foot">
+            <a class="quiet-link" href={exhibit.url} rel="noopener">
+              <span>Visit exhibit</span>
+              <span aria-hidden="true">→</span>
+            </a>
+
+            {/*
+              Inert by default: disabled, dash for a count. The script below
+              is the only thing that ever enables it, and only after a
+              successful fetch. No script, no backend, no network — this
+              stays exactly as it renders here.
+            */}
+            <button
+              class="vote-btn"
+              type="button"
+              data-vote-btn
+              data-exhibit={exhibit.slug}
+              disabled
+              aria-label={`Upvote ${exhibit.tool}`}
+            >
+              <Glyph name="open" size={14} style="color:var(--color-signal-open)" />
+              <span class="meta vote-count" data-vote-count aria-live="polite">—</span>
+            </button>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  /**
+   * Progressive-enhancement voting. Vanilla, isolated, no framework.
+   *
+   * Degrades on purpose: any failure here — no `fetch`, network error,
+   * CORS rejection, backend not deployed — is caught and swallowed, leaving
+   * every button exactly as the server rendered it (disabled, dash count).
+   * The showcase cards and their links never depend on any of this running.
+   *
+   * Worker origin: see `workers/votes/README.md`. The Worker is NOT
+   * deployed as part of this repo's build or deploy config — see
+   * SHOWCASE-VOTING-NOTES.md at the repo root before ever pointing this at
+   * a live endpoint.
+   */
+  const VOTES_API = 'https://votes.thetoken.dad';
+  const VOTED_KEY = 'thetokendad:voted-exhibits';
+
+  function getVoted(): Record<string, boolean> {
+    try {
+      return JSON.parse(localStorage.getItem(VOTED_KEY) ?? '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function setVoted(slug: string) {
+    try {
+      const voted = getVoted();
+      voted[slug] = true;
+      localStorage.setItem(VOTED_KEY, JSON.stringify(voted));
+    } catch {
+      // localStorage unavailable (private mode, storage blocked) — the
+      // server-side dedup by IP still holds; only the client-side "you
+      // already voted" affordance is lost.
+    }
+  }
+
+  function formatCount(n: unknown): string {
+    return typeof n === 'number' && Number.isFinite(n) ? String(n) : '—';
+  }
+
+  async function init() {
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('[data-vote-btn]'),
+    );
+    if (buttons.length === 0 || typeof fetch !== 'function') return;
+
+    let counts: Record<string, number> = {};
+    try {
+      const res = await fetch(`${VOTES_API}/votes`, { headers: { accept: 'application/json' } });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && typeof data === 'object') counts = data;
+    } catch {
+      // Backend unreachable or not deployed yet. Leave every button inert.
+      return;
+    }
+
+    const voted = getVoted();
+
+    for (const btn of buttons) {
+      const slug = btn.dataset.exhibit;
+      if (!slug) continue;
+      const countEl = btn.querySelector<HTMLElement>('[data-vote-count]');
+      if (countEl) countEl.textContent = formatCount(counts[slug]);
+
+      btn.disabled = false;
+      if (voted[slug]) {
+        btn.dataset.voted = 'true';
+        btn.disabled = true;
+      }
+
+      btn.addEventListener('click', async () => {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        try {
+          const res = await fetch(`${VOTES_API}/vote`, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ exhibit: slug }),
+          });
+          if (!res.ok) {
+            btn.disabled = false;
+            return;
+          }
+          const data = await res.json();
+          if (countEl) countEl.textContent = formatCount(data?.count);
+          btn.dataset.voted = 'true';
+          setVoted(slug);
+        } catch {
+          // Network failure mid-click: leave the button clickable again
+          // rather than stranding it disabled with no vote recorded.
+          btn.disabled = false;
+        }
+      });
+    }
+  }
+
+  init();
+</script>

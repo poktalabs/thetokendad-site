@@ -1,0 +1,38 @@
+{
+  // Standalone Worker for the showcase upvote mechanic. Deliberately NOT
+  // referenced by the main site's wrangler.jsonc, astro.config.mjs, or
+  // deploy scripts — see ../../SHOWCASE-VOTING-NOTES.md before touching
+  // this file or deploying it. Nothing here is wired into the static site
+  // build; the site stays `output: 'static'` regardless of this Worker.
+  //
+  // Deploy (after reading the notes and getting sign-off):
+  //   cd workers/votes
+  //   npx wrangler kv namespace create VOTES_KV
+  //   # paste the returned id into kv_namespaces[0].id below
+  //   npx wrangler deploy
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "thetokendad-votes-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-08",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Placeholder id — `wrangler kv namespace create VOTES_KV` prints the real
+  // one. A placeholder is fine for `wrangler deploy --dry-run`; it is not
+  // fine for an actual deploy.
+  "kv_namespaces": [
+    { "binding": "VOTES_KV", "id": "REPLACE_WITH_REAL_KV_NAMESPACE_ID" }
+  ],
+
+  // Same custom-domain pattern as the main site and the redirect Worker
+  // (see ../../wrangler.jsonc, ../../redirect/wrangler.jsonc). workers.dev
+  // is disabled on this account (see REPORT-v1.md, Deployment section), so
+  // a custom domain is the only reachable option, not a style choice.
+  "routes": [{ "pattern": "votes.thetoken.dad", "custom_domain": true }],
+
+  "vars": {
+    // Read by src/index.ts for the CORS allow-list. Override per
+    // environment with `wrangler deploy --var ALLOWED_ORIGIN:...` if this
+    // is ever tested from a preview deploy of the main site.
+    "ALLOWED_ORIGIN": "https://thetoken.dad"
+  }
+}
