@@ -1,80 +1,24 @@
 ---
 import { Image } from 'astro:assets';
 import Glyph from './Glyph.astro';
-import designImg from '../assets/exhibits/design.png';
-import impeccableImg from '../assets/exhibits/impeccable.png';
-import tasteImg from '../assets/exhibits/taste.png';
-import gstackImg from '../assets/exhibits/gstack.png';
-
-// Hero screenshots of each live exhibit, so a reader sees the design before
-// clicking through. Captured dark (the site's primary theme) at 1280x800.
-const IMAGES: Record<string, ImageMetadata> = {
-  design: designImg,
-  impeccable: impeccableImg,
-  taste: tasteImg,
-  gstack: gstackImg,
-};
+import { EXHIBITS } from '../lib/exhibits';
 
 /**
- * Showcase — the four exhibits.
+ * Showcase — the four exhibits, as a carousel.
  *
- * Same brief, four AI design tools, everything else held constant. The cards
- * are the must-have: plain links to the live exhibits, present in the static
- * HTML with zero JavaScript. Voting is layered on top as progressive
- * enhancement — see the inline <script> below and `workers/votes/`. With JS
- * off, or the vote backend unreachable, every card still renders and every
- * link still works; the vote button simply sits inert (dash for a count,
- * disabled) rather than pretending to a number nobody sent.
+ * A browse-first teaser on the home page: one big preview at a time in a
+ * scroll-snap track, a thumbnail strip below to jump between them, and a CTA
+ * into the vote page where all four sit side by side and the ballot lives.
  *
- * One signal accent for the whole section: Open — "work shown while it is
- * still wrong" — which is exactly what four AI-built sites judged in public
- * are. It marks the section head and the vote glyph; it does not multiply
- * into one hue per card, because the six signals are a typed vocabulary, not
- * a decoration set.
+ * No JavaScript. The track is a CSS scroll-snap container and the thumbnails
+ * are ordinary anchor links to each slide's id — clicking one scrolls the
+ * track to that slide. With no CSS scroll support it degrades to a plain
+ * horizontally-scrollable row of links. The vote itself is on
+ * /website-challenge-v1/vote/, not here.
+ *
+ * One signal accent for the section: Open — "work shown while it is still
+ * wrong" — on the section head only.
  */
-
-interface Exhibit {
-  slug: string;
-  tool: string;
-  arm: string;
-  url: string;
-  character: string;
-}
-
-const EXHIBITS: Exhibit[] = [
-  {
-    slug: 'design',
-    tool: 'frontend-design',
-    arm: 'Arm 1',
-    url: 'https://claude-design-v1.thetoken.dad',
-    character:
-      'Asked nothing, filled every gap itself, shipped in one pass — cheapest of the four by a factor of six. It also designed the page you are reading this on.',
-  },
-  {
-    slug: 'impeccable',
-    tool: 'Impeccable',
-    arm: 'Arm 2',
-    url: 'https://claude-impeccable-v1.thetoken.dad',
-    character:
-      'Built, reviewed itself behind a fix-or-ship gate, and documented from source — twice, until it would pass its own review.',
-  },
-  {
-    slug: 'taste',
-    tool: 'Taste',
-    arm: 'Arm 3',
-    url: 'https://claude-taste-v1.thetoken.dad',
-    character:
-      'Interviewed hardest of the four and held the strictest line on copy, then handed over React that had to be translated to ship.',
-  },
-  {
-    slug: 'gstack',
-    tool: 'gstack',
-    arm: 'Arm 4',
-    url: 'https://claude-gstack-v1.thetoken.dad',
-    character:
-      'Ran a structured 13-finding review with a second model as an outside voice — caught a colour that could never have rendered.',
-  },
-];
 ---
 
 <section id="exhibits" class="shell stack-section" style="scroll-margin-top: 2rem">
@@ -85,201 +29,52 @@ const EXHIBITS: Exhibit[] = [
 
   <div class="column showcase-intro">
     <p class="lede" style="text-align:center">
-      One frozen brief, handed to four AI design tools. All four converged on
-      the same typeface. Look at what each one actually built, then say which
-      one you would ship.
+      One frozen brief, four AI design tools. All four converged on the same
+      typeface. Browse what each one built, then vote for the one you'd ship.
     </p>
   </div>
 
-  <ul class="showcase-grid">
-    {
-      EXHIBITS.map((exhibit) => (
-        <li class="showcase-card">
-          {/*
-            The hero of the live exhibit. A third link to the same place the
-            title and the CTA already point at, so it is hidden from assistive
-            tech and the tab order — decorative for AT, clickable for a mouse.
-          */}
+  <div class="carousel">
+    <div class="carousel-track">
+      {
+        EXHIBITS.map((e) => (
           <a
-            class="showcase-thumb"
-            href={exhibit.url}
+            id={`slide-${e.slug}`}
+            class="carousel-slide"
+            href={e.url}
             rel="noopener"
-            tabindex="-1"
-            aria-hidden="true"
           >
-            <Image src={IMAGES[exhibit.slug]} alt="" width={760} densities={[1, 1.5]} />
+            <Image src={e.image} alt={`The ${e.tool} exhibit`} width={1200} densities={[1, 1.5]} />
+            <span class="carousel-caption meta meta-row">
+              <span>{e.arm}</span>
+              <span class="sep" aria-hidden="true">/</span>
+              <span>{e.tool}</span>
+              <span class="sep" aria-hidden="true">/</span>
+              <span class="carousel-caption-cta">Visit ↗</span>
+            </span>
           </a>
+        ))
+      }
+    </div>
 
-          <div class="showcase-eyebrow meta meta-row">
-            <span>{exhibit.arm}</span>
-            <span class="sep" aria-hidden="true">/</span>
-            <span>{exhibit.tool}</span>
-          </div>
-
-          <h3 class="showcase-title">
-            <a class="showcase-title-link" href={exhibit.url} rel="noopener">
-              {exhibit.tool}
+    <ul class="carousel-thumbs">
+      {
+        EXHIBITS.map((e) => (
+          <li>
+            <a class="carousel-thumb" href={`#slide-${e.slug}`} aria-label={`Show ${e.tool}`}>
+              <Image src={e.image} alt="" width={320} />
+              <span class="carousel-thumb-label label">{e.tool}</span>
             </a>
-          </h3>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 
-          <p class="showcase-desc">{exhibit.character}</p>
-
-          <div class="showcase-foot">
-            <a class="quiet-link" href={exhibit.url} rel="noopener">
-              <span>Visit exhibit</span>
-              <span aria-hidden="true">→</span>
-            </a>
-
-            {/*
-              A single vote: an up-arrow, the word, and the count. It is a
-              ballot — one vote per person across all four — so casting it
-              locks every card. Inert by default (disabled, dash for a count);
-              the script below is the only thing that enables it, and only
-              after a successful fetch. No script, no backend, no network — it
-              stays exactly as it renders here.
-            */}
-            <button
-              class="vote-btn"
-              type="button"
-              data-vote-btn
-              data-exhibit={exhibit.slug}
-              disabled
-              title="Vote for this one"
-              aria-label={`Vote for ${exhibit.tool}`}
-            >
-              <svg class="vote-arrow" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
-                <path d="M8 3.2 14 12 2 12 Z" />
-              </svg>
-              <span class="vote-label" data-vote-label>Vote</span>
-              <span class="meta vote-count" data-vote-count aria-live="polite">—</span>
-            </button>
-          </div>
-        </li>
-      ))
-    }
-  </ul>
+  <div class="center-row showcase-cta">
+    <a class="cta-button" href="/website-challenge-v1/vote/">
+      <span>Compare all four &amp; vote</span>
+      <span class="cta-arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
 </section>
-
-<script>
-  /**
-   * Progressive-enhancement ballot. Vanilla, isolated, no framework.
-   *
-   * One vote per person, total — pick the one you'd ship. Casting a vote locks
-   * all four cards. Degrades on purpose: any failure here — no `fetch`, network
-   * error, CORS rejection, backend not deployed — is caught and swallowed,
-   * leaving every button as the server rendered it (disabled, dash count). The
-   * showcase cards and their links never depend on this running.
-   *
-   * Worker origin + deploy: see `workers/votes/README.md` and
-   * SHOWCASE-VOTING-NOTES.md at the repo root.
-   */
-  const VOTES_API = 'https://votes.thetoken.dad';
-  const VOTED_KEY = 'thetokendad:voted-exhibit';
-
-  function getVotedLocal(): string | null {
-    try {
-      return localStorage.getItem(VOTED_KEY);
-    } catch {
-      return null;
-    }
-  }
-
-  function setVotedLocal(slug: string) {
-    try {
-      localStorage.setItem(VOTED_KEY, slug);
-    } catch {
-      // localStorage unavailable — the server-side per-IP dedup still holds;
-      // only the client-side "you already voted" memory is lost.
-    }
-  }
-
-  function formatCount(n: unknown): string {
-    return typeof n === 'number' && Number.isFinite(n) ? String(n) : '—';
-  }
-
-  async function init() {
-    const buttons = Array.from(
-      document.querySelectorAll<HTMLButtonElement>('[data-vote-btn]'),
-    );
-    if (buttons.length === 0 || typeof fetch !== 'function') return;
-
-    let counts: Record<string, number> = {};
-    let youVoted: string | null = null;
-    try {
-      const res = await fetch(`${VOTES_API}/votes`, {
-        headers: { accept: 'application/json' },
-      });
-      if (!res.ok) return;
-      const data = await res.json();
-      if (data && typeof data === 'object') {
-        counts = data.counts ?? {};
-        youVoted = data.youVoted ?? null;
-      }
-    } catch {
-      // Backend unreachable or not deployed yet. Leave every button inert.
-      return;
-    }
-
-    // The server (per-IP) is authoritative; localStorage is a fallback for the
-    // affordance when this browser voted but the server read lagged.
-    if (!youVoted) youVoted = getVotedLocal();
-
-    const setCount = (btn: HTMLButtonElement) => {
-      const countEl = btn.querySelector<HTMLElement>('[data-vote-count]');
-      if (countEl) countEl.textContent = formatCount(counts[btn.dataset.exhibit ?? '']);
-    };
-
-    // Lock every card; mark the chosen one as voted.
-    const lockAll = (chosen: string | null) => {
-      for (const btn of buttons) {
-        btn.disabled = true;
-        const labelEl = btn.querySelector<HTMLElement>('[data-vote-label]');
-        if (btn.dataset.exhibit === chosen) {
-          btn.dataset.voted = 'true';
-          if (labelEl) labelEl.textContent = 'Voted';
-        } else if (labelEl) {
-          labelEl.textContent = 'Vote';
-        }
-      }
-    };
-
-    for (const btn of buttons) setCount(btn);
-
-    if (youVoted) {
-      lockAll(youVoted);
-      return;
-    }
-
-    // Not yet voted: enable all four. The first click wins and locks the rest.
-    for (const btn of buttons) {
-      btn.disabled = false;
-      btn.addEventListener('click', async () => {
-        const slug = btn.dataset.exhibit;
-        if (!slug || btn.disabled) return;
-        for (const b of buttons) b.disabled = true; // lock immediately
-
-        try {
-          const res = await fetch(`${VOTES_API}/vote`, {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ exhibit: slug }),
-          });
-          if (!res.ok) {
-            for (const b of buttons) b.disabled = false; // allow a retry
-            return;
-          }
-          const data = await res.json();
-          const chosen: string = data?.youVoted ?? slug;
-          counts = data?.counts ?? counts;
-          for (const b of buttons) setCount(b);
-          setVotedLocal(chosen);
-          lockAll(chosen);
-        } catch {
-          for (const b of buttons) b.disabled = false;
-        }
-      });
-    }
-  }
-
-  init();
-</script>

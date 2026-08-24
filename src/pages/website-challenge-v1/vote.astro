@@ -1,0 +1,205 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { EXHIBITS } from '../../lib/exhibits';
+import { SITE_TITLE } from '../../consts';
+
+// The vote: four AI design tools built the same site from one frozen brief,
+// shown here in an equal grid so they can be compared side by side. One vote
+// per person — it is a ballot, not a set of upvotes. The voting logic lives in
+// the <script> below and in workers/votes/; with no JS the grid and every link
+// still work, the vote buttons simply stay inert.
+---
+
+<BaseLayout
+  title={`Vote · The Website Challenge · ${SITE_TITLE}`}
+  description="Four AI design tools built the same site from one brief. Compare them and vote for the one you would ship."
+>
+  <div class="shell page-head">
+    <h1 class="page-title">Which one would you ship?</h1>
+    <p class="post-lede">
+      One frozen brief, four AI design tools, everything else held constant.
+      Compare them below and cast one vote — the one you would actually ship.
+    </p>
+  </div>
+
+  <section class="shell vote-page">
+    <ul class="showcase-grid">
+      {
+        EXHIBITS.map((exhibit) => (
+          <li class="showcase-card">
+            <a
+              class="showcase-thumb"
+              href={exhibit.url}
+              rel="noopener"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <Image src={exhibit.image} alt="" width={900} densities={[1, 1.5]} />
+            </a>
+
+            <div class="showcase-eyebrow meta meta-row">
+              <span>{exhibit.arm}</span>
+              <span class="sep" aria-hidden="true">/</span>
+              <span>{exhibit.tool}</span>
+            </div>
+
+            <h2 class="showcase-title">
+              <a class="showcase-title-link" href={exhibit.url} rel="noopener">
+                {exhibit.tool}
+              </a>
+            </h2>
+
+            <p class="showcase-desc">{exhibit.character}</p>
+
+            <div class="showcase-foot">
+              <a class="quiet-link" href={exhibit.url} rel="noopener">
+                <span>Visit exhibit</span>
+                <span aria-hidden="true">→</span>
+              </a>
+
+              <button
+                class="vote-btn"
+                type="button"
+                data-vote-btn
+                data-exhibit={exhibit.slug}
+                disabled
+                title="Vote for this one"
+                aria-label={`Vote for ${exhibit.tool}`}
+              >
+                <svg class="vote-arrow" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+                  <path d="M8 3.2 14 12 2 12 Z" />
+                </svg>
+                <span class="vote-label" data-vote-label>Vote</span>
+                <span class="meta vote-count" data-vote-count aria-live="polite">—</span>
+              </button>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="vote-note meta">
+      One vote per person. You are picking the site you would ship, not rating
+      each one.
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  /**
+   * Progressive-enhancement ballot. Vanilla, isolated, no framework.
+   *
+   * One vote per person, total — pick the one you'd ship. Casting a vote locks
+   * all four cards. Degrades on purpose: any failure here (no `fetch`, network
+   * error, CORS rejection, backend not deployed) is caught and swallowed,
+   * leaving every button as the server rendered it (disabled, dash count). The
+   * cards and their links never depend on this running.
+   *
+   * Worker origin + deploy: see `workers/votes/README.md` and
+   * SHOWCASE-VOTING-NOTES.md at the repo root.
+   */
+  const VOTES_API = 'https://votes.thetoken.dad';
+  const VOTED_KEY = 'thetokendad:voted-exhibit';
+
+  function getVotedLocal(): string | null {
+    try {
+      return localStorage.getItem(VOTED_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  function setVotedLocal(slug: string) {
+    try {
+      localStorage.setItem(VOTED_KEY, slug);
+    } catch {
+      // localStorage unavailable — server-side per-IP dedup still holds.
+    }
+  }
+
+  function formatCount(n: unknown): string {
+    return typeof n === 'number' && Number.isFinite(n) ? String(n) : '—';
+  }
+
+  async function init() {
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('[data-vote-btn]'),
+    );
+    if (buttons.length === 0 || typeof fetch !== 'function') return;
+
+    let counts: Record<string, number> = {};
+    let youVoted: string | null = null;
+    try {
+      const res = await fetch(`${VOTES_API}/votes`, {
+        headers: { accept: 'application/json' },
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && typeof data === 'object') {
+        counts = data.counts ?? {};
+        youVoted = data.youVoted ?? null;
+      }
+    } catch {
+      return;
+    }
+
+    if (!youVoted) youVoted = getVotedLocal();
+
+    const setCount = (btn: HTMLButtonElement) => {
+      const countEl = btn.querySelector<HTMLElement>('[data-vote-count]');
+      if (countEl) countEl.textContent = formatCount(counts[btn.dataset.exhibit ?? '']);
+    };
+
+    const lockAll = (chosen: string | null) => {
+      for (const btn of buttons) {
+        btn.disabled = true;
+        const labelEl = btn.querySelector<HTMLElement>('[data-vote-label]');
+        if (btn.dataset.exhibit === chosen) {
+          btn.dataset.voted = 'true';
+          if (labelEl) labelEl.textContent = 'Voted';
+        } else if (labelEl) {
+          labelEl.textContent = 'Vote';
+        }
+      }
+    };
+
+    for (const btn of buttons) setCount(btn);
+
+    if (youVoted) {
+      lockAll(youVoted);
+      return;
+    }
+
+    for (const btn of buttons) {
+      btn.disabled = false;
+      btn.addEventListener('click', async () => {
+        const slug = btn.dataset.exhibit;
+        if (!slug || btn.disabled) return;
+        for (const b of buttons) b.disabled = true;
+
+        try {
+          const res = await fetch(`${VOTES_API}/vote`, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ exhibit: slug }),
+          });
+          if (!res.ok) {
+            for (const b of buttons) b.disabled = false;
+            return;
+          }
+          const data = await res.json();
+          const chosen: string = data?.youVoted ?? slug;
+          counts = data?.counts ?? counts;
+          for (const b of buttons) setCount(b);
+          setVotedLocal(chosen);
+          lockAll(chosen);
+        } catch {
+          for (const b of buttons) b.disabled = false;
+        }
+      });
+    }
+  }
+
+  init();
+</script>
