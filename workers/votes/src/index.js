@@ -20,8 +20,8 @@
  * Storage (Workers KV, binding VOTES_KV)
  *   count:<exhibit>          -> string integer, the running total
  *   voted:<exhibit>:<iphash> -> "1", permanent — dedup marker, no raw IP
- *                                ever stored, only a SHA-256 hash of it
- *   rl:<iphash>               -> "1", short TTL — coarse rate limit
+ *                                ever stored, only a SHA-256 hash of it.
+ *                                This is the one-vote-per-IP-per-exhibit control.
  *
  * KV is eventually-consistent with no transactions, so a genuine race (two
  * requests from the same IP landing on different edge colos in the same
@@ -97,15 +97,10 @@ async function handleVote(request, env) {
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
   const ipHash = await hashIp(ip);
 
-  // Coarse rate limit: one write of any kind per IP per 3 seconds. Cheap
-  // to defeat by a determined attacker, sufficient to stop an accidental
-  // double-click or a naive script loop.
-  const rlKey = `rl:${ipHash}`;
-  if (await env.VOTES_KV.get(rlKey)) {
-    return json({ error: 'rate limited' }, env, { status: 429 });
-  }
-  await env.VOTES_KV.put(rlKey, '1', { expirationTtl: 3 });
-
+  // No coarse rate-limit key: Workers KV rejects any expirationTtl below 60s,
+  // so the intended 3s guard is impossible, and a 60s guard would block a
+  // visitor from upvoting a second exhibit for a full minute. The permanent
+  // per-(exhibit, IP) dedup key below is the real "one vote per IP" control.
   const votedKey = `voted:${exhibit}:${ipHash}`;
   const alreadyVoted = await env.VOTES_KV.get(votedKey);
   const counts = await getAllCounts(env);
