@@ -1,0 +1,37 @@
+---
+import Glyph from './Glyph.astro';
+import { SITE_TITLE } from '../consts';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href);
+---
+
+<header class="site-header">
+  <a class="wordmark" href="/">{SITE_TITLE}</a>
+  <nav class="site-nav" aria-label="Sections">
+    <a
+      class="navlink"
+      href="/blog/"
+      aria-current={isCurrent('/blog/') ? 'page' : undefined}
+    >
+      <Glyph name="writing" size={18} />
+      <span>Writing</span>
+    </a>
+    <a
+      class="navlink"
+      href="/about/"
+      aria-current={isCurrent('/about/') ? 'page' : undefined}
+    >
+      <Glyph name="about" size={18} />
+      <span>About</span>
+    </a>
+    <a
+      class="navlink"
+      href="/website-challenge-v1/"
+      aria-current={isCurrent('/website-challenge-v1/') ? 'page' : undefined}
+    >
+      <Glyph name="measure" size={18} />
+      <span>Website Challenge</span>
+    </a>
+  </nav>
+</header>

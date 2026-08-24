@@ -16,8 +16,8 @@ import '@fontsource-variable/faustina/wght.css';
 import '@fontsource-variable/faustina/wght-italic.css';
 
 import BaseHead from '../components/BaseHead.astro';
-import Glyph from '../components/Glyph.astro';
-import { SITE_TITLE, SOCIAL } from '../consts';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -29,11 +29,6 @@ interface Props {
 
 const { title, description, jsonLd } = Astro.props;
 const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
-
-const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href || path.startsWith(href);
-
-const copyright = `© ${new Date().getFullYear()} ${SITE_TITLE}`;
 ---
 
 <html lang="en">
@@ -44,35 +39,7 @@ const copyright = `© ${new Date().getFullYear()} ${SITE_TITLE}`;
     ))}
   </head>
   <body>
-    <header class="site-header">
-      <a class="wordmark" href="/">{SITE_TITLE}</a>
-      <nav class="site-nav" aria-label="Sections">
-        <a
-          class="navlink"
-          href="/website-challenge-v1/"
-          aria-current={isCurrent('/website-challenge-v1/') ? 'page' : undefined}
-        >
-          <Glyph name="measure" size={18} />
-          <span>Website Challenge</span>
-        </a>
-        <a
-          class="navlink"
-          href="/blog/"
-          aria-current={isCurrent('/blog/') ? 'page' : undefined}
-        >
-          <Glyph name="writing" size={18} />
-          <span>Writing</span>
-        </a>
-        <a
-          class="navlink"
-          href="/about/"
-          aria-current={isCurrent('/about/') ? 'page' : undefined}
-        >
-          <Glyph name="about" size={18} />
-          <span>About</span>
-        </a>
-      </nav>
-    </header>
+    <SiteHeader />
 
     <main class="site-main">
       <div class="shell">
@@ -82,16 +49,7 @@ const copyright = `© ${new Date().getFullYear()} ${SITE_TITLE}`;
       </div>
     </main>
 
-    <footer class="site-footer">
-      <span>{copyright}</span>
-      <a href="/rss.xml">
-        <Glyph name="feed" size={16} />
-        <span>RSS</span>
-      </a>
-      <a href={SOCIAL.instagram} rel="me noopener">
-        <span>Instagram</span>
-      </a>
-    </footer>
+    <SiteFooter />
   </body>
 </html>
 

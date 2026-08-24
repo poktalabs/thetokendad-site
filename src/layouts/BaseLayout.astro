@@ -4,8 +4,8 @@ import '@fontsource-variable/faustina/wght.css';
 import '@fontsource-variable/faustina/wght-italic.css';
 
 import BaseHead from '../components/BaseHead.astro';
-import Glyph from '../components/Glyph.astro';
-import { SITE_TITLE, SOCIAL } from '../consts';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -14,15 +14,6 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-
-// Every gap in this file is a `gap` property. `compressHTML: 'jsx'` deletes
-// whitespace between adjacent inline elements at build time, so a literal
-// space between two links is not a space that survives the build.
-const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href || path.startsWith(href);
-
-// Built as one string, not as three adjacent nodes, for the same reason.
-const copyright = `© ${new Date().getFullYear()} ${SITE_TITLE}`;
 ---
 
 <html lang="en">
@@ -30,50 +21,12 @@ const copyright = `© ${new Date().getFullYear()} ${SITE_TITLE}`;
     <BaseHead title={title} description={description} />
   </head>
   <body>
-    <header class="site-header">
-      <a class="wordmark" href="/">{SITE_TITLE}</a>
-      <nav class="site-nav" aria-label="Sections">
-        <a
-          class="navlink"
-          href="/blog/"
-          aria-current={isCurrent('/blog/') ? 'page' : undefined}
-        >
-          <Glyph name="writing" size={18} />
-          <span>Writing</span>
-        </a>
-        <a
-          class="navlink"
-          href="/about/"
-          aria-current={isCurrent('/about/') ? 'page' : undefined}
-        >
-          <Glyph name="about" size={18} />
-          <span>About</span>
-        </a>
-      </nav>
-    </header>
+    <SiteHeader />
 
     <main class="site-main">
       <slot />
     </main>
 
-    <footer class="site-footer">
-      <span>{copyright}</span>
-      <a href={SOCIAL.x} rel="me noopener">
-        <span>X</span>
-      </a>
-      <a href={SOCIAL.github} rel="me noopener">
-        <span>GitHub</span>
-      </a>
-      <a href={SOCIAL.linkedin} rel="me noopener">
-        <span>LinkedIn</span>
-      </a>
-      <a href={SOCIAL.instagram} rel="me noopener">
-        <span>Instagram</span>
-      </a>
-      <a href="/rss.xml">
-        <Glyph name="feed" size={16} />
-        <span>RSS</span>
-      </a>
-    </footer>
+    <SiteFooter />
   </body>
 </html>
