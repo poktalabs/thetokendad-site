@@ -20,7 +20,7 @@
   // one. A placeholder is fine for `wrangler deploy --dry-run`; it is not
   // fine for an actual deploy.
   "kv_namespaces": [
-    { "binding": "VOTES_KV", "id": "REPLACE_WITH_REAL_KV_NAMESPACE_ID" }
+    { "binding": "VOTES_KV", "id": "65a2e30a6a15403490c3128b6a2e2471" }
   ],
 
   // Same custom-domain pattern as the main site and the redirect Worker
