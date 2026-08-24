@@ -1,5 +1,19 @@
 ---
+import { Image } from 'astro:assets';
 import Glyph from './Glyph.astro';
+import designImg from '../assets/exhibits/design.png';
+import impeccableImg from '../assets/exhibits/impeccable.png';
+import tasteImg from '../assets/exhibits/taste.png';
+import gstackImg from '../assets/exhibits/gstack.png';
+
+// Hero screenshots of each live exhibit, so a reader sees the design before
+// clicking through. Captured dark (the site's primary theme) at 1280x800.
+const IMAGES: Record<string, ImageMetadata> = {
+  design: designImg,
+  impeccable: impeccableImg,
+  taste: tasteImg,
+  gstack: gstackImg,
+};
 
 /**
  * Showcase — the four exhibits.
@@ -81,6 +95,21 @@ const EXHIBITS: Exhibit[] = [
     {
       EXHIBITS.map((exhibit) => (
         <li class="showcase-card">
+          {/*
+            The hero of the live exhibit. A third link to the same place the
+            title and the CTA already point at, so it is hidden from assistive
+            tech and the tab order — decorative for AT, clickable for a mouse.
+          */}
+          <a
+            class="showcase-thumb"
+            href={exhibit.url}
+            rel="noopener"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <Image src={IMAGES[exhibit.slug]} alt="" width={760} densities={[1, 1.5]} />
+          </a>
+
           <div class="showcase-eyebrow meta meta-row">
             <span>{exhibit.arm}</span>
             <span class="sep" aria-hidden="true">/</span>
@@ -102,10 +131,10 @@ const EXHIBITS: Exhibit[] = [
             </a>
 
             {/*
-              Inert by default: disabled, dash for a count. The script below
-              is the only thing that ever enables it, and only after a
-              successful fetch. No script, no backend, no network — this
-              stays exactly as it renders here.
+              An upvote: an up-arrow, the word, and the count. Inert by default
+              (disabled, dash for a count); the script below is the only thing
+              that enables it, and only after a successful fetch. No script, no
+              backend, no network — it stays exactly as it renders here.
             */}
             <button
               class="vote-btn"
@@ -113,9 +142,13 @@ const EXHIBITS: Exhibit[] = [
               data-vote-btn
               data-exhibit={exhibit.slug}
               disabled
+              title="Upvote"
               aria-label={`Upvote ${exhibit.tool}`}
             >
-              <Glyph name="open" size={14} style="color:var(--color-signal-open)" />
+              <svg class="vote-arrow" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+                <path d="M8 3.2 14 12 2 12 Z" />
+              </svg>
+              <span class="vote-label" data-vote-label>Upvote</span>
               <span class="meta vote-count" data-vote-count aria-live="polite">—</span>
             </button>
           </div>
@@ -189,12 +222,14 @@ const EXHIBITS: Exhibit[] = [
       const slug = btn.dataset.exhibit;
       if (!slug) continue;
       const countEl = btn.querySelector<HTMLElement>('[data-vote-count]');
+      const labelEl = btn.querySelector<HTMLElement>('[data-vote-label]');
       if (countEl) countEl.textContent = formatCount(counts[slug]);
 
       btn.disabled = false;
       if (voted[slug]) {
         btn.dataset.voted = 'true';
         btn.disabled = true;
+        if (labelEl) labelEl.textContent = 'Voted';
       }
 
       btn.addEventListener('click', async () => {
@@ -213,6 +248,7 @@ const EXHIBITS: Exhibit[] = [
           const data = await res.json();
           if (countEl) countEl.textContent = formatCount(data?.count);
           btn.dataset.voted = 'true';
+          if (labelEl) labelEl.textContent = 'Voted';
           setVoted(slug);
         } catch {
           // Network failure mid-click: leave the button clickable again
