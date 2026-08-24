@@ -1,0 +1,52 @@
+---
+// Hub-scoped layout for /website-challenge-v1/*.
+//
+// Why this exists instead of BaseLayout: the hub pages need per-page JSON-LD in
+// <head>, and BaseLayout/BaseHead (deliberately) expose no head slot. Rather than
+// edit those shared files (owned by the human design track), this layout mirrors
+// BaseLayout's semantic shell and reuses the UNMODIFIED BaseHead for
+// title/description/canonical/OG/Twitter, adding only a JSON-LD injection point.
+//
+// Keep this file free of Tailwind utility-shaped words in prose/comments
+// (ring, blur, shadow, gradient, grayscale, invert, ...) — Tailwind 4 scans it.
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_TITLE } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  // One JSON-LD object or an array of them. Serialized verbatim into <head>.
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, description, jsonLd } = Astro.props;
+const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+    {blocks.map((block) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
+  </head>
+  <body>
+    <header>
+      <a href="/">{SITE_TITLE}</a>
+      <nav>
+        <a href="/blog/">Writing</a>
+        <a href="/about/">About</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <p>&copy; {new Date().getFullYear()} {SITE_TITLE}</p>
+      <a href="/rss.xml">RSS</a>
+    </footer>
+  </body>
+</html>
