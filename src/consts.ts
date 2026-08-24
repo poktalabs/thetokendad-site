@@ -10,5 +10,8 @@ export const SITE_DESCRIPTION =
 export const AUTHOR = 'Mel';
 
 export const SOCIAL = {
+  x: 'https://x.com/thetokendad_',
+  github: 'https://github.com/troopdegen',
+  linkedin: 'https://www.linkedin.com/in/mel-mc',
   instagram: 'https://instagram.com/thetokendad',
 } as const;

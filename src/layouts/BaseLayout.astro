@@ -58,12 +58,21 @@ const copyright = `© ${new Date().getFullYear()} ${SITE_TITLE}`;
 
     <footer class="site-footer">
       <span>{copyright}</span>
-      <a href="/rss.xml">
-        <Glyph name="feed" size={16} />
-        <span>RSS</span>
+      <a href={SOCIAL.x} rel="me noopener">
+        <span>X</span>
+      </a>
+      <a href={SOCIAL.github} rel="me noopener">
+        <span>GitHub</span>
+      </a>
+      <a href={SOCIAL.linkedin} rel="me noopener">
+        <span>LinkedIn</span>
       </a>
       <a href={SOCIAL.instagram} rel="me noopener">
         <span>Instagram</span>
+      </a>
+      <a href="/rss.xml">
+        <Glyph name="feed" size={16} />
+        <span>RSS</span>
       </a>
     </footer>
   </body>
