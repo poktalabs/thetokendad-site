@@ -1,7 +1,7 @@
 ---
 import HubLayout from '../../layouts/HubLayout.astro';
 
-const pageTitle = 'The Website Challenge — Four AI Design Tools, One Brief';
+const pageTitle = 'The Website Challenge: Four AI Design Tools, One Brief';
 const pageDescription =
   'One frozen brief, four AI design tools, zero contact between them. All four independently chose the same display typeface. Here is what that does and does not prove.';
 const pageUrl = 'https://thetoken.dad/website-challenge-v1/';
@@ -58,7 +58,7 @@ const faqJsonLd = {
       name: 'Does a more expensive AI design process produce a better website?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'The run does not settle it. A 6x cost spread (Impeccable $7.02 vs frontend-design $1.12) bought a more rigorous process — more review rounds and an adversarial gate — but whether it bought a better website is exactly what the four exhibits let readers judge.',
+        text: 'The run does not settle it. A 6x cost spread (Impeccable $7.02 vs frontend-design $1.12) bought a more rigorous process (more review rounds and an adversarial gate), but whether it bought a better website is exactly what the four exhibits let readers judge.',
       },
     },
     {
@@ -100,12 +100,12 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
       <h1>The Website Challenge: Four AI Design Tools, One Frozen Brief</h1>
       <p>
         Typography was the one variable a human deliberately left open, with an explicit warning against
-        the obvious answer — and all four AI design tools chose the same typeface anyway. One person wrote
+        the obvious answer, and all four AI design tools chose the same typeface anyway. One person wrote
         a design brief once, froze it, and handed the identical frozen document to four different AI design
         tools with nothing else varied. Across six independent readings of that brief, the display typeface
         was Archivo every single time. Whether that is genuine agreement on the right answer or four tools
         pattern-matching to the same training-data reflex is the open question this run cannot settle by
-        itself — which is why the four exhibits are published for readers to judge directly.
+        itself, which is why the four exhibits are published for readers to judge directly.
       </p>
     </header>
 
@@ -125,7 +125,7 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
       <h2>What did every tool choose, independently?</h2>
       <p>
         The brief's instruction on type was direct: "I don't want to restrict, I want to be surprised," paired
-        with a named embarrassment to avoid — "an obvious serif font selected by AI." Type was expected to be
+        with a named embarrassment to avoid, "an obvious serif font selected by AI." Type was expected to be
         one of the places the four tools would diverge most. It was not. All four tools chose Archivo for
         display type. Arms 1 and 2 independently chose the identical pair, Archivo and Faustina, with no
         contact between them. Inside arm 4 alone, three further independent voices each proposed Archivo
@@ -136,7 +136,7 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
         That convergence is the most interesting thing this run produced, precisely because it cuts both
         ways. Read generously, it looks like four independent systems finding the same correct answer to a
         well-specified problem. Read skeptically, it looks like four tools built on similar training data
-        reaching for the same safe, non-obvious choice — "surprise me" answered with consensus instead of
+        reaching for the same safe, non-obvious choice: "surprise me" answered with consensus instead of
         variation. The run itself cannot distinguish between those two readings. That is exactly why the
         four exhibits are left live: so a reader can look at the actual outputs and decide which explanation
         the evidence supports.
@@ -147,7 +147,7 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
       <h2>The four exhibits</h2>
       <p>
         Each row below is a full, independently built website from the same frozen brief. All four exhibits
-        are frozen and <code>noindex</code> — they will not change, and they should not be relied on to
+        are frozen and <code>noindex</code>: they will not change, and they should not be relied on to
         appear in search results.
       </p>
       <table>
@@ -183,7 +183,7 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
       </table>
       <p>
         The exhibits are the evidence. Because they are <code>noindex</code>, they may not be crawlable by
-        search engines — this hub page carries the canonical explanation and ranking of the run.
+        search engines; this hub page carries the canonical explanation and ranking of the run.
       </p>
     </section>
 
@@ -191,8 +191,8 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
       <h2>If the outputs converged, what actually differed?</h2>
       <p>
         The divergence between the four tools was in process, not in taste. The cheapest arm
-        (frontend-design) modelled at $1.12; the most expensive (Impeccable) modelled at $7.02 — a 6x
-        spread — yet the visual outputs were more alike than that spread would predict. What this run
+        (frontend-design) modelled at $1.12; the most expensive (Impeccable) modelled at $7.02 (a 6x
+        spread), yet the visual outputs were more alike than that spread would predict. What this run
         actually publishes is that process divergence, plus the single most valuable defect it uncovered: a
         colour that, due to a CSS specificity conflict, could structurally never render, a problem only an
         adversarial review pass was able to find. Full detail, including the per-tool process breakdown, the
@@ -204,15 +204,15 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
       <h2>Read more</h2>
       <ul>
         <li>
-          <a href="/website-challenge-v1/methodology/">Methodology</a> — how the run was controlled: clean-context
+          <a href="/website-challenge-v1/methodology/">Methodology</a>, how the run was controlled: clean-context
           runners, the intake proxy, parallel execution, and verification.
         </li>
         <li>
-          <a href="/website-challenge-v1/results/">Results</a> — the headline finding in full, the process
+          <a href="/website-challenge-v1/results/">Results</a>, the headline finding in full, the process
           divergence between tools, the key defect, the stats tables, and the cost method.
         </li>
         <li>
-          <a href="/website-challenge-v1/exhibits/">Exhibits</a> — the four tools with per-tool context,
+          <a href="/website-challenge-v1/exhibits/">Exhibits</a>, the four tools with per-tool context,
           per-arm stats, and links out to each live site.
         </li>
       </ul>
@@ -244,7 +244,7 @@ const jsonLd = [articleJsonLd, faqJsonLd, breadcrumbJsonLd];
         <dt>Does a more expensive AI design process produce a better website?</dt>
         <dd>
           The run does not settle it. A 6x cost spread (Impeccable $7.02 vs frontend-design $1.12) bought a
-          more rigorous process — more review rounds and an adversarial gate — but whether it bought a better
+          more rigorous process (more review rounds and an adversarial gate), but whether it bought a better
           website is exactly what the four exhibits let readers judge.
         </dd>
 

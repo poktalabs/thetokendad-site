@@ -6,7 +6,7 @@ import { SITE_TITLE } from '../../consts';
 
 // The vote: four AI design tools built the same site from one frozen brief,
 // shown here in an equal grid so they can be compared side by side. One vote
-// per person — it is a ballot, not a set of upvotes. The voting logic lives in
+// per person, it is a ballot, not a set of upvotes. The voting logic lives in
 // the <script> below and in workers/votes/; with no JS the grid and every link
 // still work, the vote buttons simply stay inert.
 ---
@@ -19,7 +19,7 @@ import { SITE_TITLE } from '../../consts';
     <h1 class="page-title">Which one would you ship?</h1>
     <p class="post-lede">
       One frozen brief, four AI design tools, everything else held constant.
-      Compare them below and cast one vote — the one you would actually ship.
+      Compare them below and cast one vote, the one you would actually ship.
     </p>
   </div>
 
@@ -71,7 +71,7 @@ import { SITE_TITLE } from '../../consts';
                   <path d="M8 3.2 14 12 2 12 Z" />
                 </svg>
                 <span class="vote-label" data-vote-label>Vote</span>
-                <span class="meta vote-count" data-vote-count aria-live="polite">—</span>
+                <span class="meta vote-count" data-vote-count aria-live="polite">-</span>
               </button>
             </div>
           </li>
@@ -90,7 +90,7 @@ import { SITE_TITLE } from '../../consts';
   /**
    * Progressive-enhancement ballot. Vanilla, isolated, no framework.
    *
-   * One vote per person, total — pick the one you'd ship. Casting a vote locks
+   * One vote per person, total, pick the one you'd ship. Casting a vote locks
    * all four cards. Degrades on purpose: any failure here (no `fetch`, network
    * error, CORS rejection, backend not deployed) is caught and swallowed,
    * leaving every button as the server rendered it (disabled, dash count). The
@@ -114,12 +114,12 @@ import { SITE_TITLE } from '../../consts';
     try {
       localStorage.setItem(VOTED_KEY, slug);
     } catch {
-      // localStorage unavailable — server-side per-IP dedup still holds.
+      // localStorage unavailable, server-side per-IP dedup still holds.
     }
   }
 
   function formatCount(n: unknown): string {
-    return typeof n === 'number' && Number.isFinite(n) ? String(n) : '—';
+    return typeof n === 'number' && Number.isFinite(n) ? String(n) : '-';
   }
 
   async function init() {

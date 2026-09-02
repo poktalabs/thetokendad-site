@@ -1,4 +1,4 @@
-// The four Website Challenge exhibits — one frozen brief, four AI design tools.
+// The four Website Challenge exhibits, one frozen brief, four AI design tools.
 // Shared by the homepage carousel (ExhibitCarousel / Showcase) and the vote
 // page (/website-challenge-v1/vote/) so their data can never drift apart.
 //
@@ -27,7 +27,7 @@ export const EXHIBITS: Exhibit[] = [
     arm: 'Arm 1',
     url: 'https://claude-design-v1.thetoken.dad',
     character:
-      'Asked nothing, filled every gap itself, shipped in one pass — cheapest of the four by a factor of six. It also designed the page you are reading this on.',
+      'Asked nothing, filled every gap itself, shipped in one pass. Cheapest of the four by a factor of six, and it also designed the page you are reading this on.',
     image: designImg,
   },
   {
@@ -36,7 +36,7 @@ export const EXHIBITS: Exhibit[] = [
     arm: 'Arm 2',
     url: 'https://claude-impeccable-v1.thetoken.dad',
     character:
-      'Built, reviewed itself behind a fix-or-ship gate, and documented from source — twice, until it would pass its own review.',
+      'Built, reviewed itself behind a fix-or-ship gate, and documented from source, twice, until it would pass its own review.',
     image: impeccableImg,
   },
   {
@@ -54,7 +54,7 @@ export const EXHIBITS: Exhibit[] = [
     arm: 'Arm 4',
     url: 'https://claude-gstack-v1.thetoken.dad',
     character:
-      'Ran a structured 13-finding review with a second model as an outside voice — caught a colour that could never have rendered.',
+      'Ran a structured 13-finding review with a second model as an outside voice. Caught a colour that could never have rendered.',
     image: gstackImg,
   },
 ];

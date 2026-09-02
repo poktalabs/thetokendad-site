@@ -1,6 +1,6 @@
 ---
 /**
- * Glyph — the Signal Set.
+ * Glyph, the Signal Set.
  *
  * One drawing grammar, no exceptions except the one noted below:
  *
@@ -13,7 +13,7 @@
  *
  * The exception: `feed` is the public RSS mark, which is asymmetric and
  * corner-set. Wayfinding defers to an existing public standard over its own
- * house rules — a symbol people already know beats a symbol that matches.
+ * house rules, a symbol people already know beats a symbol that matches.
  *
  * `data-draw` marks a stroked element (traced on arrival), `data-point` marks
  * a solid one (it lands after the tracing). Both are inert unless an ancestor
@@ -66,7 +66,7 @@ const MARKS: Record<Props['name'], string> = {
     <path d="M7 17V8H17V17" pathLength="1" data-draw />`,
 
   // The Origin circle, struck through: a point that was published and then
-  // changed. Same circle as Origin and Unlisted — a marked point, an empty
+  // changed. Same circle as Origin and Unlisted, a marked point, an empty
   // point, a struck point.
   correction: `
     <circle cx="12" cy="12" r="8" pathLength="1" data-draw />

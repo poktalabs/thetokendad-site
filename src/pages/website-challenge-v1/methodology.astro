@@ -1,7 +1,7 @@
 ---
 import HubLayout from '../../layouts/HubLayout.astro';
 
-const title = 'Website Challenge Methodology — One Controlled Variable';
+const title = 'Website Challenge Methodology: One Controlled Variable';
 const description =
   'How four AI design tools built the same site from one frozen brief: the control surface, the frozen answer sheet, clean-context runners, and the verification gates that kept the comparison honest.';
 
@@ -64,9 +64,9 @@ const jsonLd = [
 
   <p>
     Exactly one thing was allowed to vary across the four runs: the design
-    tool. Everything else — the harness, the model, the inputs, the starting
+    tool. Everything else (the harness, the model, the inputs, the starting
     code, the page scope, the content, the stack, and which files could be
-    touched — was pinned before any arm started. This page documents the
+    touched) was pinned before any arm started. This page documents the
     control surface, the mechanism the run existed to test, and the checks
     that made the four outcomes comparable rather than four different
     experiments wearing the same name.
@@ -98,7 +98,7 @@ const jsonLd = [
       <tr>
         <td>Frozen inputs</td>
         <td>
-          VISION.md, PRODUCT.md, ANSWER-SHEET.md — content-hashed, never
+          VISION.md, PRODUCT.md, ANSWER-SHEET.md, content-hashed, never
           edited mid-run
         </td>
       </tr>
@@ -124,7 +124,7 @@ const jsonLd = [
         <td>Editable files</td>
         <td>
           global.css, two layouts, four page files, plus @fontsource-variable
-          pins — nothing else
+          pins, nothing else
         </td>
       </tr>
       <tr>
@@ -143,12 +143,12 @@ const jsonLd = [
   <h2>Why did each arm run in a clean-context subagent?</h2>
 
   <p>
-    Every arm ran in a fresh subagent that had never read any tool's rules —
+    Every arm ran in a fresh subagent that had never read any tool's rules:
     not the protocol, not the rubric, not the playbook, not another arm's
     output. This was mandatory, not preferred. The orchestrating session had
     already read all four tools' ban lists and typography prohibitions, so a
     design pass run directly from that session would produce one tool's
-    output plus three competitors' opinions baked in — and the contamination
+    output plus three competitors' opinions baked in, and the contamination
     would be invisible in the final result.
   </p>
 
@@ -163,7 +163,7 @@ const jsonLd = [
   <p>
     Three of the four tools interview the user before they design anything.
     Answering those interview questions live, arm by arm, would hand one arm
-    an input no other arm received — and the gap would be undetectable
+    an input no other arm received, and the gap would be undetectable
     afterward, since it would show up only as "better design judgment." The
     run existed partly to test whether this could be neutralized.
   </p>
@@ -173,8 +173,8 @@ const jsonLd = [
     single frozen answer sheet. Every question a tool asked during its
     interview was then answered by lookup against that sheet, never by
     composing a fresh answer in the moment. Anything the sheet did not cover
-    got exactly one sentence in response — "the vision doesn't cover that —
-    your call" — plus a logged reason. Improvising a rich, in-character
+    got exactly one sentence in response: "the vision doesn't cover that,
+    your call," plus a logged reason. Improvising a rich, in-character
     answer was forbidden.
   </p>
 
@@ -201,7 +201,7 @@ const jsonLd = [
     own branch, with its own dependency install and its own assigned port.
     Every worktree was verified green before its runner was dispatched.
     Because the arms shared no state, running them in parallel cost nothing
-    in comparability — and it exercised the intake-proxy mechanism three
+    in comparability, and it exercised the intake-proxy mechanism three
     different ways at once, under real concurrency rather than in sequence.
   </p>
 
@@ -225,8 +225,8 @@ const jsonLd = [
   </ul>
 
   <p>
-    This discipline caught nothing false in the arms' own design self-reports
-    — which is itself the finding worth recording, since it means the
+    This discipline caught nothing false in the arms' own design self-reports,
+    which is itself the finding worth recording, since it means the
     self-reports were reliable on this run. The same discipline applied
     later, in the deployment phase, caught two real bugs.
   </p>
@@ -261,7 +261,7 @@ const jsonLd = [
 
   <dl>
     <dt>What varied</dt>
-    <dd>The design tool — nothing else.</dd>
+    <dd>The design tool, nothing else.</dd>
     <dt>What was pinned</dt>
     <dd>
       Harness, model (with two named exceptions), inputs, starting code,

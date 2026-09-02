@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 /* =============================================================================
-   thetoken.dad — "Signal Set"
+   thetoken.dad, "Signal Set"
 
    Dark is the real theme; it is the default, declared here in @theme. Light is
    a separate set of colour decisions further down, not an inversion.
@@ -56,7 +56,7 @@
   --radius-md: 8px;
 }
 
-/* Measures and rhythm. Plain custom properties — not utility-generating. */
+/* Measures and rhythm. Plain custom properties, not utility-generating. */
 :root {
   --width-page: 72rem;
   --width-narrow: 44rem;
@@ -68,12 +68,12 @@
 }
 
 /* =============================================================================
-   Light theme — its own decisions, not an inversion.
+   Light theme, its own decisions, not an inversion.
 
    The dark ground is a midnight with blue-green chroma; the light ground is a
    gallery wall, a warm-neutral green-grey, not white and not cream. The signal
    hues are re-chosen at their own lightness so each one holds >= 4.5:1 on that
-   wall — they are not the dark hues darkened by formula.
+   wall, they are not the dark hues darkened by formula.
    ========================================================================== */
 @media (prefers-color-scheme: light) {
   :root {
@@ -310,7 +310,7 @@ body {
 }
 
 /* =============================================================================
-   Home — the entrance
+   Home, the entrance
 
    "The 'the' is load-bearing." The wordmark is set to say so: a small, wide
    THE over the full-width TOKEN DAD.
@@ -414,7 +414,7 @@ body {
 }
 
 /* =============================================================================
-   The key plate — the signature element
+   The key plate, the signature element
 
    A museum key. Six cells, hairline-ruled, symmetric at every breakpoint.
    It teaches the marks so that the marks can appear alone elsewhere.
@@ -502,7 +502,7 @@ body {
 }
 
 /* =============================================================================
-   Signal marks — the wordless form
+   Signal marks, the wordless form
    ========================================================================== */
 
 .glyph {
@@ -630,11 +630,11 @@ body {
 }
 
 /* =============================================================================
-   Latest build — the featured work
+   Latest build, the featured work
 
    A single panel that puts the newest thing built front of house and sends the
    reader into it. A bordered plate on the ground at rest, filling to a surface
-   on hover — the same two-state language as the writing entries and the key
+   on hover, the same two-state language as the writing entries and the key
    plate, scaled up so it reads as the featured item rather than a list row.
    The Measurement hue is the only colour it carries. Nothing here moves; the
    entrance holds the site's one authored moment.
@@ -720,11 +720,11 @@ body {
 }
 
 /* =============================================================================
-   Showcase — the four exhibits
+   Showcase, the four exhibits
 
    Same hairline-grid technique as the key plate: 1px gaps on the line colour
    forming the rules, cells sitting on the ground. One signal accent for the
-   whole section (Open, green) rather than one hue per card — the six signals
+   whole section (Open, green) rather than one hue per card, the six signals
    are a typed vocabulary tied to the writing's tag families, not a palette
    to spend on decoration. The vote control is the only interactive element
    this site ships; it renders inert (disabled, dash count) until the script
@@ -878,7 +878,7 @@ body {
 }
 
 /* =============================================================================
-   Carousel — the home-page browse teaser
+   Carousel, the home-page browse teaser
 
    A CSS scroll-snap track with a thumbnail strip below. No JavaScript: the
    thumbnails are anchor links to each slide's id, and the browser scrolls the
@@ -975,7 +975,7 @@ body {
   text-align: center;
 }
 
-/* Primary CTA button — a bordered pill in the link hue. */
+/* Primary CTA button, a bordered pill in the link hue. */
 .showcase-cta {
   margin-top: var(--space-block);
 }
@@ -1060,7 +1060,7 @@ body {
 }
 
 /* =============================================================================
-   Prose — the primary surface
+   Prose, the primary surface
 
    Left-aligned inside a centred column. The page is symmetric; the reading is
    not, because ragged-right at a fixed measure is what long text wants.

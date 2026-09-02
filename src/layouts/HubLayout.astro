@@ -4,12 +4,12 @@
 // Why this exists instead of BaseLayout: the hub pages need per-page JSON-LD in
 // <head>, and BaseLayout/BaseHead (deliberately) expose no head slot. Rather than
 // edit those shared files (owned by the human design track), this layout mirrors
-// BaseLayout's semantic shell — the same header/nav/footer markup, the same
-// design tokens via global.css, the same variable fonts — and reuses the
+// BaseLayout's semantic shell, the same header/nav/footer markup, the same
+// design tokens via global.css, the same variable fonts, and reuses the
 // UNMODIFIED BaseHead for title/description/canonical/OG/Twitter, adding only a
 // JSON-LD injection point. No shared file is touched by this component.
 //
-// Keep this file's prose and comments free of Tailwind utility-shaped words —
+// Keep this file's prose and comments free of Tailwind utility-shaped words, 
 // Tailwind 4 scans comments too, and a stray one mints a real utility class.
 import '@fontsource-variable/archivo/standard.css';
 import '@fontsource-variable/faustina/wght.css';
@@ -57,7 +57,7 @@ const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   /* Hub-only touch-up. Everything here is scoped to this layout: the tokens,
      type roles and shell/prose measures all come from the unmodified
      global.css. This just brings the hub's plain semantic HTML (no `class`
-     attributes — written for AEO, not for this design system) into the same
+     attributes, written for AEO, not for this design system) into the same
      rhythm as the rest of the site, without editing the hub pages or any
      shared file. `:global()` is required because slotted content keeps the
      child page's own scope, not this layout's. */
