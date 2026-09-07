@@ -25,6 +25,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('rss.xml', Astro.site)} />
 
+<!-- Favicon: the Signal Set token mark. SVG for modern browsers (it swaps to
+     the light palette on light chrome), .ico as the universal fallback, and a
+     180px apple-touch icon for iOS home screens. -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
 <title>{title}</title>
 <meta name="description" content={description} />
 

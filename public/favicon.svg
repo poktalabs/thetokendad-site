@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="The Token Dad">
+  <!--
+    The Token Dad mark, v1: a square token with one corner unit claimed in
+    signal-amber. Geometric, no rounded corners, one accent, in line with the
+    Signal Set system. Colours are set as presentation attributes (the dark
+    theme, which is the real one) so the icon renders even where a favicon SVG
+    gets no CSS; the <style> block below swaps to the light palette on light
+    browser chrome where that is honoured.
+  -->
+  <style>
+    .bg { fill: #0a1620; }
+    .fg { stroke: #f4fafc; }
+    .ac { fill: #f5b845; }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: #eceee9; }
+      .fg { stroke: #0b1211; }
+      .ac { fill: #8a5b00; }
+    }
+  </style>
+  <rect class="bg" width="64" height="64" fill="#0a1620" />
+  <rect class="fg" x="16" y="16" width="32" height="32" fill="none" stroke="#f4fafc" stroke-width="5" />
+  <rect class="ac" x="34" y="34" width="14" height="14" fill="#f5b845" />
+</svg>

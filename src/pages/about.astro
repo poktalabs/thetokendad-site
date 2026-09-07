@@ -4,8 +4,10 @@ import Glyph from '../components/Glyph.astro';
 import SignalKey from '../components/SignalKey.astro';
 import { SITE_TITLE, SOCIAL } from '../consts';
 
-// The bio, kept deliberately simple: it says who The Token Dad is, not a CV.
-// Identity over specifics, the professional detail is left off on purpose.
+// The bio. Dad first, then what I do, then the ordinary human parts. The lede
+// paragraph carries the premise; the rest is normal body text so the block has
+// hierarchy instead of one flat wall. Every fact is Mel's own or sourced; no
+// invented anecdotes, no CV stack, no em-dashes.
 ---
 
 <BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is.">
@@ -16,10 +18,37 @@ import { SITE_TITLE, SOCIAL } from '../consts';
 
   <section class="shell column stack">
     <p class="lede">
-      I'm Mel. The Token Dad is the part that happens at home: I hand the
-      calendar, the messages and the hundred small handoffs to agents, and I
-      publish what it costs to run them. I get numbers wrong sometimes, and when
-      I do, the correction goes up here too.
+      I'm Mel, a new dad in Mexico City. Most of what I build starts at home: the
+      calendar, the messages, the hundred small handoffs that used to live in my
+      head and leak out of it. I hand them to agents, and I publish what it costs
+      to run them. Real bills, per model, with the method attached so you can
+      check my work. I get numbers wrong sometimes; when I do, the correction
+      goes up here too.
+    </p>
+
+    <p>
+      The rest of the time I'm a founder. I started Pokta Labs, a frontier lab
+      accelerating healthcare and education, and I run Frutero Club, a tech
+      community that works as a talent accelerator for builders who want to level
+      up professionally. The job has always been the same one: take a
+      complicated system and make it usable by someone who didn't build it. The
+      agents I run at home are that same discipline; they just show up wearing
+      sweatpants.
+    </p>
+
+    <p>
+      Off the clock I'm about as ordinary as they come. Cancún raised me,
+      Monterrey put me through school, and Mexico City has been home since 2013.
+      I support Club América, Manchester United, and the Dallas Cowboys, which is
+      a lifelong commitment to caring far too much about games I'll never play
+      in. I play tennis and football most weeks, and I'll happily lose an evening
+      to history, geopolitics, sci-fi, fantasy, a good game, or music.
+    </p>
+
+    <p>
+      I'm also the three-time champion of the International Super Smash Brothers
+      Big Walrus Invitational, title successfully defended last week at the sixth
+      edition. It is exactly as prestigious as it sounds.
     </p>
   </section>
 
