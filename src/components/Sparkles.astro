@@ -1,8 +1,9 @@
 ---
 /*
-  Sparkle field: the grey four-point stars from the reference frame.
-  Decorative only (aria-hidden). Positions are a fixed constellation, not
-  random, so the hero renders the same on every build and every visit.
+  Sparkle field: the grey four-point stars from the reference frame, kept
+  sparse and quiet so they read as ambient depth, not decoration competing
+  with the wordmark. Decorative only (aria-hidden). Positions are a fixed
+  constellation, not random, so the hero renders the same on every build.
   Sizes in viewBox units (1000 x 600); `big` ones get the slow twinkle.
 */
 interface Props {
@@ -12,18 +13,12 @@ const { class: className } = Astro.props;
 
 type Star = { x: number; y: number; s: number; big?: boolean; delay?: number };
 const stars: Star[] = [
-  { x: 640, y: 48, s: 14 },
-  { x: 815, y: 62, s: 22, big: true, delay: 0.4 },
-  { x: 720, y: 132, s: 9 },
-  { x: 900, y: 135, s: 11 },
-  { x: 330, y: 120, s: 30, big: true, delay: 1.6 },
-  { x: 205, y: 395, s: 12 },
-  { x: 460, y: 430, s: 8 },
-  { x: 90, y: 480, s: 40, big: true, delay: 2.7 },
-  { x: 290, y: 470, s: 9 },
-  { x: 400, y: 515, s: 20, big: true, delay: 0.9 },
-  { x: 560, y: 560, s: 7 },
-  { x: 950, y: 420, s: 10 },
+  { x: 820, y: 70, s: 16, big: true, delay: 0.6 },
+  { x: 690, y: 150, s: 7 },
+  { x: 940, y: 215, s: 9 },
+  { x: 120, y: 470, s: 22, big: true, delay: 2.4 },
+  { x: 300, y: 545, s: 7 },
+  { x: 560, y: 520, s: 10 },
 ];
 
 /* four-point star, centred at 0,0 with radius 1; concave sides via quad curves */
@@ -55,17 +50,18 @@ const path = 'M0 -1 Q0.06 -0.06 1 0 Q0.06 0.06 0 1 Q-0.06 0.06 -1 0 Q-0.06 -0.06
     width: 100%;
     height: 100%;
     pointer-events: none;
+    opacity: 0.55;
   }
 
   .twinkle {
     transform-box: fill-box;
     transform-origin: center;
-    animation: twinkle 5.5s ease-in-out infinite;
+    animation: twinkle 7s ease-in-out infinite;
   }
 
   @keyframes twinkle {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.35; }
+    50% { opacity: 0.3; }
   }
 
   @media (prefers-reduced-motion: reduce) {

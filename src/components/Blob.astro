@@ -1,8 +1,16 @@
 ---
 /*
-  Gradient blob: one piece of the brand chrome. A stepped, rounded silhouette
-  in the reference frame's idiom, filled with a two-stop gradient from the
-  decorative spectrum. Purely decorative; it never carries UI meaning.
+  Troopie: one piece of the brand chrome. A stepped, rounded silhouette in
+  the reference frame's idiom, filled with a two-stop gradient from the
+  decorative spectrum, with the frame's `''` eyes. Purely decorative; it
+  never carries UI meaning.
+
+  Troopies are alive: gooey enough to breathe, squash and settle, firm
+  enough to hold their silhouette. The body breathes on a slow loop, the
+  eyes blink on a separate, slower loop, and a faint side-to-side lean makes
+  the two loops feel unscripted. `delay` offsets the loops so two Troopies
+  on the same page never move in sync. All of it stops under
+  prefers-reduced-motion.
 
   `from` / `to` take theme colour names (lime, yellow, cyan, blue, orange,
   pink, magenta, purple). Position it from the parent via `class`.
@@ -12,16 +20,24 @@ interface Props {
   to?: string;
   class?: string;
   eyes?: boolean;
+  delay?: number;
 }
-const { from = 'magenta', to = 'purple', class: className, eyes = true } = Astro.props;
-const id = `blob-${from}-${to}-${Math.random().toString(36).slice(2, 7)}`;
+const {
+  from = 'magenta',
+  to = 'purple',
+  class: className,
+  eyes = true,
+  delay = 0,
+} = Astro.props;
+const id = `troopie-${from}-${to}-${Math.random().toString(36).slice(2, 7)}`;
 ---
 
 <svg
-  class:list={['blob', className]}
+  class:list={['troopie', className]}
   viewBox="0 0 200 200"
   aria-hidden="true"
   focusable="false"
+  style={`--delay:${delay}s`}
 >
   <defs>
     <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
@@ -29,23 +45,67 @@ const id = `blob-${from}-${to}-${Math.random().toString(36).slice(2, 7)}`;
       <stop offset="1" stop-color={`var(--color-${to})`} />
     </linearGradient>
   </defs>
-  <!-- stepped silhouette: three rounded blocks fused, like the frame's Troopies -->
-  <path
-    fill={`url(#${id})`}
-    d="M40 200 V110 a30 30 0 0 1 30 -30 h20 V50 a30 30 0 0 1 30 -30 h50 a30 30 0 0 1 30 30 V200 Z"
-  />
-  {eyes && (
-    <g fill="var(--color-ground)" transform="translate(148 44) skewX(-14)">
-      <rect x="0" y="0" width="5" height="16" rx="2.5" />
-      <rect x="12" y="0" width="5" height="16" rx="2.5" />
-    </g>
-  )}
+  <g class="body">
+    <!-- stepped silhouette: three rounded blocks fused, like the frame's Troopies -->
+    <path
+      fill={`url(#${id})`}
+      d="M40 200 V110 a30 30 0 0 1 30 -30 h20 V50 a30 30 0 0 1 30 -30 h50 a30 30 0 0 1 30 30 V200 Z"
+    />
+    {eyes && (
+      <g class="eyes" fill="var(--color-ground)" transform="translate(148 44) skewX(-14)">
+        <rect x="0" y="0" width="5" height="16" rx="2.5" />
+        <rect x="12" y="0" width="5" height="16" rx="2.5" />
+      </g>
+    )}
+  </g>
 </svg>
 
 <style>
-  .blob {
+  .troopie {
     position: absolute;
     pointer-events: none;
     overflow: visible;
+  }
+
+  /* the body squashes from its feet: wider as it settles, taller as it rises */
+  .body {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation:
+      breathe 4.6s ease-in-out infinite,
+      lean 9s ease-in-out infinite;
+    animation-delay: var(--delay), calc(var(--delay) * 1.5);
+  }
+
+  /* eyes: a quick double-blink, then a long hold */
+  .eyes {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    animation: blink 6.2s step-end infinite;
+    animation-delay: calc(var(--delay) + 1.3s);
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1, 1); }
+    45%      { transform: scale(0.97, 1.045); }
+    60%      { transform: scale(1.02, 0.975); }
+  }
+
+  @keyframes lean {
+    0%, 100% { rotate: 0deg; }
+    30%      { rotate: -1.6deg; }
+    70%      { rotate: 1.2deg; }
+  }
+
+  @keyframes blink {
+    0%, 100%    { transform: scaleY(1); }
+    3%          { transform: scaleY(0.08); }
+    5%          { transform: scaleY(1); }
+    8%          { transform: scaleY(0.08); }
+    10%         { transform: scaleY(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .body, .eyes { animation: none; }
   }
 </style>

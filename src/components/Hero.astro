@@ -18,8 +18,8 @@ const { title, tagline } = Astro.props;
 
 <section class="hero" aria-labelledby="hero-title">
   <Sparkles />
-  <Blob class="blob-a" from="magenta" to="purple" />
-  <Blob class="blob-b" from="cyan" to="blue" eyes={false} />
+  <Blob class="blob-a" from="magenta" to="purple" delay={0} />
+  <Blob class="blob-b" from="cyan" to="blue" delay={1.7} />
 
   <div class="hero-inner wrap">
     <p class="kicker">
@@ -70,8 +70,8 @@ const { title, tagline } = Astro.props;
   }
   .hero :global(.blob-b) {
     width: clamp(90px, 12vw, 170px);
-    left: -2%;
-    bottom: -14%;
+    left: 1%;
+    bottom: -10%;
     z-index: 1;
     transform: scaleX(-1);
   }
@@ -96,6 +96,13 @@ const { title, tagline } = Astro.props;
     border-radius: 50%;
     background: var(--color-magenta);
   }
+  @media (max-width: 30rem) {
+    .kicker .dot { display: none; }
+  }
+  /* one Troopie is enough on a phone; the second one only gets clipped */
+  @media (max-width: 40rem) {
+    .hero :global(.blob-b) { display: none; }
+  }
 
   /* ---- the wordmark ----
      Three stacked copies of the same text. The h1's pseudo-elements carry the
@@ -110,9 +117,9 @@ const { title, tagline } = Astro.props;
     margin: 0;
     padding: 0.2em 0.35em; /* room for the strokes and the slant */
     font-family: var(--font-display);
-    font-size: clamp(3.2rem, 11.5vw, 9rem);
+    font-size: clamp(2.3rem, 7.4vw, 6.1rem);
     line-height: 1;
-    letter-spacing: 0.015em;
+    letter-spacing: 0;
     text-transform: uppercase;
     transform: skewX(var(--slant));
     filter: drop-shadow(0 0 22px rgb(255 47 214 / 0.28));
