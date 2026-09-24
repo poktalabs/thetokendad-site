@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 /* Self-hosted fonts (fontsource, served from the bundle, no third-party requests). */
-@import '@fontsource/bowlby-one';
+@import '@fontsource-variable/space-grotesk';
 @import '@fontsource-variable/inter';
 
 /*
@@ -13,7 +13,7 @@
   action). Secondary: violet, for depth, orbits, hover states.
   Everything else is graphite tones and white. Meaning is carried by shape,
   never by hue.
-  Type: chunky rounded display face for headlines, calm sans for reading,
+  Type: a precise grotesk for headlines and labels, calm sans for reading,
   mono for code. Reading surfaces stay quiet so the receipts can be read.
 */
 @theme static {
@@ -42,7 +42,7 @@
 
   --color-sparkle: #c9c9c9;
 
-  --font-display: 'Bowlby One', 'Arial Black', Impact, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
@@ -98,9 +98,9 @@
 
   h1, h2, h3 {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.05;
-    letter-spacing: 0.005em;
+    letter-spacing: -0.015em;
     text-wrap: balance;
   }
 

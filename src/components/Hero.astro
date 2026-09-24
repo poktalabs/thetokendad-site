@@ -1,25 +1,25 @@
 ---
 /*
-  Home hero: arrival in a new universe.
+  Home hero: arrival in a new universe, read from a control room.
 
-  One star, the token, hangs at the top of the page. The wordmark sits in
-  its lower light. Below, on a faint orbit arc, three worlds: each one is a
-  gate into an aspect of The Token Dad, and each is a real link (the worlds
-  ARE the primary navigation on the home page).
+  One star, the token, hangs at the top of the page. The wordmark sits
+  beneath it in open sky. Along the bottom, an instrument strip: three
+  worlds, each a gate into an aspect of The Token Dad, and each a real link
+  (the worlds ARE the primary navigation on the home page).
 
   Layers, back to front:
-    nebula     violet and magenta washes on the graphite ground
+    nebula     violet washes on the graphite ground
     starfield  dotted depth layer, drifting
     sparkles   sparse four-point stars
     comet      a streak every so often
     sun        the token: gradient disc with horizontal cuts in its lower half
     content    wordmark, tagline
-    orbit      the arc the worlds sit on, plus the worlds
+    strip      hairline-ruled row of worlds
 
-  The wordmark is our own: Bowlby One, sun gradient, no outline, no slant,
-  and the O in TOKEN is a small sun with the same cuts. Live text, with the
-  full title exposed to assistive tech and the decorated version hidden
-  from it.
+  The wordmark is ours: Space Grotesk, ink, tracked caps, and the O in
+  TOKEN is a small sun with the same cuts, the only colour in the title.
+  Live text; the full title is exposed to assistive tech, the decorated
+  version hidden from it.
 */
 import Sparkles from './Sparkles.astro';
 import StarField from './StarField.astro';
@@ -53,29 +53,25 @@ const { title, tagline } = Astro.props;
     <p class="tagline">{tagline}</p>
   </div>
 
-  <nav class="orbit wrap" aria-label="Worlds">
-    <svg class="orbit-arc" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <path d="M0 40 Q500 200 1000 40" />
-    </svg>
-    <p class="orbit-caption">Pick a world</p>
-    <ul class="worlds">
-      <li class="w w1">
-        <World href="/blog/" label="Writing" hint="guides and posts" kind="ring" from="orange" to="magenta" delay={0} />
-      </li>
-      <li class="w w2">
-        <World href="/about/" label="The Dad" hint="who is building this" kind="moon" from="coral" to="violet" delay={2.3} />
-      </li>
-      <li class="w w3">
-        <World href="/website-challenge-v1/" label="Lab" hint="past experiments" kind="craters" from="magenta" to="violet-deep" delay={4.1} />
-      </li>
-    </ul>
+  <nav class="strip" aria-label="Worlds">
+    <div class="strip-inner wrap">
+      <p class="strip-caption">
+        <span>Worlds</span>
+        <span class="strip-caption-note">each one a gate</span>
+      </p>
+      <ul class="worlds">
+        <li><World href="/blog/" index="01" label="Writing" hint="Guides and posts, with receipts" kind="ring" /></li>
+        <li><World href="/about/" index="02" label="The Dad" hint="Who is building this, and why" kind="moon" /></li>
+        <li><World href="/website-challenge-v1/" index="03" label="Lab" hint="Experiments, including the closed ones" kind="crescent" /></li>
+      </ul>
+    </div>
   </nav>
 </section>
 
 <style>
   .hero {
     --sun-size: clamp(200px, 24vw, 340px);
-    --sun-top: 3vh;
+    --sun-top: 4vh;
 
     position: relative;
     isolation: isolate;
@@ -87,9 +83,8 @@ const { title, tagline } = Astro.props;
     display: grid;
     grid-template-rows: 1fr auto;
     background:
-      radial-gradient(70% 55% at 78% 6%,  rgb(139 61 255 / 0.22), transparent 70%),
-      radial-gradient(55% 45% at 10% 40%, rgb(74 26 184 / 0.22), transparent 70%),
-      radial-gradient(60% 40% at 50% 100%, rgb(255 47 214 / 0.10), transparent 70%),
+      radial-gradient(70% 55% at 78% 6%,  rgb(139 61 255 / 0.18), transparent 70%),
+      radial-gradient(55% 45% at 10% 40%, rgb(74 26 184 / 0.18), transparent 70%),
       var(--color-ground);
   }
 
@@ -110,8 +105,8 @@ const { title, tagline } = Astro.props;
     border-radius: 50%;
     background: var(--gradient-sun-deep);
     box-shadow:
-      0 0 80px rgb(255 77 109 / 0.35),
-      0 0 220px rgb(139 61 255 / 0.28);
+      0 0 80px rgb(255 77 109 / 0.28),
+      0 0 220px rgb(139 61 255 / 0.22);
     /* the cuts: bands of sky through the lower half, widening downward */
     mask-image: linear-gradient(
       to bottom,
@@ -159,47 +154,40 @@ const { title, tagline } = Astro.props;
     justify-items: center;
     align-content: start;
     text-align: center;
-    gap: 1rem;
-    /* the wordmark starts just under the sun, in open sky, so the two never fight */
-    padding-top: calc(var(--sun-top) + var(--sun-size) + 1.25rem);
+    gap: 1.1rem;
+    /* the wordmark starts just under the sun, in open sky */
+    padding-top: calc(var(--sun-top) + var(--sun-size) + 2rem);
   }
 
   /* ---- the wordmark ---- */
   .wordmark {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(2.6rem, 7.6vw, 6.4rem);
-    line-height: 0.95;
-    letter-spacing: 0.01em;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4.6vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    color: var(--color-ink);
   }
 
   .wordmark-art {
     display: inline-flex;
     flex-wrap: wrap;
     justify-content: center;
-    column-gap: 0.28em;
-    filter:
-      drop-shadow(0 0 22px rgb(255 77 109 / 0.35))
-      drop-shadow(0 12px 22px rgb(0 0 0 / 0.55));
-  }
-
-  .word {
-    background-image: var(--gradient-sun);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    padding-block: 0.06em; /* keep descender room inside the clip box */
+    column-gap: 0.5em;
+    /* tracked caps: trailing letterspace is optical noise, pull it back */
+    margin-right: -0.14em;
   }
 
   /* the O in TOKEN: a small sun, cuts included */
   .sun-o {
     display: inline-grid;
     place-items: center;
-    width: 0.86em;
-    height: 0.86em;
-    vertical-align: -0.04em;
-    margin-inline: 0.03em;
+    width: 0.78em;
+    height: 0.78em;
+    vertical-align: -0.02em;
+    margin-inline: 0.04em 0.16em;
   }
   .sun-o-disc {
     display: block;
@@ -207,6 +195,7 @@ const { title, tagline } = Astro.props;
     height: 100%;
     border-radius: 50%;
     background: var(--gradient-sun);
+    box-shadow: 0 0 18px rgb(255 77 109 / 0.45);
     mask-image: linear-gradient(
       to bottom,
       #000 0 54%,
@@ -219,66 +208,68 @@ const { title, tagline } = Astro.props;
   }
 
   .tagline {
-    max-width: 36ch;
+    max-width: 38ch;
     margin: 0;
-    font-size: clamp(1.05rem, 2vw, 1.3rem);
-    line-height: 1.5;
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    line-height: 1.55;
     color: var(--color-ink-muted);
     text-wrap: pretty;
   }
 
-  /* ---- orbit + worlds ---- */
-  .orbit {
+  /* ---- the strip ---- */
+  .strip {
     position: relative;
     z-index: 2;
-    padding-block: 1.5rem 3rem;
+    margin-top: 3.5rem;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    background: linear-gradient(to bottom, rgb(28 28 28 / 0.6), rgb(28 28 28 / 0.9));
   }
 
-  .orbit-arc {
-    position: absolute;
-    left: -10%;
-    right: -10%;
-    width: 120%;
-    top: 50%;
-    height: 220px;
-    translate: 0 -46%;
-    fill: none;
-    stroke: var(--color-violet);
-    stroke-opacity: 0.35;
-    stroke-width: 1;
-    stroke-dasharray: 3 7;
-    pointer-events: none;
+  .strip-inner {
+    display: grid;
+    gap: 0.5rem;
+    padding-block: 1rem 1.5rem;
   }
 
-  .orbit-caption {
-    margin: 0 0 1.25rem;
-    text-align: center;
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
+  .strip-caption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0;
+    padding-inline: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-ink-faint);
+  }
+  .strip-caption-note {
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
   }
 
   .worlds {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    align-items: start;
-    justify-items: center;
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  /* follow the arc: the middle world sits lower */
-  .w2 { translate: 0 30px; }
+  .worlds li + li {
+    border-left: 1px solid rgb(255 255 255 / 0.08);
+  }
 
   @media (max-width: 48rem) {
-    .hero { --sun-size: clamp(200px, 60vw, 280px); }
-    .orbit { padding-block: 2rem 3rem; }
-    .orbit-arc { height: 140px; }
-    .w2 { translate: 0 22px; }
-    .worlds :global(.hint) { display: none; }
-    .worlds :global(.label) { font-size: 0.9rem; }
+    .hero { --sun-size: clamp(190px, 56vw, 260px); }
+    .strip { margin-top: 2.5rem; }
+    .strip-caption { padding-inline: 0.75rem; }
+    .worlds { grid-template-columns: 1fr; }
+    .worlds li + li {
+      border-left: 0;
+      border-top: 1px solid rgb(255 255 255 / 0.08);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
