@@ -1,0 +1,145 @@
+---
+/*
+  Feed: the station log. Every entry is a row: date, kind, title, one line.
+  Kind is inferred from tags for now (guide / experiment / launch / post);
+  it becomes a schema field when the guide template lands.
+*/
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  heading?: string;
+}
+const { posts, heading = 'Feed' } = Astro.props;
+
+const KINDS = ['guide', 'experiment', 'launch'] as const;
+function kindOf(tags: string[]): string {
+  const hit = KINDS.find((k) => tags.includes(k));
+  return hit ?? 'post';
+}
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<section class="feed wrap" aria-labelledby="feed-title">
+  <header class="feed-head">
+    <h2 id="feed-title">{heading}</h2>
+    <p class="feed-note">Latest transmissions. Newest first.</p>
+  </header>
+
+  {posts.length === 0 ? (
+    <p class="feed-empty">No signals yet.</p>
+  ) : (
+    <ol class="rows">
+      {posts.map((post) => (
+        <li class="row">
+          <time class="date" datetime={post.data.pubDate.toISOString()}>{iso(post.data.pubDate)}</time>
+          <span class="kind">{kindOf(post.data.tags)}</span>
+          <a class="title" href={`/blog/${post.id}/`}>{post.data.title}</a>
+          <p class="desc">{post.data.description}</p>
+        </li>
+      ))}
+    </ol>
+  )}
+
+  <a class="all" href="/blog/">Full log</a>
+</section>
+
+<style>
+  .feed {
+    padding-block: 3.5rem 5rem;
+  }
+
+  .feed-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .feed-head h2 {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .feed-note {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--color-ink-faint);
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 7.5rem 6rem 1fr;
+    grid-template-areas:
+      'date kind title'
+      'date kind desc';
+    column-gap: 1.5rem;
+    row-gap: 0.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .date, .kind {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+  }
+  .date { grid-area: date; color: var(--color-ink-faint); }
+  .kind { grid-area: kind; color: var(--color-ink-muted); text-transform: uppercase; }
+  .title {
+    grid-area: title;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    max-width: 60ch;
+  }
+  .title:hover { color: var(--color-magenta); }
+  .desc {
+    grid-area: desc;
+    margin: 0;
+    max-width: 60ch;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--color-ink-muted);
+  }
+
+  .feed-empty { color: var(--color-ink-muted); }
+
+  .all {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-ink-muted);
+  }
+  .all::after { content: ' →'; }
+  .all:hover { color: var(--color-magenta); }
+
+  @media (max-width: 48rem) {
+    .row {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'meta'
+        'title'
+        'desc';
+    }
+    .date, .kind { grid-area: auto; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; }
+    .title, .desc { flex-basis: 100%; }
+  }
+</style>

@@ -1,9 +1,9 @@
 ---
 /*
-  Dotted starfield: the depth layer behind the sparkles. Two densities of
-  tiny points, drifting on slow loops so the sky feels like it has distance.
-  Positions come from a seeded generator, so the sky is the same on every
-  build. Decorative only (aria-hidden).
+  Dotted starfield: the depth layer behind everything. Sparse and dim by
+  design; it should register as distance, not decoration. Two densities of
+  tiny points on very slow drift. Positions come from a seeded generator,
+  so the sky is the same on every build. Decorative only (aria-hidden).
 */
 interface Props {
   class?: string;
@@ -26,12 +26,12 @@ function field(seed: number, count: number, rMin: number, rMax: number): Dot[] {
     x: Math.round(rnd() * 1000),
     y: Math.round(rnd() * 640),
     r: +(rMin + rnd() * (rMax - rMin)).toFixed(2),
-    o: +(0.35 + rnd() * 0.65).toFixed(2),
+    o: +(0.3 + rnd() * 0.6).toFixed(2),
   }));
 }
 
-const far = field(7, 110, 0.6, 1.2);
-const near = field(19, 40, 1.3, 2.2);
+const far = field(7, 70, 0.5, 1.0);
+const near = field(19, 18, 1.1, 1.7);
 ---
 
 <svg
@@ -62,12 +62,12 @@ const near = field(19, 40, 1.3, 2.2);
     transform-box: view-box;
     animation: drift linear infinite;
   }
-  .far  { animation-duration: 90s; opacity: 0.55; }
-  .near { animation-duration: 60s; opacity: 0.8; }
+  .far  { animation-duration: 120s; opacity: 0.4; }
+  .near { animation-duration: 80s; opacity: 0.6; }
 
   @keyframes drift {
     from { transform: translateX(0); }
-    to   { transform: translateX(-12px); }
+    to   { transform: translateX(-10px); }
   }
 
   @media (prefers-reduced-motion: reduce) {

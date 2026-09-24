@@ -1,46 +1,42 @@
 ---
 /*
-  Home hero: arrival in a new universe, read from a control room.
+  Home hero: the quiet deck of a research station.
 
-  One star, the token, hangs at the top of the page. The wordmark sits
-  beneath it in open sky. Along the bottom, an instrument strip: three
-  worlds, each a gate into an aspect of The Token Dad, and each a real link
-  (the worlds ARE the primary navigation on the home page).
+  Nothing shouts. A sparse starfield, a small sun emblem (the token), the
+  station's name in tracked caps, one line of intent, and a signal line
+  that decodes a transmission now and then. Under it, a readout row of
+  station facts in mono. The worlds (the primary navigation) follow as a
+  hairline strip.
 
-  Layers, back to front:
-    nebula     violet washes on the graphite ground
-    starfield  dotted depth layer, drifting
-    sparkles   sparse four-point stars
-    comet      a streak every so often
-    sun        the token: gradient disc with horizontal cuts in its lower half
-    content    wordmark, tagline
-    strip      hairline-ruled row of worlds
-
-  The wordmark is ours: Space Grotesk, ink, tracked caps, and the O in
-  TOKEN is a small sun with the same cuts, the only colour in the title.
-  Live text; the full title is exposed to assistive tech, the decorated
-  version hidden from it.
+  The full title is exposed to assistive tech; the decorated wordmark with
+  the sun-O is hidden from it.
 */
-import Sparkles from './Sparkles.astro';
 import StarField from './StarField.astro';
+import Signal from './Signal.astro';
 import World from './World.astro';
+
+interface Readout {
+  label: string;
+  value: string;
+}
 
 interface Props {
   title: string;
   tagline: string;
+  signals: string[];
+  readouts: Readout[];
 }
-const { title, tagline } = Astro.props;
+const { title, tagline, signals, readouts } = Astro.props;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
   <div class="sky" aria-hidden="true">
     <StarField />
-    <Sparkles />
-    <span class="comet"></span>
-    <div class="sun"></div>
   </div>
 
-  <div class="content wrap">
+  <div class="deck wrap">
+    <span class="emblem" aria-hidden="true"></span>
+
     <h1 id="hero-title" class="wordmark">
       <span class="sr-only">{title}</span>
       <span class="wordmark-art" aria-hidden="true">
@@ -51,151 +47,65 @@ const { title, tagline } = Astro.props;
     </h1>
 
     <p class="tagline">{tagline}</p>
+
+    <Signal messages={signals} class="hero-signal" />
+
+    <dl class="readouts">
+      {readouts.map((r) => (
+        <div class="readout">
+          <dt>{r.label}</dt>
+          <dd>{r.value}</dd>
+        </div>
+      ))}
+    </dl>
   </div>
 
   <nav class="strip" aria-label="Worlds">
-    <div class="strip-inner wrap">
-      <p class="strip-caption">
-        <span>Worlds</span>
-        <span class="strip-caption-note">each one a gate</span>
-      </p>
-      <ul class="worlds">
-        <li><World href="/blog/" index="01" label="Writing" hint="Guides and posts, with receipts" kind="ring" /></li>
-        <li><World href="/about/" index="02" label="The Dad" hint="Who is building this, and why" kind="moon" /></li>
-        <li><World href="/website-challenge-v1/" index="03" label="Lab" hint="Experiments, including the closed ones" kind="crescent" /></li>
-      </ul>
-    </div>
+    <ul class="worlds wrap">
+      <li><World href="/blog/" index="01" label="Writing" hint="Guides and posts, with receipts" kind="ring" /></li>
+      <li><World href="/about/" index="02" label="The Dad" hint="Who is building this, and why" kind="moon" /></li>
+      <li><World href="/website-challenge-v1/" index="03" label="Lab" hint="Experiments, including the closed ones" kind="crescent" /></li>
+    </ul>
   </nav>
 </section>
 
 <style>
   .hero {
-    --sun-size: clamp(200px, 24vw, 340px);
-    --sun-top: 4vh;
-
     position: relative;
     isolation: isolate;
     overflow: hidden;
     /* run under the site header so the sky starts at the top of the page */
     margin-top: calc(-1 * var(--header-h));
     padding-top: var(--header-h);
-    min-height: 100svh;
-    display: grid;
-    grid-template-rows: 1fr auto;
     background:
-      radial-gradient(70% 55% at 78% 6%,  rgb(139 61 255 / 0.18), transparent 70%),
-      radial-gradient(55% 45% at 10% 40%, rgb(74 26 184 / 0.18), transparent 70%),
+      radial-gradient(60% 50% at 85% 0%, rgb(74 26 184 / 0.14), transparent 70%),
       var(--color-ground);
   }
 
-  /* ---- sky ---- */
   .sky {
     position: absolute;
     inset: 0;
     z-index: 0;
   }
 
-  .sun {
-    position: absolute;
-    left: 50%;
-    top: calc(var(--header-h) + var(--sun-top));
-    width: var(--sun-size);
-    aspect-ratio: 1;
-    translate: -50% 0;
-    border-radius: 50%;
-    background: var(--gradient-sun-deep);
-    box-shadow:
-      0 0 80px rgb(255 77 109 / 0.28),
-      0 0 220px rgb(139 61 255 / 0.22);
-    /* the cuts: bands of sky through the lower half, widening downward */
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0 52%,
-      transparent 52% 54%,
-      #000 54% 61%,
-      transparent 61% 64%,
-      #000 64% 70%,
-      transparent 70% 74%,
-      #000 74% 79%,
-      transparent 79% 84%,
-      #000 84% 88%,
-      transparent 88% 94%,
-      #000 94% 97%,
-      transparent 97%
-    );
-  }
-
-  /* a comet streak every so often, top-right to mid-left */
-  .comet {
-    position: absolute;
-    top: 14%;
-    left: 70%;
-    width: 180px;
-    height: 2px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.9));
-    transform: rotate(-24deg);
-    opacity: 0;
-    animation: comet 14s ease-in-out infinite;
-    animation-delay: 3s;
-  }
-  @keyframes comet {
-    0%, 6%   { opacity: 0; translate: 0 0; }
-    1%       { opacity: 1; }
-    5%       { opacity: 0; translate: -420px 190px; }
-    100%     { opacity: 0; translate: -420px 190px; }
-  }
-
-  /* ---- content ---- */
-  .content {
+  /* ---- the deck ---- */
+  .deck {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     display: grid;
-    justify-items: center;
-    align-content: start;
-    text-align: center;
-    gap: 1.1rem;
-    /* the wordmark starts just under the sun, in open sky */
-    padding-top: calc(var(--sun-top) + var(--sun-size) + 2rem);
+    justify-items: start;
+    gap: 1.25rem;
+    padding-block: clamp(4rem, 12vh, 8rem) 3.5rem;
   }
 
-  /* ---- the wordmark ---- */
-  .wordmark {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.9rem, 4.6vw, 3.6rem);
-    line-height: 1;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-ink);
-  }
-
-  .wordmark-art {
-    display: inline-flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    column-gap: 0.5em;
-    /* tracked caps: trailing letterspace is optical noise, pull it back */
-    margin-right: -0.14em;
-  }
-
-  /* the O in TOKEN: a small sun, cuts included */
-  .sun-o {
-    display: inline-grid;
-    place-items: center;
-    width: 0.78em;
-    height: 0.78em;
-    vertical-align: -0.02em;
-    margin-inline: 0.04em 0.16em;
-  }
-  .sun-o-disc {
+  /* the token: a small sun with the cuts, the station's emblem */
+  .emblem {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 44px;
+    aspect-ratio: 1;
     border-radius: 50%;
     background: var(--gradient-sun);
-    box-shadow: 0 0 18px rgb(255 77 109 / 0.45);
+    box-shadow: 0 0 24px rgb(255 77 109 / 0.35);
     mask-image: linear-gradient(
       to bottom,
       #000 0 54%,
@@ -207,53 +117,98 @@ const { title, tagline } = Astro.props;
     );
   }
 
+  .wordmark {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .wordmark-art {
+    display: inline-flex;
+    flex-wrap: wrap;
+    column-gap: 0.55em;
+  }
+
+  /* the O in TOKEN, the same emblem at type size */
+  .sun-o {
+    display: inline-grid;
+    place-items: center;
+    width: 0.8em;
+    height: 0.8em;
+    vertical-align: -0.02em;
+    margin-inline: 0.05em 0.2em;
+  }
+  .sun-o-disc {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--gradient-sun);
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0 54%,
+      transparent 54% 62%,
+      #000 62% 76%,
+      transparent 76% 86%,
+      #000 86% 100%
+    );
+  }
+
   .tagline {
-    max-width: 38ch;
+    max-width: 40ch;
     margin: 0;
-    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    font-size: clamp(1.05rem, 1.7vw, 1.25rem);
     line-height: 1.55;
     color: var(--color-ink-muted);
     text-wrap: pretty;
   }
 
-  /* ---- the strip ---- */
-  .strip {
-    position: relative;
-    z-index: 2;
-    margin-top: 3.5rem;
-    border-top: 1px solid rgb(255 255 255 / 0.1);
-    background: linear-gradient(to bottom, rgb(28 28 28 / 0.6), rgb(28 28 28 / 0.9));
+  .hero :global(.hero-signal) {
+    margin-top: 0.5rem;
   }
 
-  .strip-inner {
-    display: grid;
-    gap: 0.5rem;
-    padding-block: 1rem 1.5rem;
-  }
-
-  .strip-caption {
+  /* ---- readouts ---- */
+  .readouts {
     display: flex;
-    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.75rem 2.5rem;
+    width: 100%;
+    margin: 1.75rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+  }
+  .readout {
+    display: flex;
     gap: 0.75rem;
     margin: 0;
-    padding-inline: 1.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-ink-faint);
   }
-  .strip-caption-note {
-    text-transform: none;
-    letter-spacing: 0.02em;
-    font-family: var(--font-sans);
-    font-size: 0.78rem;
+  .readout dt {
+    color: var(--color-ink-faint);
+    text-transform: uppercase;
+  }
+  .readout dd {
+    margin: 0;
+    color: var(--color-ink-muted);
   }
 
+  /* ---- worlds strip ---- */
+  .strip {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  }
   .worlds {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     list-style: none;
   }
@@ -262,17 +217,11 @@ const { title, tagline } = Astro.props;
   }
 
   @media (max-width: 48rem) {
-    .hero { --sun-size: clamp(190px, 56vw, 260px); }
-    .strip { margin-top: 2.5rem; }
-    .strip-caption { padding-inline: 0.75rem; }
+    .deck { padding-block: 3rem 2.5rem; }
     .worlds { grid-template-columns: 1fr; }
     .worlds li + li {
       border-left: 0;
       border-top: 1px solid rgb(255 255 255 / 0.08);
     }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .comet { animation: none; }
   }
 </style>
