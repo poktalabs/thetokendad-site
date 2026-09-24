@@ -1,12 +1,28 @@
 ---
 /*
-  Home hero. The wordmark reproduces the reference frame's logo treatment:
-  chunky rounded display face, slanted, lime-to-yellow gradient fill, a
-  graphite border and a thin magenta outline around it. Built with three
-  stacked copies of the same text (two pseudo-elements carrying strokes, the
-  real text carrying the gradient) so it stays live text, not an image.
+  Home hero: a synthwave deep-space stage.
+
+  Layers, back to front:
+    nebula     two soft radial washes (purple, blue) on the graphite ground
+    starfield  dotted depth layer, drifting
+    sparkles   the frame's four-point stars, sparse
+    sun        the token: a big gradient disc with the 80s horizontal cuts,
+               sitting on the horizon behind the wordmark
+    grid       perspective floor rolling toward the viewer
+    horizon    magenta glow line where sun meets floor
+    troopies   the squad, standing on the near edge of the floor
+    content    kicker, wordmark, tagline, actions
+
+  The wordmark reproduces the reference frame's logo treatment: chunky
+  rounded display face, slanted, yellow-to-lime gradient fill, a graphite
+  border and a thin magenta outline. Three stacked copies of the same text
+  keep it live text, not an image.
+
+  Colour rule holds: magenta is the only hue doing UI work (the primary
+  action). Everything else in the spectrum is scenery.
 */
 import Sparkles from './Sparkles.astro';
+import StarField from './StarField.astro';
 import Blob from './Blob.astro';
 
 interface Props {
@@ -17,14 +33,30 @@ const { title, tagline } = Astro.props;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <Sparkles />
-  <Blob class="blob-a" from="magenta" to="purple" delay={0} />
-  <Blob class="blob-b" from="cyan" to="blue" delay={1.7} />
+  <div class="sky" aria-hidden="true">
+    <StarField />
+    <Sparkles />
+    <div class="sun"></div>
+    <span class="comet"></span>
+  </div>
 
-  <div class="hero-inner wrap">
+  <div class="floor" aria-hidden="true">
+    <div class="grid"></div>
+    <div class="horizon"></div>
+  </div>
+
+  <div class="squad" aria-hidden="true">
+    <Blob class="t t1" variant="tall"  from="magenta" to="purple" delay={0} />
+    <Blob class="t t2" variant="stack" from="cyan"    to="blue"   delay={1.4} flip />
+    <Blob class="t t3" variant="wide"  from="lime"    to="yellow" delay={2.6} />
+    <Blob class="t t4" variant="stack" from="orange"  to="pink"   delay={0.8} />
+    <Blob class="t t5" variant="tall"  from="yellow"  to="lime"   delay={3.3} flip />
+  </div>
+
+  <div class="content wrap">
     <p class="kicker">
       <span>Build in public</span>
-      <span class="dot" aria-hidden="true"></span>
+      <span class="dot"></span>
       <span>Guides with receipts</span>
     </p>
 
@@ -43,37 +75,160 @@ const { title, tagline } = Astro.props;
 
 <style>
   .hero {
+    --horizon: 66%;            /* where the floor starts, from the top */
+    --sun-size: clamp(260px, 36vw, 500px);
+
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding-block: clamp(5rem, 14vw, 10rem);
+    /* run under the site header so the sky starts at the top of the page */
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: var(--header-h);
+    min-height: 100svh;
+    display: grid;
+    align-items: end;
     background:
-      radial-gradient(60% 50% at 50% 60%, rgb(123 44 255 / 0.10), transparent 70%),
+      radial-gradient(70% 55% at 78% 8%,  rgb(123 44 255 / 0.22), transparent 70%),
+      radial-gradient(60% 50% at 12% 30%, rgb(42 42 255 / 0.16), transparent 70%),
+      radial-gradient(90% 40% at 50% var(--horizon), rgb(255 47 214 / 0.16), transparent 70%),
       var(--color-ground);
   }
 
-  .hero-inner {
-    position: relative;
+  /* ---- sky ---- */
+  .sky {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .sun {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--header-h) + 3vh);
+    width: var(--sun-size);
+    aspect-ratio: 1;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: linear-gradient(
+      180deg,
+      var(--color-yellow) 0%,
+      var(--color-orange) 34%,
+      var(--color-magenta) 62%,
+      var(--color-purple) 100%
+    );
+    box-shadow:
+      0 0 80px rgb(255 47 214 / 0.35),
+      0 0 200px rgb(123 44 255 / 0.25);
+    /* the 80s cuts: bands of sky through the lower half, widening downward */
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0 52%,
+      transparent 52% 54%,
+      #000 54% 61%,
+      transparent 61% 64%,
+      #000 64% 70%,
+      transparent 70% 74%,
+      #000 74% 79%,
+      transparent 79% 84%,
+      #000 84% 88%,
+      transparent 88% 94%,
+      #000 94% 97%,
+      transparent 97%
+    );
+  }
+
+  /* a comet streak every so often, top-right to mid-left */
+  .comet {
+    position: absolute;
+    top: 14%;
+    left: 70%;
+    width: 180px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.9));
+    transform: rotate(-24deg);
+    opacity: 0;
+    animation: comet 14s ease-in-out infinite;
+    animation-delay: 3s;
+  }
+  @keyframes comet {
+    0%, 6%   { opacity: 0; translate: 0 0; }
+    1%       { opacity: 1; }
+    5%       { opacity: 0; translate: -420px 190px; }
+    100%     { opacity: 0; translate: -420px 190px; }
+  }
+
+  /* ---- floor ---- */
+  .floor {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--horizon);
+    bottom: 0;
+    z-index: 1;
+    overflow: hidden;
+    perspective: 520px;
+    perspective-origin: 50% 0;
+    mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 82%, transparent);
+  }
+
+  .grid {
+    position: absolute;
+    left: -60%;
+    right: -60%;
+    top: 0;
+    height: 240%;
+    transform-origin: 50% 0;
+    transform: rotateX(64deg);
+    background-image:
+      linear-gradient(to right,  rgb(255 47 214 / 0.55) 2px, transparent 2px),
+      linear-gradient(to bottom, rgb(255 47 214 / 0.55) 2px, transparent 2px);
+    background-size: 96px 96px;
+    animation: roll 2.4s linear infinite;
+  }
+  @keyframes roll {
+    from { background-position: 0 0, 0 0; }
+    to   { background-position: 0 0, 0 96px; }
+  }
+
+  .horizon {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: var(--color-magenta);
+    box-shadow:
+      0 0 12px 2px rgb(255 47 214 / 0.8),
+      0 0 60px 10px rgb(255 47 214 / 0.35);
+  }
+
+  /* ---- the squad ---- */
+  .squad {
+    position: absolute;
+    inset: 0;
     z-index: 2;
+  }
+  .squad :global(.t) {
+    bottom: 6%;
+    filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.55));
+  }
+  .squad :global(.t1) { left: 4%;   width: clamp(120px, 15vw, 220px); }
+  .squad :global(.t2) { left: 14%;  width: clamp(80px, 10vw, 150px); bottom: 5%; }
+  .squad :global(.t3) { right: 4%;  width: clamp(140px, 17vw, 250px); }
+  .squad :global(.t4) { right: 19%; width: clamp(70px, 9vw, 130px); bottom: 5%; }
+  .squad :global(.t5) { right: -3%; width: clamp(90px, 11vw, 160px); bottom: 3%; }
+
+  /* ---- content ---- */
+  .content {
+    position: relative;
+    z-index: 3;
     display: grid;
     justify-items: center;
     text-align: center;
-    gap: 1.75rem;
-  }
-
-  /* blobs: one per lower corner, cropped by the section so they read as chrome peeking in */
-  .hero :global(.blob-a) {
-    width: clamp(120px, 18vw, 240px);
-    right: -3%;
-    bottom: -8%;
-    z-index: 1;
-  }
-  .hero :global(.blob-b) {
-    width: clamp(90px, 12vw, 170px);
-    left: 1%;
-    bottom: -10%;
-    z-index: 1;
-    transform: scaleX(-1);
+    gap: 1.5rem;
+    /* the wordmark overlaps the sun's lower third; tagline + actions sit on the horizon */
+    padding-block: calc(var(--sun-size) * 0.62) 16vh;
   }
 
   .kicker {
@@ -83,9 +238,14 @@ const { title, tagline } = Astro.props;
     justify-content: center;
     gap: 0.5rem 0.75rem;
     margin: 0;
-    font-size: 0.8rem;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: rgb(28 28 28 / 0.55);
+    backdrop-filter: blur(6px);
+    font-size: 0.74rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-ink-muted);
   }
@@ -95,13 +255,11 @@ const { title, tagline } = Astro.props;
     height: 6px;
     border-radius: 50%;
     background: var(--color-magenta);
+    box-shadow: 0 0 8px var(--color-magenta);
   }
   @media (max-width: 30rem) {
-    .kicker .dot { display: none; }
-  }
-  /* one Troopie is enough on a phone; the second one only gets clipped */
-  @media (max-width: 40rem) {
-    .hero :global(.blob-b) { display: none; }
+    .kicker .dot,
+    .kicker span:last-child { display: none; }
   }
 
   /* ---- the wordmark ----
@@ -122,7 +280,7 @@ const { title, tagline } = Astro.props;
     letter-spacing: 0;
     text-transform: uppercase;
     transform: skewX(var(--slant));
-    filter: drop-shadow(0 0 22px rgb(255 47 214 / 0.28));
+    filter: drop-shadow(0 0 28px rgb(255 47 214 / 0.45)) drop-shadow(0 14px 18px rgb(0 0 0 / 0.5));
   }
 
   .wordmark-fill {
@@ -144,14 +302,10 @@ const { title, tagline } = Astro.props;
     color: var(--color-ground);
     paint-order: stroke fill;
   }
-
-  /* bottom layer: the thin magenta outline (drawn as the thickest stroke) */
   .wordmark::before {
     z-index: 1;
     -webkit-text-stroke: var(--stroke-outer) var(--color-magenta);
   }
-
-  /* middle layer: the graphite border between magenta and the gradient */
   .wordmark::after {
     z-index: 2;
     -webkit-text-stroke: var(--stroke-inner) var(--color-ground);
@@ -164,6 +318,7 @@ const { title, tagline } = Astro.props;
     line-height: 1.45;
     color: var(--color-ink);
     text-wrap: pretty;
+    text-shadow: 0 2px 18px rgb(0 0 0 / 0.7);
   }
 
   .actions {
@@ -171,13 +326,13 @@ const { title, tagline } = Astro.props;
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.75rem;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
-    padding: 0.8rem 1.4rem;
+    padding: 0.85rem 1.5rem;
     border-radius: var(--radius-pill);
     font-weight: 600;
     font-size: 0.95rem;
@@ -190,6 +345,7 @@ const { title, tagline } = Astro.props;
   .btn-primary {
     background: var(--color-magenta);
     color: var(--color-ground);
+    box-shadow: 0 0 24px -4px rgb(255 47 214 / 0.6);
   }
   .btn-primary:hover {
     color: var(--color-ground);
@@ -198,16 +354,29 @@ const { title, tagline } = Astro.props;
 
   .btn-ghost {
     color: var(--color-ink);
-    border: 1px solid var(--color-line-strong);
-    background: rgb(255 255 255 / 0.02);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    background: rgb(28 28 28 / 0.55);
+    backdrop-filter: blur(6px);
   }
   .btn-ghost:hover {
     color: var(--color-ink);
     border-color: var(--color-purple);
-    background: rgb(123 44 255 / 0.12);
+    background: rgb(123 44 255 / 0.18);
+  }
+
+  /* ---- small screens: fewer Troopies, smaller sun, tighter stage ---- */
+  @media (max-width: 48rem) {
+    .hero { --horizon: 72%; --sun-size: clamp(220px, 70vw, 320px); }
+    .squad :global(.t2),
+    .squad :global(.t4),
+    .squad :global(.t5) { display: none; }
+    .squad :global(.t1) { left: -4%; width: 34vw; }
+    .squad :global(.t3) { right: -6%; width: 38vw; }
+    .content { padding-block: calc(var(--sun-size) * 0.55) 22vh; }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .grid, .comet { animation: none; }
     .btn { transition: none; }
     .btn:hover { transform: none; }
   }

@@ -48,6 +48,7 @@
   --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
+  --header-h: 4.25rem;
   --radius-blob: 1.75rem;
   --radius-pill: 999px;
 

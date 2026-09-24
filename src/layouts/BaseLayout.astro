@@ -16,7 +16,7 @@ const { title, description } = Astro.props;
     <BaseHead title={title} description={description} />
   </head>
   <body class="flex min-h-dvh flex-col">
-    <header class="wrap flex items-center justify-between py-5">
+    <header class="wrap relative z-10 flex h-(--header-h) items-center justify-between">
       <a href="/" class="group inline-flex items-center gap-2 text-[0.95rem] font-semibold tracking-tight no-underline hover:text-magenta" aria-label={`${SITE_TITLE}, home`}>
         <span class="size-2.5 rounded-full bg-magenta transition-transform group-hover:scale-125" aria-hidden="true"></span>
         thetoken.dad
