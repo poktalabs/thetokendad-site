@@ -1,0 +1,207 @@
+---
+/*
+  Home hero. The wordmark reproduces the reference frame's logo treatment:
+  chunky rounded display face, slanted, lime-to-yellow gradient fill, a
+  graphite border and a thin magenta outline around it. Built with three
+  stacked copies of the same text (two pseudo-elements carrying strokes, the
+  real text carrying the gradient) so it stays live text, not an image.
+*/
+import Sparkles from './Sparkles.astro';
+import Blob from './Blob.astro';
+
+interface Props {
+  title: string;
+  tagline: string;
+}
+const { title, tagline } = Astro.props;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <Sparkles />
+  <Blob class="blob-a" from="magenta" to="purple" />
+  <Blob class="blob-b" from="cyan" to="blue" eyes={false} />
+
+  <div class="hero-inner wrap">
+    <p class="kicker">
+      <span>Build in public</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>Guides with receipts</span>
+    </p>
+
+    <h1 id="hero-title" class="wordmark" data-text={title}>
+      <span class="wordmark-fill">{title}</span>
+    </h1>
+
+    <p class="tagline">{tagline}</p>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="/blog/">Read the writing</a>
+      <a class="btn btn-ghost" href="/about/">Who is the dad</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(5rem, 14vw, 10rem);
+    background:
+      radial-gradient(60% 50% at 50% 60%, rgb(123 44 255 / 0.10), transparent 70%),
+      var(--color-ground);
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 1.75rem;
+  }
+
+  /* blobs: one per lower corner, cropped by the section so they read as chrome peeking in */
+  .hero :global(.blob-a) {
+    width: clamp(120px, 18vw, 240px);
+    right: -3%;
+    bottom: -8%;
+    z-index: 1;
+  }
+  .hero :global(.blob-b) {
+    width: clamp(90px, 12vw, 170px);
+    left: -2%;
+    bottom: -14%;
+    z-index: 1;
+    transform: scaleX(-1);
+  }
+
+  .kicker {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 0.75rem;
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .kicker span { white-space: nowrap; }
+  .kicker .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-magenta);
+  }
+
+  /* ---- the wordmark ----
+     Three stacked copies of the same text. The h1's pseudo-elements carry the
+     strokes (magenta outer line, graphite border) and sit beneath; the inner
+     span carries the gradient fill on top. */
+  .wordmark {
+    --stroke-outer: 0.11em;   /* magenta line + graphite border */
+    --stroke-inner: 0.075em;  /* graphite border only */
+    --slant: -10deg;
+
+    position: relative;
+    margin: 0;
+    padding: 0.2em 0.35em; /* room for the strokes and the slant */
+    font-family: var(--font-display);
+    font-size: clamp(3.2rem, 11.5vw, 9rem);
+    line-height: 1;
+    letter-spacing: 0.015em;
+    text-transform: uppercase;
+    transform: skewX(var(--slant));
+    filter: drop-shadow(0 0 22px rgb(255 47 214 / 0.28));
+  }
+
+  .wordmark-fill {
+    position: relative;
+    z-index: 3;
+    /* yellow at the top, lime at the bottom, like the frame */
+    background-image: linear-gradient(180deg, var(--color-yellow) 8%, var(--color-lime) 88%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .wordmark::before,
+  .wordmark::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    padding: inherit;
+    color: var(--color-ground);
+    paint-order: stroke fill;
+  }
+
+  /* bottom layer: the thin magenta outline (drawn as the thickest stroke) */
+  .wordmark::before {
+    z-index: 1;
+    -webkit-text-stroke: var(--stroke-outer) var(--color-magenta);
+  }
+
+  /* middle layer: the graphite border between magenta and the gradient */
+  .wordmark::after {
+    z-index: 2;
+    -webkit-text-stroke: var(--stroke-inner) var(--color-ground);
+  }
+
+  .tagline {
+    max-width: 34ch;
+    margin: 0;
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    line-height: 1.45;
+    color: var(--color-ink);
+    text-wrap: pretty;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.8rem 1.4rem;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  .btn-primary {
+    background: var(--color-magenta);
+    color: var(--color-ground);
+  }
+  .btn-primary:hover {
+    color: var(--color-ground);
+    box-shadow: var(--shadow-glow-magenta);
+  }
+
+  .btn-ghost {
+    color: var(--color-ink);
+    border: 1px solid var(--color-line-strong);
+    background: rgb(255 255 255 / 0.02);
+  }
+  .btn-ghost:hover {
+    color: var(--color-ink);
+    border-color: var(--color-purple);
+    background: rgb(123 44 255 / 0.12);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+    .btn:hover { transform: none; }
+  }
+</style>

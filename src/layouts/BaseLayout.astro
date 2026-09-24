@@ -15,22 +15,24 @@ const { title, description } = Astro.props;
   <head>
     <BaseHead title={title} description={description} />
   </head>
-  <body>
-    <header>
-      <a href="/">{SITE_TITLE}</a>
-      <nav>
-        <a href="/blog/">Writing</a>
-        <a href="/about/">About</a>
+  <body class="flex min-h-dvh flex-col">
+    <header class="wrap flex items-center justify-between py-5">
+      <a href="/" class="font-display text-xl tracking-wide no-underline hover:text-magenta">
+        {SITE_TITLE}
+      </a>
+      <nav class="flex gap-6 text-sm font-medium text-ink-muted">
+        <a href="/blog/" class="no-underline hover:text-magenta">Writing</a>
+        <a href="/about/" class="no-underline hover:text-magenta">About</a>
       </nav>
     </header>
 
-    <main>
+    <main class="flex-1">
       <slot />
     </main>
 
-    <footer>
-      <p>&copy; {new Date().getFullYear()} {SITE_TITLE}</p>
-      <a href="/rss.xml">RSS</a>
+    <footer class="wrap flex items-center justify-between border-t border-line py-6 text-sm text-ink-muted">
+      <p class="m-0">&copy; {new Date().getFullYear()} {SITE_TITLE}</p>
+      <a href="/rss.xml" class="no-underline hover:text-magenta">RSS</a>
     </footer>
   </body>
 </html>

@@ -1,17 +1,119 @@
 @import 'tailwindcss';
 
+/* Self-hosted fonts (fontsource, served from the bundle, no third-party requests). */
+@import '@fontsource/lilita-one';
+@import '@fontsource-variable/inter';
+
 /*
-  DESIGN IS DELIBERATELY ABSENT.
+  Visual lock, 2026-09 (see workstream DECISIONS.md, 2026-09-19).
 
-  This file carries no visual direction on purpose. The canvas's look is being
-  designed by hand (Mel, via /impeccable) on top of this scaffold, and anything
-  opinionated here would just be work to undo.
-
-  What goes here when design lands: a Tailwind 4 `@theme` block with the brand
-  tokens (colors, type scale, fonts), plus any base element styles.
-
-  @theme {
-    --color-*: ...;
-    --font-*: ...;
-  }
+  Ground: near-black graphite, never pure black. Dark-only.
+  Accent: magenta primary, purple secondary. Those two are the only colours
+  allowed to carry UI meaning (links, focus, primary action).
+  Spectrum: lime / yellow / cyan / blue / orange / pink live ONLY inside
+  decorative chrome (gradient blobs, the display wordmark, badges). They never
+  encode state. Meaning is carried by shape, never by hue.
+  Type: chunky rounded display face for headlines, calm sans for reading,
+  mono for code. Reading surfaces stay quiet so the receipts can be read.
 */
+@theme static {
+  /* graphite tone steps, darkest to lightest */
+  --color-ground: #1c1c1c;
+  --color-ground-raised: #232323;
+  --color-ground-panel: #2a2a2a;
+  --color-line: #383838;
+  --color-line-strong: #4a4a4a;
+
+  /* text */
+  --color-ink: #f2f2f2;
+  --color-ink-muted: #a8a8a8;
+  --color-ink-faint: #6e6e6e;
+
+  /* functional accent: the only hues that mean something */
+  --color-magenta: #ff2fd6;
+  --color-magenta-deep: #c400a3;
+  --color-purple: #7b2cff;
+  --color-purple-deep: #4b12b8;
+
+  /* decorative spectrum: chrome only, never UI meaning */
+  --color-lime: #7cff1e;
+  --color-yellow: #f4ff2a;
+  --color-cyan: #24e8ff;
+  --color-blue: #2a2aff;
+  --color-orange: #ff6a2a;
+  --color-pink: #ff2ea8;
+  --color-sparkle: #c9c9c9;
+
+  --font-display: 'Lilita One', 'Arial Black', Impact, sans-serif;
+  --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --radius-blob: 1.75rem;
+  --radius-pill: 999px;
+
+  --shadow-glow-magenta: 0 0 0 1px var(--color-magenta), 0 0 32px -4px rgb(255 47 214 / 0.55);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+    margin: 0;
+  }
+
+  ::selection {
+    background: var(--color-magenta);
+    color: var(--color-ground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-magenta);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-color: var(--color-magenta);
+    text-underline-offset: 0.2em;
+  }
+
+  a:hover {
+    color: var(--color-magenta);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+
+  code, pre, kbd {
+    font-family: var(--font-mono);
+  }
+}
+
+@layer utilities {
+  /* max reading width shared by every surface */
+  .wrap {
+    width: min(100% - 2.5rem, 72rem);
+    margin-inline: auto;
+  }
+
+  .wrap-prose {
+    width: min(100% - 2.5rem, 42rem);
+    margin-inline: auto;
+  }
+}

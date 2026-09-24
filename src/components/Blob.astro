@@ -1,0 +1,51 @@
+---
+/*
+  Gradient blob: one piece of the brand chrome. A stepped, rounded silhouette
+  in the reference frame's idiom, filled with a two-stop gradient from the
+  decorative spectrum. Purely decorative; it never carries UI meaning.
+
+  `from` / `to` take theme colour names (lime, yellow, cyan, blue, orange,
+  pink, magenta, purple). Position it from the parent via `class`.
+*/
+interface Props {
+  from?: string;
+  to?: string;
+  class?: string;
+  eyes?: boolean;
+}
+const { from = 'magenta', to = 'purple', class: className, eyes = true } = Astro.props;
+const id = `blob-${from}-${to}-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<svg
+  class:list={['blob', className]}
+  viewBox="0 0 200 200"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color={`var(--color-${from})`} />
+      <stop offset="1" stop-color={`var(--color-${to})`} />
+    </linearGradient>
+  </defs>
+  <!-- stepped silhouette: three rounded blocks fused, like the frame's Troopies -->
+  <path
+    fill={`url(#${id})`}
+    d="M40 200 V110 a30 30 0 0 1 30 -30 h20 V50 a30 30 0 0 1 30 -30 h50 a30 30 0 0 1 30 30 V200 Z"
+  />
+  {eyes && (
+    <g fill="var(--color-ground)" transform="translate(148 44) skewX(-14)">
+      <rect x="0" y="0" width="5" height="16" rx="2.5" />
+      <rect x="12" y="0" width="5" height="16" rx="2.5" />
+    </g>
+  )}
+</svg>
+
+<style>
+  .blob {
+    position: absolute;
+    pointer-events: none;
+    overflow: visible;
+  }
+</style>
