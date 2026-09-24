@@ -5,14 +5,14 @@
 @import '@fontsource-variable/inter';
 
 /*
-  Visual lock, 2026-09 (see workstream DECISIONS.md, 2026-09-19).
+  Visual lock, 2026-09 (see workstream DECISIONS.md, 2026-09-19 and 2026-09-24).
 
   Ground: near-black graphite, never pure black. Dark-only.
-  Accent: magenta primary, purple secondary. Those two are the only colours
-  allowed to carry UI meaning (links, focus, primary action).
-  Spectrum: lime / yellow / cyan / blue / orange / pink live ONLY inside
-  decorative chrome (gradient blobs, the display wordmark, badges). They never
-  encode state. Meaning is carried by shape, never by hue.
+  Primary: the sun gradient, orange to magenta. Magenta is the solid form
+  used wherever a single colour has to do UI work (links, focus, primary
+  action). Secondary: violet, for depth, orbits, hover states.
+  Everything else is graphite tones and white. Meaning is carried by shape,
+  never by hue.
   Type: chunky rounded display face for headlines, calm sans for reading,
   mono for code. Reading surfaces stay quiet so the receipts can be read.
 */
@@ -29,19 +29,17 @@
   --color-ink-muted: #a8a8a8;
   --color-ink-faint: #6e6e6e;
 
-  /* functional accent: the only hues that mean something */
+  /* primary: the sun */
+  --color-orange: #ff7a1f;
+  --color-coral: #ff4d6d;
   --color-magenta: #ff2fd6;
   --color-magenta-deep: #c400a3;
-  --color-purple: #7b2cff;
-  --color-purple-deep: #4b12b8;
 
-  /* decorative spectrum: chrome only, never UI meaning */
-  --color-lime: #7cff1e;
-  --color-yellow: #f4ff2a;
-  --color-cyan: #24e8ff;
-  --color-blue: #2a2aff;
-  --color-orange: #ff6a2a;
-  --color-pink: #ff2ea8;
+  /* secondary: violet */
+  --color-violet: #8b3dff;
+  --color-violet-deep: #4a1ab8;
+  --color-space: #2a1650;
+
   --color-sparkle: #c9c9c9;
 
   --font-display: 'Bowlby One', 'Arial Black', Impact, sans-serif;
@@ -49,10 +47,15 @@
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --header-h: 4.25rem;
-  --radius-blob: 1.75rem;
   --radius-pill: 999px;
 
   --shadow-glow-magenta: 0 0 0 1px var(--color-magenta), 0 0 32px -4px rgb(255 47 214 / 0.55);
+}
+
+/* the primary gradient, reused by the sun, the wordmark and emphasis chrome */
+:root {
+  --gradient-sun: linear-gradient(180deg, var(--color-orange) 0%, var(--color-coral) 45%, var(--color-magenta) 100%);
+  --gradient-sun-deep: linear-gradient(180deg, var(--color-orange) 0%, var(--color-magenta) 55%, var(--color-violet) 100%);
 }
 
 @layer base {
