@@ -5,25 +5,20 @@
   it becomes a schema field when the guide template lands.
 */
 import type { CollectionEntry } from 'astro:content';
+import { kindOf } from '../lib/posts';
 
 interface Props {
   posts: CollectionEntry<'blog'>[];
   heading?: string;
+  showAll?: boolean;
 }
-const { posts, heading = 'Feed' } = Astro.props;
-
-const KINDS = ['guide', 'experiment', 'launch'] as const;
-function kindOf(tags: string[]): string {
-  const hit = KINDS.find((k) => tags.includes(k));
-  return hit ?? 'post';
-}
+const { posts, heading = 'Feed', showAll = true } = Astro.props;
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 ---
 
 <section class="feed wrap" aria-labelledby="feed-title">
   <header class="feed-head">
     <h2 id="feed-title">{heading}</h2>
-    <p class="feed-note">Latest transmissions. Newest first.</p>
   </header>
 
   {posts.length === 0 ? (
@@ -41,7 +36,7 @@ const iso = (d: Date) => d.toISOString().slice(0, 10);
     </ol>
   )}
 
-  <a class="all" href="/blog/">Full log</a>
+  {showAll && <a class="all" href="/blog/">Full log</a>}
 </section>
 
 <style>
@@ -64,11 +59,6 @@ const iso = (d: Date) => d.toISOString().slice(0, 10);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-ink);
-  }
-  .feed-note {
-    margin: 0;
-    font-size: 0.9rem;
     color: var(--color-ink);
   }
 

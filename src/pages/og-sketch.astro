@@ -1,0 +1,60 @@
+---
+/* OG card sketch, 1200x630. Screenshot it, save as public/og.png, delete this route. */
+import '../styles/global.css';
+import SunMark from '../components/SunMark.astro';
+---
+<html lang="en">
+  <head><meta charset="utf-8" /><meta name="robots" content="noindex" /><title>og</title></head>
+  <body>
+    <div class="card">
+      <div class="mark"><SunMark size="120px" /></div>
+      <p class="title">T<SunMark size="0.7em" class="o" />KENMAXXING<br />for <span class="g">good</span></p>
+      <p class="sub">Learn and build tech to <span class="g">improve lives</span></p>
+      <p class="url">thetoken.dad</p>
+    </div>
+  </body>
+</html>
+<style>
+  body { margin: 0; }
+  .card {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    padding: 72px 80px;
+    box-sizing: border-box;
+    background: var(--color-ground);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .mark { position: absolute; top: 72px; left: 80px; }
+  .title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 104px;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+  .title :global(.o) { display: inline-block; vertical-align: baseline; margin: 0 0.05em 0 0.02em; }
+  .g { background: var(--gradient-sun); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub {
+    margin: 28px 0 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .url {
+    position: absolute;
+    top: 96px;
+    right: 80px;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.125em;
+    text-transform: uppercase;
+  }
+</style>

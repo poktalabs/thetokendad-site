@@ -1,12 +1,22 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, SOCIAL } from '../consts';
 
-// CONTENT PENDING — the bio is blocked on TASK-005 (brand basics).
-// The route exists so the structure is real; the prose is Mel's to write.
+// CONTENT PENDING: the bio is Mel's to write (TASK-005, brand basics).
+// The route and the reading surface are real; the prose is a placeholder.
 ---
 
-<BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is.">
-  <h1>About</h1>
-  <p>Bio pending — see TASK-005.</p>
+<BaseLayout title={`About · ${SITE_TITLE}`} description="Who The Token Dad is, and why this site exists.">
+  <section class="page-head wrap-prose">
+    <h1>The Dad</h1>
+    <p class="page-lede">A dad building with machines, publishing what it costs.</p>
+  </section>
+  <div class="prose wrap-prose about">
+    <p>Bio pending. The short version: I forget things, so I build agents that remember them, and I publish the receipts.</p>
+    <p>Find me as <a href={SOCIAL.instagram}>@thetokendad</a> on Instagram, or subscribe to the <a href="/rss.xml">RSS feed</a>.</p>
+  </div>
 </BaseLayout>
+
+<style>
+  .about { padding-bottom: 5rem; }
+</style>

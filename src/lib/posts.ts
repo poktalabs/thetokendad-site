@@ -16,3 +16,9 @@ export async function getPublishedPosts(): Promise<CollectionEntry<'blog'>[]> {
   );
   return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
+
+/** Feed kind, inferred from tags until it becomes a schema field. */
+const KINDS = ['guide', 'experiment', 'launch'] as const;
+export function kindOf(tags: string[]): string {
+  return KINDS.find((k) => tags.includes(k)) ?? 'post';
+}

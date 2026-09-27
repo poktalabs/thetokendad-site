@@ -110,6 +110,85 @@
   }
 }
 
+@layer components {
+  /* reading surface for posts and pages: calm, one measure, hairline rules */
+  .prose {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  .prose > * + * { margin-top: 1.25em; }
+  .prose h2, .prose h3 {
+    margin-top: 2.2em;
+    margin-bottom: 0.6em;
+    text-wrap: pretty;
+  }
+  .prose h2 { font-size: 1.6rem; }
+  .prose h3 { font-size: 1.2rem; }
+  .prose p { margin-bottom: 0; }
+  .prose a { text-decoration: underline; }
+  .prose strong { font-weight: 600; }
+  .prose ul, .prose ol { padding-left: 1.4em; }
+  .prose li + li { margin-top: 0.4em; }
+  .prose blockquote {
+    margin-inline: 0;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    border-left: 2px solid var(--color-magenta);
+  }
+  .prose code {
+    padding: 0.1em 0.35em;
+    border-radius: 0.35rem;
+    background: var(--color-ground-panel);
+    font-size: 0.88em;
+  }
+  .prose pre {
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-ground-raised) !important;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  .prose pre code { padding: 0; background: none; font-size: inherit; }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  .prose th, .prose td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--color-line);
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .prose hr { border: 0; border-top: 1px solid var(--color-line); }
+  .prose img { max-width: 100%; height: auto; border-radius: 0.75rem; }
+
+  /* page header shared by the inner pages */
+  .page-head {
+    padding-block: 3.5rem 2rem;
+  }
+  .page-head h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    letter-spacing: -0.03em;
+  }
+  .page-head .page-lede {
+    max-width: 44ch;
+    margin: 1rem 0 0;
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+}
+
 @layer utilities {
   /* max reading width shared by every surface */
   .wrap {

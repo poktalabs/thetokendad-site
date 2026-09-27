@@ -1,26 +1,16 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
+import Feed from '../../components/Feed.astro';
 import { getPublishedPosts } from '../../lib/posts';
 import { SITE_TITLE } from '../../consts';
 
 const posts = await getPublishedPosts();
 ---
 
-<BaseLayout title={`Writing · ${SITE_TITLE}`} description="Posts from The Token Dad.">
-  <h1>Writing</h1>
-
-  {posts.length === 0 ? (
-    <p>Nothing published yet.</p>
-  ) : (
-    <ul>
-      {posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-          <FormattedDate date={post.data.pubDate} />
-          <p>{post.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  )}
+<BaseLayout title={`Writing · ${SITE_TITLE}`} description="Guides and posts from The Token Dad, with receipts.">
+  <section class="page-head wrap">
+    <h1>Writing</h1>
+    <p class="page-lede">Guides you can replicate and posts from the bench, newest first, with what each one cost.</p>
+  </section>
+  <Feed posts={posts} heading="All posts" showAll={false} />
 </BaseLayout>
