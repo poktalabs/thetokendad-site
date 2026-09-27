@@ -99,8 +99,10 @@ const hasTicker = headlines.length > 0;
   .nav a:hover { background: var(--color-ground-raised); color: var(--color-ink); }
 
   @media (max-width: 56rem) {
-    .bar.has-ticker { grid-template-columns: auto 1fr; }
+    /* no ticker: the brand cell takes the space up to the nav and centres the wordmark */
+    .bar, .bar.has-ticker { grid-template-columns: 1fr auto; }
     .cell-ticker { display: none; }
+    .brand { justify-content: center; }
     .nav a { padding: 0 0.9rem; }
   }
   @media (max-width: 26rem) {
