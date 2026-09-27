@@ -1,0 +1,89 @@
+---
+/*
+  Ecosystem: the living background of the hero. Nodes joined by hairlines,
+  with short bright packets in the palette colours travelling node to node
+  at different speeds and directions. The station is a system doing work,
+  not a backdrop.
+
+  Purely decorative: hidden from assistive tech, packets stop under
+  reduced motion, the graph stays.
+*/
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+// a 1400x700 field; positions are hand-placed so the graph reads as a mesh, not a grid
+const nodes: Record<string, [number, number]> = {
+  a: [120, 120], b: [420, 90], c: [700, 160], d: [1000, 80], e: [1300, 140],
+  f: [250, 380], g: [620, 420], h: [900, 330], i: [1250, 420],
+  j: [450, 640], k: [800, 620], l: [1150, 660],
+};
+const links: [string, string][] = [
+  ['a', 'b'], ['b', 'c'], ['c', 'd'], ['d', 'e'], ['a', 'f'], ['b', 'f'], ['f', 'g'], ['c', 'g'],
+  ['g', 'h'], ['d', 'h'], ['h', 'i'], ['e', 'i'], ['f', 'j'], ['g', 'j'], ['g', 'k'], ['h', 'k'],
+  ['k', 'l'], ['i', 'l'], ['j', 'k'],
+];
+// link index, colour, duration (s), delay (s), reversed
+const packets: [number, string, number, number, boolean][] = [
+  [0, 'orange', 6, 0, false], [2, 'magenta', 7, 1.5, true], [6, 'violet', 5, 0.5, false],
+  [8, 'coral', 6.5, 2, false], [10, 'orange', 5.5, 3, true], [13, 'magenta', 8, 1, false],
+  [15, 'violet', 6, 2.5, true], [16, 'coral', 7, 0, false], [18, 'orange', 9, 4, true],
+  [4, 'violet', 7.5, 3.5, false],
+];
+const hubs = new Set(['c', 'g', 'h', 'k']);
+
+const seg = (p: string, q: string) => `M${nodes[p][0]} ${nodes[p][1]} L${nodes[q][0]} ${nodes[q][1]}`;
+---
+
+<svg class:list={['eco', className]} viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <g class="links">
+    {links.map(([p, q]) => <path d={seg(p, q)} />)}
+  </g>
+  <g class="nodes">
+    {Object.entries(nodes).map(([id, [x, y]]) => (
+      <circle cx={x} cy={y} r={hubs.has(id) ? 4 : 3} class:list={{ hub: hubs.has(id) }} />
+    ))}
+  </g>
+  <g class="packets">
+    {packets.map(([li, colour, dur, delay, rev]) => {
+      const [p, q] = links[li];
+      return (
+        <path class={`pk ${colour}`} d={rev ? seg(q, p) : seg(p, q)} pathLength="100" stroke-dasharray="14 300">
+          <animate attributeName="stroke-dashoffset" values="14;-100" dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
+        </path>
+      );
+    })}
+  </g>
+</svg>
+
+<style>
+  .eco {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .links path {
+    fill: none;
+    stroke: var(--color-line-strong);
+    stroke-width: 1;
+  }
+  .nodes circle { fill: var(--color-ink-faint); }
+  .nodes .hub { fill: var(--color-ink-muted); }
+
+  /* packets: a short bright dash travelling the link, node to node */
+  .pk {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .pk.orange { stroke: var(--color-orange); filter: drop-shadow(0 0 5px var(--color-orange)); }
+  .pk.coral { stroke: var(--color-coral); filter: drop-shadow(0 0 5px var(--color-coral)); }
+  .pk.magenta { stroke: var(--color-magenta); filter: drop-shadow(0 0 5px var(--color-magenta)); }
+  .pk.violet { stroke: var(--color-violet); filter: drop-shadow(0 0 5px var(--color-violet)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .packets { display: none; }
+  }
+</style>

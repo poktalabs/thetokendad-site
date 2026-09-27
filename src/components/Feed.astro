@@ -46,7 +46,7 @@ const iso = (d: Date) => d.toISOString().slice(0, 10);
 
 <style>
   .feed {
-    padding-block: 3.5rem 5rem;
+    padding-block: 4rem 5rem;
   }
 
   .feed-head {
@@ -54,19 +54,21 @@ const iso = (d: Date) => d.toISOString().slice(0, 10);
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-line);
   }
   .feed-head h2 {
     margin: 0;
-    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-ink);
   }
   .feed-note {
     margin: 0;
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     color: var(--color-ink-faint);
   }
 
@@ -74,43 +76,55 @@ const iso = (d: Date) => d.toISOString().slice(0, 10);
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid rgb(255 255 255 / 0.08);
   }
   .row {
     display: grid;
-    grid-template-columns: 7.5rem 6rem 1fr;
+    grid-template-columns: 7.5rem 7rem 1fr;
     grid-template-areas:
       'date kind title'
       'date kind desc';
     column-gap: 1.5rem;
-    row-gap: 0.25rem;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    row-gap: 0.35rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-line);
   }
-  .date, .kind {
+  .date {
+    grid-area: date;
+    padding-top: 0.35rem;
     font-family: var(--font-mono);
-    font-size: 0.74rem;
-    letter-spacing: 0.06em;
-    line-height: 1.7;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-faint);
   }
-  .date { grid-area: date; color: var(--color-ink-faint); }
-  .kind { grid-area: kind; color: var(--color-ink-muted); text-transform: uppercase; }
+  .kind {
+    grid-area: kind;
+    justify-self: start;
+    align-self: start;
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
   .title {
     grid-area: title;
+    max-width: 60ch;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     line-height: 1.35;
     letter-spacing: -0.005em;
     text-decoration: none;
-    max-width: 60ch;
   }
   .title:hover { color: var(--color-magenta); }
   .desc {
     grid-area: desc;
-    margin: 0;
     max-width: 60ch;
-    font-size: 0.92rem;
+    margin: 0;
+    font-size: 0.98rem;
     line-height: 1.55;
     color: var(--color-ink-muted);
   }
@@ -132,14 +146,11 @@ const iso = (d: Date) => d.toISOString().slice(0, 10);
 
   @media (max-width: 48rem) {
     .row {
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        'meta'
-        'title'
-        'desc';
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
     }
-    .date, .kind { grid-area: auto; }
-    .row { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; }
+    .date { padding-top: 0.3rem; }
     .title, .desc { flex-basis: 100%; }
   }
 </style>

@@ -1,72 +1,44 @@
 ---
 /*
-  Home hero: the quiet deck of a research station.
+  Home hero: the lab, alive.
 
-  Nothing shouts. A sparse starfield, a small sun emblem (the token), the
-  station's name in tracked caps, one line of intent, and a signal line
-  that decodes a transmission now and then. Under it, a readout row of
-  station facts in mono. The worlds (the primary navigation) follow as a
-  hairline strip.
+  A big display statement on the left, over an ecosystem of nodes and
+  travelling packets that fills the section. The station name sits above
+  the statement as a kicker with the sun as the O in TOKEN. Two pills
+  under the statement: read the log, meet the dad.
 
-  The full title is exposed to assistive tech; the decorated wordmark with
-  the sun-O is hidden from it.
+  The full title is exposed to assistive tech; the decorated kicker is
+  hidden from it.
 */
-import StarField from './StarField.astro';
-import Signal from './Signal.astro';
-import World from './World.astro';
-
-interface Readout {
-  label: string;
-  value: string;
-}
+import Ecosystem from './Ecosystem.astro';
 
 interface Props {
   title: string;
-  tagline: string;
-  signals: string[];
-  readouts: Readout[];
+  statement: string;
+  lede: string;
 }
-const { title, tagline, signals, readouts } = Astro.props;
+const { title, statement, lede } = Astro.props;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="sky" aria-hidden="true">
-    <StarField />
+  <div class="field" aria-hidden="true">
+    <Ecosystem />
   </div>
 
   <div class="deck wrap">
-    <span class="emblem" aria-hidden="true"></span>
-
-    <h1 id="hero-title" class="wordmark">
+    <p class="kicker">
       <span class="sr-only">{title}</span>
-      <span class="wordmark-art" aria-hidden="true">
-        <span class="word">The</span>
-        <span class="word">T<span class="sun-o"><span class="sun-o-disc"></span></span>ken</span>
-        <span class="word">Dad</span>
-      </span>
-    </h1>
+      <span class="kicker-art" aria-hidden="true">The T<span class="sun-o"></span>ken Dad</span>
+    </p>
 
-    <p class="tagline">{tagline}</p>
+    <h1 id="hero-title" class="statement">{statement}</h1>
+    <p class="lede">{lede}</p>
 
-    <Signal messages={signals} class="hero-signal" />
-
-    <dl class="readouts">
-      {readouts.map((r) => (
-        <div class="readout">
-          <dt>{r.label}</dt>
-          <dd>{r.value}</dd>
-        </div>
-      ))}
-    </dl>
+    <div class="actions">
+      <a class="pill solid" href="/blog/">Read the log <span aria-hidden="true">&rarr;</span></a>
+      <a class="pill" href="/about/">Who is building this</a>
+    </div>
   </div>
-
-  <nav class="strip" aria-label="Worlds">
-    <ul class="worlds wrap">
-      <li><World href="/blog/" index="01" label="Writing" hint="Guides and posts, with receipts" kind="ring" /></li>
-      <li><World href="/about/" index="02" label="The Dad" hint="Who is building this, and why" kind="moon" /></li>
-      <li><World href="/website-challenge-v1/" index="03" label="Lab" hint="Experiments, including the closed ones" kind="crescent" /></li>
-    </ul>
-  </nav>
 </section>
 
 <style>
@@ -74,78 +46,44 @@ const { title, tagline, signals, readouts } = Astro.props;
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    /* run under the site header so the sky starts at the top of the page */
-    margin-top: calc(-1 * var(--header-h));
-    padding-top: var(--header-h);
-    background:
-      radial-gradient(60% 50% at 85% 0%, rgb(74 26 184 / 0.14), transparent 70%),
-      var(--color-ground);
   }
 
-  .sky {
+  /* the ecosystem covers the section; faded where the copy sits */
+  .field {
     position: absolute;
-    inset: 0;
+    inset: -2rem 0;
     z-index: 0;
+    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.25) 0%, rgb(0 0 0 / 0.5) 45%, #000 70%);
   }
 
-  /* ---- the deck ---- */
   .deck {
     position: relative;
     z-index: 1;
     display: grid;
-    justify-items: start;
-    gap: 1.25rem;
-    padding-block: clamp(4rem, 12vh, 8rem) 3.5rem;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    padding-block: clamp(4rem, 10vh, 6rem) 4rem;
   }
+  .deck > * { grid-column: 1; }
 
-  /* the token: a small sun with the cuts, the station's emblem */
-  .emblem {
-    display: block;
-    width: 44px;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--gradient-sun);
-    box-shadow: 0 0 24px rgb(255 77 109 / 0.35);
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0 54%,
-      transparent 54% 60%,
-      #000 60% 72%,
-      transparent 72% 79%,
-      #000 79% 90%,
-      transparent 90% 100%
-    );
-  }
-
-  .wordmark {
-    margin: 0.25rem 0 0;
+  .kicker {
+    display: flex;
+    align-items: center;
+    margin: 0 0 1.5rem;
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: clamp(1.6rem, 3.2vw, 2.4rem);
-    line-height: 1;
-    letter-spacing: 0.18em;
+    font-size: 0.95rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--color-ink);
+    color: var(--color-ink-muted);
   }
-  .wordmark-art {
-    display: inline-flex;
-    flex-wrap: wrap;
-    column-gap: 0.55em;
-  }
+  .kicker-art { display: inline-flex; align-items: center; }
 
-  /* the O in TOKEN, the same emblem at type size */
+  /* the token: the sun with its cuts, as the O in TOKEN */
   .sun-o {
-    display: inline-grid;
-    place-items: center;
-    width: 0.8em;
-    height: 0.8em;
-    vertical-align: -0.02em;
-    margin-inline: 0.05em 0.2em;
-  }
-  .sun-o-disc {
-    display: block;
-    width: 100%;
-    height: 100%;
+    display: inline-block;
+    width: 0.85em;
+    height: 0.85em;
+    margin: 0 0.2em 0 0.05em;
     border-radius: 50%;
     background: var(--gradient-sun);
     mask-image: linear-gradient(
@@ -158,70 +96,55 @@ const { title, tagline, signals, readouts } = Astro.props;
     );
   }
 
-  .tagline {
-    max-width: 40ch;
+  .statement {
+    max-width: 14ch;
     margin: 0;
-    font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+    font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .lede {
+    max-width: 44ch;
+    margin: 1.5rem 0 0;
+    font-size: 1.15rem;
     line-height: 1.55;
     color: var(--color-ink-muted);
     text-wrap: pretty;
   }
 
-  .hero :global(.hero-signal) {
-    margin-top: 0.5rem;
-  }
-
-  /* ---- readouts ---- */
-  .readouts {
+  .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem 2.5rem;
-    width: 100%;
-    margin: 1.75rem 0 0;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgb(255 255 255 / 0.08);
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    letter-spacing: 0.06em;
-  }
-  .readout {
-    display: flex;
     gap: 0.75rem;
-    margin: 0;
+    margin-top: 2rem;
   }
-  .readout dt {
-    color: var(--color-ink-faint);
-    text-transform: uppercase;
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    background: var(--color-ground);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 200ms ease, background-color 200ms ease, color 200ms ease;
   }
-  .readout dd {
-    margin: 0;
-    color: var(--color-ink-muted);
+  .pill:hover { border-color: var(--color-ink); color: var(--color-ink); }
+  .pill.solid {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-ground);
   }
-
-  /* ---- worlds strip ---- */
-  .strip {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid rgb(255 255 255 / 0.08);
-    border-bottom: 1px solid rgb(255 255 255 / 0.08);
-  }
-  .worlds {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin: 0 auto;
-    padding: 0;
-    list-style: none;
-  }
-  .worlds li + li {
-    border-left: 1px solid rgb(255 255 255 / 0.08);
+  .pill.solid:hover {
+    background: var(--color-magenta);
+    border-color: var(--color-magenta);
+    color: var(--color-ground);
   }
 
-  @media (max-width: 48rem) {
-    .deck { padding-block: 3rem 2.5rem; }
-    .worlds { grid-template-columns: 1fr; }
-    .worlds li + li {
-      border-left: 0;
-      border-top: 1px solid rgb(255 255 255 / 0.08);
-    }
+  @media (max-width: 56rem) {
+    .field { mask-image: linear-gradient(180deg, rgb(0 0 0 / 0.3), #000); }
+    .deck { grid-template-columns: 1fr; padding-block: 3rem 3rem; }
   }
 </style>

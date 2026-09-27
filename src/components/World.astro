@@ -1,172 +1,101 @@
 ---
 /*
-  World: a planet that is also a gate. Each aspect of The Token Dad is a
-  world; the link drops you into that part of the site.
-
-  Drawn like a wayfinding pictogram, not a cartoon: a flat disc with a
-  terminator (the lit side faces the sun, up and left), and one geometric
-  mark per kind. Shape carries the meaning, colour is scenery:
-    ring      a thin ring            Writing (things published)
-    moon      a satellite on orbit   The Dad (the person, and who orbits him)
-    crescent  a partial phase        Lab (work still coming into light)
+  World: a gate into one aspect of The Token Dad, drawn as a colour card.
+  Index, label, one line, and a plus. Colour is scenery: the three cards
+  take the three palette hues by position, never by meaning.
 */
-type Kind = 'ring' | 'moon' | 'crescent';
+type Tone = 'orange' | 'magenta' | 'violet';
 
 interface Props {
   href: string;
   index: string;
   label: string;
   hint?: string;
-  kind: Kind;
+  tone: Tone;
   class?: string;
 }
-const { href, index, label, hint, kind, class: className } = Astro.props;
-const id = `world-${kind}-${Math.random().toString(36).slice(2, 7)}`;
+const { href, index, label, hint, tone, class: className } = Astro.props;
 ---
 
-<a href={href} class:list={['world', className]}>
-  <span class="planet" aria-hidden="true">
-    <svg viewBox="0 0 120 120" focusable="false">
-      <defs>
-        <linearGradient id={`${id}-g`} x1="0.15" y1="0" x2="0.85" y2="1">
-          <stop offset="0" stop-color="var(--color-orange)" />
-          <stop offset="0.5" stop-color="var(--color-magenta)" />
-          <stop offset="1" stop-color="var(--color-violet-deep)" />
-        </linearGradient>
-        <radialGradient id={`${id}-t`} cx="0.3" cy="0.25" r="0.9">
-          <stop offset="0.3" stop-color="#000" stop-opacity="0" />
-          <stop offset="1" stop-color="#000" stop-opacity="0.6" />
-        </radialGradient>
-        <clipPath id={`${id}-c`}>
-          <circle cx="60" cy="60" r="30" />
-        </clipPath>
-      </defs>
-
-      {kind === 'ring' && (
-        <ellipse class="mark" cx="60" cy="60" rx="50" ry="12" transform="rotate(-22 60 60)" />
-      )}
-
-      <circle cx="60" cy="60" r="30" fill={`url(#${id}-g)`} />
-      <circle cx="60" cy="60" r="30" fill={`url(#${id}-t)`} />
-
-      {kind === 'crescent' && (
-        /* the unlit part: a second disc offset toward the shadow side */
-        <circle cx="74" cy="66" r="30" fill="var(--color-ground)" clip-path={`url(#${id}-c)`} />
-      )}
-
-      {kind === 'ring' && (
-        /* front half of the ring only: dash the ellipse so the back arc is skipped */
-        <ellipse class="mark mark-front" cx="60" cy="60" rx="50" ry="12" transform="rotate(-22 60 60)" />
-      )}
-
-      {kind === 'moon' && (
-        <g class="orbit">
-          <circle class="mark" cx="60" cy="60" r="46" />
-          <circle class="moon" cx="106" cy="60" r="4" />
-        </g>
-      )}
-    </svg>
-  </span>
-
-  <span class="meta">
-    <span class="index">{index}</span>
-    <span class="label">{label}</span>
-    {hint && <span class="hint">{hint}</span>}
-  </span>
+<a href={href} class:list={['world', tone, className]}>
+  <span class="index">{index}</span>
+  <span class="label">{label}</span>
+  {hint && <span class="hint">{hint}</span>}
+  <span class="plus" aria-hidden="true">+</span>
 </a>
 
 <style>
   .world {
-    --size: 64px;
-
+    position: relative;
     display: grid;
-    grid-template-columns: var(--size) 1fr;
-    align-items: center;
-    gap: 1rem;
+    grid-template-rows: auto 1fr auto;
+    gap: 0.25rem;
+    min-height: 15rem;
     padding: 1.25rem 1.5rem;
+    border-radius: 1.25rem;
+    color: var(--color-ground);
     text-decoration: none;
-    color: var(--color-ink);
-    border-radius: 6px;
-    transition: background-color 200ms ease;
+    transition: transform 250ms ease;
   }
+  .world.orange { background: var(--color-orange); }
+  .world.magenta { background: var(--color-magenta); }
+  .world.violet { background: var(--color-violet); color: var(--color-ink); }
 
-  .planet {
-    display: block;
-    width: var(--size);
-    aspect-ratio: 1;
-  }
-  .planet svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-
-  .mark {
-    fill: none;
-    stroke: var(--color-ink-muted);
-    stroke-width: 1.5;
-    stroke-opacity: 0.55;
-  }
-  .mark-front {
-    stroke: var(--color-ink);
-    stroke-opacity: 0.9;
-    stroke-dasharray: 95 200;
-    stroke-dashoffset: -55;
-  }
-  .moon { fill: var(--color-ink); }
-  .orbit {
-    transform-box: fill-box;
-    transform-origin: 50% 50%;
-    animation: orbit 24s linear infinite;
-  }
-
-  .meta {
-    display: grid;
-    gap: 0.15rem;
-  }
   .index {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    color: var(--color-ink-faint);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
   }
   .label {
+    align-self: start;
+    margin-top: 1rem;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: 0.02em;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
     text-transform: uppercase;
-    transition: color 200ms ease;
   }
   .hint {
-    font-size: 0.82rem;
-    color: var(--color-ink-muted);
+    max-width: 22ch;
+    padding-right: 3rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+  .plus {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    line-height: 1;
   }
 
   .world:hover,
   .world:focus-visible {
-    color: var(--color-ink);
-    background: rgb(255 255 255 / 0.04);
-    outline: none;
+    color: inherit;
+    transform: translateY(-4px);
   }
-  .world:hover .label,
-  .world:focus-visible .label { color: var(--color-magenta); }
-  .world:focus-visible { box-shadow: inset 0 0 0 1px var(--color-magenta); }
-
-  @keyframes orbit {
-    to { transform: rotate(360deg); }
-  }
-
-  @media (max-width: 48rem) {
-    .world {
-      --size: 52px;
-      padding: 1rem 0.75rem;
-      gap: 0.85rem;
-    }
-    .hint { display: none; }
+  .world.violet:hover,
+  .world.violet:focus-visible { color: var(--color-ink); }
+  .world:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .orbit { animation: none; }
+    .world { transition: none; }
+    .world:hover, .world:focus-visible { transform: none; }
+  }
+  @media (max-width: 48rem) {
+    .world { min-height: 11rem; }
+    .label { font-size: 1.6rem; }
   }
 </style>

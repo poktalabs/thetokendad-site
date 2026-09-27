@@ -1,32 +1,44 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import World from '../components/World.astro';
 import Feed from '../components/Feed.astro';
 import { getPublishedPosts } from '../lib/posts';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, HOME_STATEMENT, HOME_LEDE } from '../consts';
 
 const posts = await getPublishedPosts();
 const latest = posts.slice(0, 6);
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
-const firstLight = posts.length ? iso(posts[posts.length - 1].data.pubDate) : '2026-08-07';
 
-/* the station's transmissions: real facts, cycled by the signal line */
-const signals = [
-  `station online since ${firstLight}`,
-  ...latest.slice(0, 3).map((p) => `${iso(p.data.pubDate)} · ${p.data.title}`),
-  'experiment website-challenge-v1 · closed · archived',
-];
-
-const readouts = [
-  { label: 'Station', value: 'thetoken.dad' },
-  { label: 'Orbit', value: 'CDMX' },
-  { label: 'Since', value: firstLight },
-  { label: 'Signals', value: String(posts.length).padStart(2, '0') },
+/* the command bar ticker: real transmissions, newest first */
+const headlines = [
+  ...latest.slice(0, 3).map((p) => ({ when: iso(p.data.pubDate), what: p.data.title })),
+  { when: 'lab', what: 'website-challenge-v1 closed, four exhibits archived' },
 ];
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <Hero title={SITE_TITLE} tagline={SITE_DESCRIPTION} signals={signals} readouts={readouts} />
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} headlines={headlines}>
+  <Hero title={SITE_TITLE} statement={HOME_STATEMENT} lede={HOME_LEDE} />
+
+  <nav class="worlds wrap" aria-label="Worlds">
+    <World href="/blog/" index="01" label="Writing" hint="Guides and posts, with receipts" tone="orange" />
+    <World href="/about/" index="02" label="The Dad" hint="Who is building this, and why" tone="magenta" />
+    <World href="/website-challenge-v1/" index="03" label="Lab" hint="Experiments, including the closed ones" tone="violet" />
+  </nav>
+
   <Feed posts={latest} />
 </BaseLayout>
+
+<style>
+  .worlds {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 56rem) {
+    .worlds { grid-template-columns: 1fr; }
+  }
+</style>

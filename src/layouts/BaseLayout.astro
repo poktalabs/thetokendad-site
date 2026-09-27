@@ -1,14 +1,21 @@
 ---
+/*
+  Base layout. The header is the command bar: one ruled pill with boxed
+  cells (brand, the headline ticker when the page supplies one, nav).
+*/
 import BaseHead from '../components/BaseHead.astro';
+import Ticker, { type TickerItem } from '../components/Ticker.astro';
 import { SITE_TITLE } from '../consts';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description: string;
+  headlines?: TickerItem[];
 }
 
-const { title, description } = Astro.props;
+const { title, description, headlines = [] } = Astro.props;
+const hasTicker = headlines.length > 0;
 ---
 
 <html lang="en">
@@ -16,15 +23,23 @@ const { title, description } = Astro.props;
     <BaseHead title={title} description={description} />
   </head>
   <body class="flex min-h-dvh flex-col">
-    <header class="wrap relative z-10 flex h-(--header-h) items-center justify-between">
-      <a href="/" class="group inline-flex items-center gap-2 text-[0.95rem] font-semibold tracking-tight no-underline hover:text-magenta" aria-label={`${SITE_TITLE}, home`}>
-        <span class="size-2.5 rounded-full bg-magenta transition-transform group-hover:scale-125" aria-hidden="true"></span>
-        thetoken.dad
-      </a>
-      <nav class="flex gap-6 text-sm font-medium text-ink-muted">
-        <a href="/blog/" class="no-underline hover:text-magenta">Writing</a>
-        <a href="/about/" class="no-underline hover:text-magenta">About</a>
-      </nav>
+    <header class="wrap relative z-10">
+      <div class:list={['bar', { 'has-ticker': hasTicker }]}>
+        <a href="/" class="cell brand" aria-label={`${SITE_TITLE}, home`}>
+          <span class="disc" aria-hidden="true"></span>
+          thetoken.dad
+        </a>
+        {hasTicker && (
+          <div class="cell cell-ticker">
+            <Ticker items={headlines} />
+          </div>
+        )}
+        <nav class="cell nav" aria-label="Site">
+          <a href="/blog/">Writing</a>
+          <a href="/about/">About</a>
+          <a href="/website-challenge-v1/">Lab</a>
+        </nav>
+      </div>
     </header>
 
     <main class="flex-1">
@@ -37,3 +52,70 @@ const { title, description } = Astro.props;
     </footer>
   </body>
 </html>
+
+<style>
+  .bar {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    margin-top: 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-pill);
+    background: var(--color-ground);
+    font-size: 0.9rem;
+  }
+  .bar.has-ticker { grid-template-columns: auto 1fr auto; }
+
+  .cell {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    height: 3.25rem;
+    padding: 0 1.25rem;
+  }
+  .cell + .cell { border-left: 1px solid var(--color-line); }
+
+  .brand {
+    gap: 0.6rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+  }
+  .brand:hover { color: var(--color-ink); }
+  .disc {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: var(--color-magenta);
+    transition: transform 200ms ease;
+  }
+  .brand:hover .disc { transform: scale(1.25); }
+
+  .nav {
+    padding: 0;
+    justify-self: end;
+  }
+  .nav a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1.25rem;
+    color: var(--color-ink);
+    text-decoration: none;
+    border-left: 1px solid var(--color-line);
+    transition: background-color 200ms ease;
+  }
+  .nav a:first-child { border-left: 0; }
+  .nav a:last-child { border-radius: 0 var(--radius-pill) var(--radius-pill) 0; }
+  .nav a:hover { background: var(--color-ground-raised); color: var(--color-ink); }
+
+  @media (max-width: 56rem) {
+    .bar.has-ticker { grid-template-columns: auto 1fr; }
+    .cell-ticker { display: none; }
+    .nav a { padding: 0 0.9rem; }
+  }
+  @media (max-width: 26rem) {
+    .cell { padding: 0 0.9rem; }
+    .nav a { padding: 0 0.7rem; font-size: 0.85rem; }
+  }
+</style>
