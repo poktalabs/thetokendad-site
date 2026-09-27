@@ -64,14 +64,15 @@ const seg = (p: string, q: string) => `M${nodes[p][0]} ${nodes[p][1]} L${nodes[q
     height: 100%;
     pointer-events: none;
   }
-  /* hairlines close to white but never ink, so the packets still read as the bright layer */
+  /* one step under the text greys so the graph never clashes with the copy;
+     the packets stay the bright layer */
   .links path {
     fill: none;
-    stroke: var(--color-ink-muted);
+    stroke: var(--color-ink-faint);
     stroke-width: 1;
   }
-  .nodes circle { fill: var(--color-ink-muted); }
-  .nodes .hub { fill: var(--color-sparkle); }
+  .nodes circle { fill: var(--color-ink-faint); }
+  .nodes .hub { fill: var(--color-ink-muted); }
 
   /* packets: a short bright dash travelling the link, node to node */
   .pk {
