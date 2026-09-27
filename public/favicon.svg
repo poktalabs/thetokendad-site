@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512">
+  <title>The Token Dad: sun mark</title>
+  <defs>
+    <linearGradient id="sun" gradientUnits="userSpaceOnUse" x1="50" y1="0" x2="50" y2="100">
+      <stop offset="0" stop-color="#ff7a1f"/>
+      <stop offset="0.45" stop-color="#ff4d6d"/>
+      <stop offset="1" stop-color="#ff2fd6"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#sun)" d="M50 0L50 0A50.0 50.0 0 0 1 99.84 54L0.16 54A50.0 50.0 0 0 1 50 0Z M1.461 62L98.539 62A50.0 50.0 0 0 1 92.708 76L7.292 76A50.0 50.0 0 0 1 1.461 62Z M15.301 86L84.699 86A50.0 50.0 0 0 1 50 100L50 100A50.0 50.0 0 0 1 15.301 86Z"/>
+</svg>

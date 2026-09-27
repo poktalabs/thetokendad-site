@@ -1,0 +1,43 @@
+---
+/*
+  The sun mark, inline. Same geometry as public/favicon.svg and
+  docs/brand/sun-mark.svg in the project repo: three bands of one circle
+  in the sun gradient. Size it with the `size` prop (any CSS length).
+*/
+interface Props {
+  size?: string;
+  class?: string;
+}
+
+const { size = '1em', class: className } = Astro.props;
+const uid = `sun-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg
+  class:list={['sun-mark', className]}
+  viewBox="0 0 100 100"
+  width={size}
+  height={size}
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={uid} gradientUnits="userSpaceOnUse" x1="50" y1="0" x2="50" y2="100">
+      <stop offset="0" stop-color="var(--color-orange)"></stop>
+      <stop offset="0.45" stop-color="var(--color-coral)"></stop>
+      <stop offset="1" stop-color="var(--color-magenta)"></stop>
+    </linearGradient>
+  </defs>
+  <path
+    fill={`url(#${uid})`}
+    d="M50 0L50 0A50 50 0 0 1 99.84 54L0.16 54A50 50 0 0 1 50 0Z M1.461 62L98.539 62A50 50 0 0 1 92.708 76L7.292 76A50 50 0 0 1 1.461 62Z M15.301 86L84.699 86A50 50 0 0 1 50 100L50 100A50 50 0 0 1 15.301 86Z"
+  ></path>
+</svg>
+
+<style>
+  .sun-mark {
+    display: inline-block;
+    flex: none;
+    overflow: visible;
+  }
+</style>
