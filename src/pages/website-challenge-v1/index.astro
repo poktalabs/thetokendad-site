@@ -1,6 +1,8 @@
 ---
 import HubLayout from '../../layouts/HubLayout.astro';
 import World from '../../components/World.astro';
+import FAQ from '../../components/FAQ.astro';
+import { faqJsonLd } from '../../lib/faq';
 import { AUTHOR, SITE_TITLE } from '../../consts';
 
 const title = 'The Website Challenge: four AI design tools, one brief';
@@ -51,15 +53,7 @@ const jsonLd = [
     url: pageUrl,
     mainEntityOfPage: pageUrl,
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faq.map(({ q, a }) => ({
-      '@type': 'Question',
-      name: q,
-      acceptedAnswer: { '@type': 'Answer', text: a },
-    })),
-  },
+  faqJsonLd(faq),
   {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -164,13 +158,5 @@ const jsonLd = [
     </li>
   </ul>
 
-  <h2>Frequently asked questions</h2>
-  <dl>
-    {faq.map(({ q, a }) => (
-      <>
-        <dt>{q}</dt>
-        <dd>{a}</dd>
-      </>
-    ))}
-  </dl>
+  <FAQ items={faq} heading="Frequently asked questions" />
 </HubLayout>

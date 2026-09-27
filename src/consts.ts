@@ -23,6 +23,33 @@ export const HOME_LEDE =
 
 export const AUTHOR = 'Mel';
 
+// Home FAQ (first draft, 2026-09-27). Plain answers feed the FAQPage
+// structured data; `html` is the on-page version when a link belongs in it.
+export const HOME_FAQ = [
+  {
+    q: 'What is The Token Dad?',
+    a: 'One dad building with machines in public, and publishing what it costs. Guides you can replicate, experiments that sometimes fail, and the bill for each.',
+  },
+  {
+    q: 'Who is this for?',
+    a: 'Anyone who wants to learn to build with tech and take home something they can replicate. You do not need kids. The dad part is my voice, not a filter on who reads.',
+  },
+  {
+    q: 'What do you mean by receipts?',
+    a: 'Every published number carries its method: tokens measured, cost modelled, assumptions stated. When a number turns out wrong, I correct it in public.',
+  },
+  {
+    q: 'What is the lab?',
+    a: 'Experiments, including the closed ones. The first was the Website Challenge: four AI design tools, one frozen brief. Its record and the four frozen builds are still up.',
+    html: '<p>Experiments, including the closed ones. The first was the <a href="/website-challenge-v1/">Website Challenge</a>: four AI design tools, one frozen brief. Its record and the four frozen builds are still up.</p>',
+  },
+  {
+    q: 'How do I follow along?',
+    a: 'RSS, or @thetokendad on Instagram. No newsletter, no login, nothing to sign up for.',
+    html: '<p><a href="/rss.xml">RSS</a>, or <a href="https://instagram.com/thetokendad">@thetokendad</a> on Instagram. No newsletter, no login, nothing to sign up for.</p>',
+  },
+];
+
 export const SOCIAL = {
   instagram: 'https://instagram.com/thetokendad',
 } as const;

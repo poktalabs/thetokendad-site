@@ -170,6 +170,7 @@
     color: var(--color-ink-muted);
   }
   .prose hr { border: 0; border-top: 1px solid var(--color-line); }
+  .prose .faq { margin-top: 2.5rem; }
   .prose img { max-width: 100%; height: auto; border-radius: 0.75rem; }
 
   /* page header shared by the inner pages */

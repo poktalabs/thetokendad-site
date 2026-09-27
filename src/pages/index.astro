@@ -3,9 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import World from '../components/World.astro';
 import Feed from '../components/Feed.astro';
+import FAQ from '../components/FAQ.astro';
+import { faqJsonLd } from '../lib/faq';
 import { getPublishedPosts } from '../lib/posts';
 import { projectorEntries } from '../lib/projector';
-import { SITE_TITLE, SITE_DESCRIPTION, HOME_STATEMENT, HOME_LEDE } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, HOME_STATEMENT, HOME_LEDE, HOME_FAQ } from '../consts';
 
 const posts = await getPublishedPosts();
 const latest = posts.slice(0, 6);
@@ -20,7 +22,7 @@ const headlines = [
 ];
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} headlines={headlines}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} headlines={headlines} jsonLd={faqJsonLd(HOME_FAQ)}>
   <Hero statement={HOME_STATEMENT} lede={HOME_LEDE} entries={entries} />
 
   <nav class="worlds wrap" aria-label="Worlds">
@@ -30,6 +32,8 @@ const headlines = [
   </nav>
 
   <Feed posts={latest} />
+
+  <FAQ class="wrap home-faq" items={HOME_FAQ} heading="Questions, answered from the bench" />
 </BaseLayout>
 
 <style>
@@ -43,4 +47,5 @@ const headlines = [
   @media (max-width: 56rem) {
     .worlds { grid-template-columns: 1fr; }
   }
+  :global(.home-faq) { padding-bottom: 5rem; }
 </style>
