@@ -4,10 +4,12 @@ import Hero from '../components/Hero.astro';
 import World from '../components/World.astro';
 import Feed from '../components/Feed.astro';
 import { getPublishedPosts } from '../lib/posts';
+import { projectorEntries } from '../lib/projector';
 import { SITE_TITLE, SITE_DESCRIPTION, HOME_STATEMENT, HOME_LEDE } from '../consts';
 
 const posts = await getPublishedPosts();
 const latest = posts.slice(0, 6);
+const entries = projectorEntries(posts);
 
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 
@@ -19,7 +21,7 @@ const headlines = [
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} headlines={headlines}>
-  <Hero statement={HOME_STATEMENT} lede={HOME_LEDE} />
+  <Hero statement={HOME_STATEMENT} lede={HOME_LEDE} entries={entries} />
 
   <nav class="worlds wrap" aria-label="Worlds">
     <World href="/blog/" label="Writing" hint="Guides and posts, with receipts" tone="orange" />

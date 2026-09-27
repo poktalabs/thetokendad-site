@@ -1,14 +1,14 @@
 ---
 /*
-  Home hero: the lab, alive.
-
-  A big display statement on the left, over an ecosystem of nodes and
-  travelling packets that fills the section. The wordmark lives in the
-  command bar (Wordmark.astro), not here. Two pills under the statement:
-  read the log, meet the dad.
+  Home hero: two columns. The statement, the lede and the two pills on the
+  left; the projector on the right, an ecosystem of nodes that throws
+  archive entries (log, lab, resources) onto a card display when a node is
+  hovered, and cycles them on its own when left alone. The wordmark lives
+  in the command bar (Wordmark.astro), not here.
 */
-import Ecosystem from './Ecosystem.astro';
+import Projector from './Projector.astro';
 import SunMark from './SunMark.astro';
+import type { ProjectorEntry } from '../lib/projector';
 
 interface Props {
   statement: {
@@ -21,8 +21,9 @@ interface Props {
     emphasis: string;
   };
   lede: string;
+  entries: ProjectorEntry[];
 }
-const { statement, lede } = Astro.props;
+const { statement, lede, entries } = Astro.props;
 /* the display word carries the sun as its O: split it around the first O */
 const oAt = statement.word.indexOf('O');
 const wordHead = statement.word.slice(0, oAt);
@@ -30,27 +31,29 @@ const wordTail = statement.word.slice(oAt + 1);
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="field" aria-hidden="true">
-    <Ecosystem />
-  </div>
-
   <div class="deck wrap">
-    <h1 id="hero-title" class="statement">
-      <span class="line-1">
-        <span class="sr-only">{statement.word}</span>
-        <span class="word" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
-      </span>
-      <span class="line-2">{statement.tail} <span class="emphasis">{statement.tailEmphasis}</span></span>
-      <span class="line-3">
-        {statement.lineHead} <span class="emphasis">{statement.lineEmphasis}</span>{' '}
-        {statement.line} <span class="emphasis">{statement.emphasis}</span>
-      </span>
-    </h1>
-    <p class="lede">{lede}</p>
+    <div class="copy">
+      <h1 id="hero-title" class="statement">
+        <span class="line-1">
+          <span class="sr-only">{statement.word}</span>
+          <span class="word" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
+        </span>
+        <span class="line-2">{statement.tail} <span class="emphasis">{statement.tailEmphasis}</span></span>
+        <span class="line-3">
+          {statement.lineHead} <span class="emphasis">{statement.lineEmphasis}</span>{' '}
+          {statement.line} <span class="emphasis">{statement.emphasis}</span>
+        </span>
+      </h1>
+      <p class="lede">{lede}</p>
 
-    <div class="actions">
-      <a class="pill solid" href="/blog/">Read the log <span aria-hidden="true">&rarr;</span></a>
-      <a class="pill" href="/about/">Who is building this</a>
+      <div class="actions">
+        <a class="pill solid" href="/blog/">Read the log <span aria-hidden="true">&rarr;</span></a>
+        <a class="pill" href="/about/">Who is building this</a>
+      </div>
+    </div>
+
+    <div class="stage">
+      <Projector entries={entries} />
     </div>
   </div>
 </section>
@@ -59,36 +62,28 @@ const wordTail = statement.word.slice(oAt + 1);
   .hero {
     position: relative;
     isolation: isolate;
-    overflow: hidden;
   }
   /* desktop: the hero takes the first screen minus the bar and a strip
      of the world cards, so their titles show above the fold */
   @media (min-width: 56rem) {
     .hero { min-height: calc(100svh - 4.5rem - 5.5rem); }
-  }
-
-  /* the ecosystem covers the section; faded where the copy sits */
-  .field {
-    position: absolute;
-    inset: -2rem 0;
-    z-index: 0;
-    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.25) 0%, rgb(0 0 0 / 0.5) 45%, #000 70%);
+    .deck { min-height: inherit; }
   }
 
   .deck {
-    position: relative;
-    z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    padding-block: clamp(4rem, 10vh, 6rem) 4rem;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    align-items: center;
+    column-gap: clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(3rem, 8vh, 5rem) 3.5rem;
   }
-  .deck > * { grid-column: 1; }
-  .deck > .statement { grid-column: 1 / -1; }
+  /* the statement is sized against its own column, so it never breaks */
+  .copy { container-type: inline-size; }
 
   .statement {
     margin: 0;
-    /* sized so TOKENMAXXING never breaks: about 7.6em of text on one line */
-    font-size: clamp(1.5rem, 12vw - 0.25rem, 4.4rem);
+    /* TOKENMAXXING on one line: about 7.6em of text, 12.5cqw keeps it inside */
+    font-size: clamp(1.5rem, 12.5cqw, 4.4rem);
     line-height: 1;
     letter-spacing: -0.03em;
   }
@@ -147,8 +142,19 @@ const wordTail = statement.word.slice(oAt + 1);
     color: var(--color-ground);
   }
 
+  /* the stage keeps the field's aspect and never outgrows the first screen */
+  .stage {
+    justify-self: end;
+    width: min(100%, calc((100svh - 22rem) * 600 / 520));
+    min-width: 16rem;
+  }
+
   @media (max-width: 56rem) {
-    .field { mask-image: linear-gradient(180deg, rgb(0 0 0 / 0.3), #000); }
-    .deck { grid-template-columns: 1fr; padding-block: 3rem 3rem; }
+    .deck {
+      grid-template-columns: 1fr;
+      row-gap: 2.5rem;
+      padding-block: 3rem 3rem;
+    }
+    .stage { justify-self: stretch; width: min(100%, 28rem); margin-inline: auto; }
   }
 </style>
