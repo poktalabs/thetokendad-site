@@ -15,12 +15,14 @@ interface Props {
   compact?: boolean;
   /** a mono readout above the label (arm number, kind) */
   eyebrow?: string;
+  /** sentence-case label for titles (read next), instead of the display caps */
+  plain?: boolean;
   class?: string;
 }
-const { href, label, hint, tone, compact = false, eyebrow, class: className } = Astro.props;
+const { href, label, hint, tone, compact = false, eyebrow, plain = false, class: className } = Astro.props;
 ---
 
-<a href={href} class:list={['world', tone, { compact }, className]}>
+<a href={href} class:list={['world', tone, { compact, plain }, className]}>
   {eyebrow && <span class="eyebrow">{eyebrow}</span>}
   <span class="label">{label}</span>
   {hint && <span class="hint">{hint}</span>}
@@ -57,7 +59,15 @@ const { href, label, hint, tone, compact = false, eyebrow, class: className } = 
     padding: 1rem 1.25rem;
     border-radius: 1rem;
   }
-  .world.compact .label { font-size: 1.5rem; }
+  .world.compact .label { padding-right: 2.5rem; font-size: 1.5rem; }
+  .world.plain .label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    text-wrap: pretty;
+  }
   .world.compact .hint { max-width: none; padding-right: 2.75rem; font-size: 0.85rem; overflow-wrap: anywhere; }
   .world.compact .plus { width: 1.9rem; height: 1.9rem; font-size: 1.2rem; }
 

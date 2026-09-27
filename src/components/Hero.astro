@@ -12,13 +12,11 @@ import type { ProjectorEntry } from '../lib/projector';
 
 interface Props {
   statement: {
+    lead: string;
+    leadEmphasis: string;
     word: string;
     tail: string;
     tailEmphasis: string;
-    lineHead: string;
-    lineEmphasis: string;
-    line: string;
-    emphasis: string;
   };
   lede: string;
   entries: ProjectorEntry[];
@@ -34,21 +32,18 @@ const wordTail = statement.word.slice(oAt + 1);
   <div class="deck wrap">
     <div class="copy">
       <h1 id="hero-title" class="statement">
-        <span class="line-1">
+        <span class="line-1">{statement.lead} <span class="emphasis">{statement.leadEmphasis}</span></span>
+        <span class="line-2">
           <span class="sr-only">{statement.word}</span>
-          <span class="word" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
+          <span class="word emphasis" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
         </span>
-        <span class="line-2">{statement.tail} <span class="emphasis">{statement.tailEmphasis}</span></span>
-        <span class="line-3">
-          {statement.lineHead} <span class="emphasis">{statement.lineEmphasis}</span>{' '}
-          {statement.line} <span class="emphasis">{statement.emphasis}</span>
-        </span>
+        <span class="line-3">{statement.tail} <span class="emphasis">{statement.tailEmphasis}</span></span>
       </h1>
       <p class="lede">{lede}</p>
 
       <div class="actions">
-        <a class="pill solid" href="/blog/">Read the log <span aria-hidden="true">&rarr;</span></a>
-        <a class="pill" href="/about/">Who is building this</a>
+        <a class="pill solid" href="/website-challenge-v1/">Check the Lab <span aria-hidden="true">&rarr;</span></a>
+        <a class="pill" href="/blog/">Read blog</a>
       </div>
     </div>
 
@@ -88,14 +83,15 @@ const wordTail = statement.word.slice(oAt + 1);
     letter-spacing: -0.03em;
   }
   .line-1, .line-2, .line-3 { display: block; }
-  .line-1 { white-space: nowrap; }
+  .line-2 { white-space: nowrap; }
   .word { text-transform: uppercase; letter-spacing: -0.01em; }
   .word :global(.o) {
     display: inline-block;
     vertical-align: baseline;
     margin: 0 0.05em 0 0.02em;
   }
-  .line-3 { max-width: 26ch; }
+  /* the emphasis paints the text with the sun; the mark keeps its own sun */
+  .word.emphasis { padding-right: 0.04em; }
   .emphasis {
     background: var(--gradient-sun);
     -webkit-background-clip: text;

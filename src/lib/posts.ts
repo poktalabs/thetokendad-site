@@ -22,3 +22,14 @@ const KINDS = ['guide', 'experiment', 'launch'] as const;
 export function kindOf(tags: string[]): string {
   return KINDS.find((k) => tags.includes(k)) ?? 'post';
 }
+
+/**
+ * A post's palette tone, by its position in the published list (newest
+ * first), never by kind. The feed pill, the post's own pill and its
+ * read-next card all agree because they all derive it from the index.
+ */
+export type Tone = 'orange' | 'magenta' | 'violet' | 'coral';
+const TONES: Tone[] = ['orange', 'magenta', 'violet', 'coral'];
+export function toneOf(index: number): Tone {
+  return TONES[((index % TONES.length) + TONES.length) % TONES.length];
+}

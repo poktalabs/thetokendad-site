@@ -7,19 +7,18 @@ export const SITE_URL = 'https://thetoken.dad';
 export const SITE_DESCRIPTION =
   'A dad automating his way out of the overwhelm, and publishing what it costs.';
 
-// Home hero copy (Mel, 2026-09-27). The display word gets the sun as its O;
-// the emphasis takes the sun gradient.
+// Home hero copy (Mel, 2026-09-27, revised the same evening). Three lines;
+// the emphasis takes the sun gradient, and the display word gets the sun
+// as its O.
 export const HOME_STATEMENT = {
+  lead: 'Just a',
+  leadEmphasis: 'dad',
   word: 'TOKENMAXXING',
   tail: 'for',
   tailEmphasis: 'good',
-  lineHead: 'Because',
-  lineEmphasis: 'tech',
-  line: 'is meant to',
-  emphasis: 'improve lives',
 };
 export const HOME_LEDE =
-  'Guides you can replicate, experiments that sometimes fail, and every peso it costs. Updated from the bench.';
+  'Learning AI to build apps for every day, because tech is meant to improve lives.';
 
 export const AUTHOR = 'Mel';
 

@@ -129,11 +129,15 @@
   .prose strong { font-weight: 600; }
   .prose ul, .prose ol { padding-left: 1.4em; }
   .prose li + li { margin-top: 0.4em; }
+  /* quotes take the palette by position, never by meaning */
   .prose blockquote {
     margin-inline: 0;
     padding: 0.25rem 0 0.25rem 1.25rem;
-    border-left: 2px solid var(--color-magenta);
+    border-left: 2px solid var(--color-orange);
   }
+  .prose blockquote:nth-of-type(4n + 2) { border-left-color: var(--color-magenta); }
+  .prose blockquote:nth-of-type(4n + 3) { border-left-color: var(--color-violet); }
+  .prose blockquote:nth-of-type(4n + 4) { border-left-color: var(--color-coral); }
   .prose code {
     padding: 0.1em 0.35em;
     border-radius: 0.35rem;
