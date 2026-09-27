@@ -5,7 +5,7 @@
 */
 import BaseHead from '../components/BaseHead.astro';
 import Ticker, { type TickerItem } from '../components/Ticker.astro';
-import SunMark from '../components/SunMark.astro';
+import Wordmark from '../components/Wordmark.astro';
 import { SITE_TITLE } from '../consts';
 import '../styles/global.css';
 
@@ -26,9 +26,8 @@ const hasTicker = headlines.length > 0;
   <body class="flex min-h-dvh flex-col">
     <header class="wrap relative z-10">
       <div class:list={['bar', { 'has-ticker': hasTicker }]}>
-        <a href="/" class="cell brand" aria-label={`${SITE_TITLE}, home`}>
-          <SunMark size="1.1rem" class="mark" />
-          thetoken.dad
+        <a href="/" class="cell brand">
+          <Wordmark />
         </a>
         {hasTicker && (
           <div class="cell cell-ticker">
@@ -76,15 +75,10 @@ const hasTicker = headlines.length > 0;
   .cell + .cell { border-left: 1px solid var(--color-line); }
 
   .brand {
-    gap: 0.6rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
     text-decoration: none;
     border-radius: var(--radius-pill) 0 0 var(--radius-pill);
   }
-  .brand:hover { color: var(--color-ink); }
-  .brand :global(.mark) { transition: transform 200ms ease; }
-  .brand:hover :global(.mark) { transform: scale(1.15); }
+  .brand:hover :global(.o) { transform: scale(1.2); }
 
   .nav {
     padding: 0;

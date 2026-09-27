@@ -3,21 +3,17 @@
   Home hero: the lab, alive.
 
   A big display statement on the left, over an ecosystem of nodes and
-  travelling packets that fills the section. The station name sits above
-  the statement as a kicker with the sun as the O in TOKEN. Two pills
-  under the statement: read the log, meet the dad.
-
-  The full title is exposed to assistive tech; the decorated kicker is
-  hidden from it.
+  travelling packets that fills the section. The wordmark lives in the
+  command bar (Wordmark.astro), not here. Two pills under the statement:
+  read the log, meet the dad.
 */
 import Ecosystem from './Ecosystem.astro';
 
 interface Props {
-  title: string;
   statement: string;
   lede: string;
 }
-const { title, statement, lede } = Astro.props;
+const { statement, lede } = Astro.props;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -26,11 +22,6 @@ const { title, statement, lede } = Astro.props;
   </div>
 
   <div class="deck wrap">
-    <p class="kicker">
-      <span class="sr-only">{title}</span>
-      <span class="kicker-art" aria-hidden="true">The T<span class="sun-o"></span>ken Dad</span>
-    </p>
-
     <h1 id="hero-title" class="statement">{statement}</h1>
     <p class="lede">{lede}</p>
 
@@ -64,37 +55,6 @@ const { title, statement, lede } = Astro.props;
     padding-block: clamp(4rem, 10vh, 6rem) 4rem;
   }
   .deck > * { grid-column: 1; }
-
-  .kicker {
-    display: flex;
-    align-items: center;
-    margin: 0 0 1.5rem;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 0.95rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-  }
-  .kicker-art { display: inline-flex; align-items: center; }
-
-  /* the token: the sun with its cuts, as the O in TOKEN */
-  .sun-o {
-    display: inline-block;
-    width: 0.85em;
-    height: 0.85em;
-    margin: 0 0.2em 0 0.05em;
-    border-radius: 50%;
-    background: var(--gradient-sun);
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0 54%,
-      transparent 54% 62%,
-      #000 62% 76%,
-      transparent 76% 86%,
-      #000 86% 100%
-    );
-  }
 
   .statement {
     max-width: 14ch;
