@@ -1,0 +1,50 @@
+---
+/*
+  Hub layout for the lab's website-challenge-v1 record. One shell for the
+  four sections: kicker readout, title, lede, a ruled tab strip marking the
+  current section, then the reading surface. Structured data goes through
+  BaseLayout's jsonLd prop.
+*/
+import BaseLayout from './BaseLayout.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  lede: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, description, heading, lede, jsonLd } = Astro.props;
+const hub = '/website-challenge-v1/';
+const sections = [
+  { href: hub, label: 'Overview' },
+  { href: `${hub}methodology/`, label: 'Methodology' },
+  { href: `${hub}results/`, label: 'Results' },
+  { href: `${hub}exhibits/`, label: 'Exhibits' },
+];
+const current = Astro.url.pathname;
+---
+
+<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} jsonLd={jsonLd}>
+  <section class="hub-head wrap-prose">
+    <p class="kicker">
+      <span>Lab</span>
+      <span>website-challenge-v1</span>
+      <span>closed 2026-08-19</span>
+    </p>
+    <h1>{heading}</h1>
+    <p class="page-lede">{lede}</p>
+  </section>
+
+  <nav class="hub-nav wrap-prose" aria-label="Website Challenge sections">
+    {sections.map((s) => (
+      <a href={s.href} aria-current={current === s.href ? 'page' : undefined}>{s.label}</a>
+    ))}
+  </nav>
+
+  <div class="hub-body prose wrap-prose">
+    <slot />
+  </div>
+</BaseLayout>

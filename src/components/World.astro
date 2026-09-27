@@ -4,19 +4,24 @@
   Index, label, one line, and a plus. Colour is scenery: the three cards
   take the three palette hues by position, never by meaning.
 */
-type Tone = 'orange' | 'magenta' | 'violet';
+type Tone = 'orange' | 'magenta' | 'violet' | 'coral';
 
 interface Props {
   href: string;
   label: string;
   hint?: string;
   tone: Tone;
+  /** smaller card for grids inside the reading measure */
+  compact?: boolean;
+  /** a mono readout above the label (arm number, kind) */
+  eyebrow?: string;
   class?: string;
 }
-const { href, label, hint, tone, class: className } = Astro.props;
+const { href, label, hint, tone, compact = false, eyebrow, class: className } = Astro.props;
 ---
 
-<a href={href} class:list={['world', tone, className]}>
+<a href={href} class:list={['world', tone, { compact }, className]}>
+  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
   <span class="label">{label}</span>
   {hint && <span class="hint">{hint}</span>}
   <span class="plus" aria-hidden="true">+</span>
@@ -38,9 +43,27 @@ const { href, label, hint, tone, class: className } = Astro.props;
   .world.orange { background: var(--color-orange); }
   .world.magenta { background: var(--color-magenta); }
   .world.violet { background: var(--color-violet); color: var(--color-ink); }
+  .world.coral { background: var(--color-coral); }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .world.compact {
+    min-height: 9.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+  }
+  .world.compact .label { font-size: 1.5rem; }
+  .world.compact .hint { max-width: none; padding-right: 2.75rem; font-size: 0.85rem; overflow-wrap: anywhere; }
+  .world.compact .plus { width: 1.9rem; height: 1.9rem; font-size: 1.2rem; }
 
   .label {
     align-self: start;
+    overflow-wrap: anywhere;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 2rem;

@@ -13,15 +13,21 @@ interface Props {
   title: string;
   description: string;
   headlines?: TickerItem[];
+  /** structured data for the page, one object or several; serialised verbatim */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, headlines = [] } = Astro.props;
+const { title, description, headlines = [], jsonLd } = Astro.props;
 const hasTicker = headlines.length > 0;
+const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} />
+    {blocks.map((block) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+    ))}
   </head>
   <body class="flex min-h-dvh flex-col">
     <header class="wrap relative z-10">
