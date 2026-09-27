@@ -67,30 +67,24 @@ const wordTail = statement.word.slice(oAt + 1);
     padding-block: clamp(4rem, 10vh, 6rem) 4rem;
   }
   .deck > * { grid-column: 1; }
+  .deck > .statement { grid-column: 1 / -1; }
 
   .statement {
     margin: 0;
-    font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+    /* sized so the first line never breaks: about 11.5em of text on one line */
+    font-size: clamp(1.5rem, 8.3vw - 0.25rem, 4.4rem);
     line-height: 1;
     letter-spacing: -0.03em;
   }
   .line-1, .line-2 { display: block; }
-  .line-1 { text-wrap: balance; }
+  .line-1 { white-space: nowrap; }
   .word { text-transform: uppercase; letter-spacing: -0.01em; }
   .word :global(.o) {
     display: inline-block;
     vertical-align: baseline;
     margin: 0 0.05em 0 0.02em;
   }
-  .line-2 {
-    max-width: 26ch;
-    margin-top: 0.35em;
-    font-size: 0.5em;
-    font-weight: 500;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    color: var(--color-ink);
-  }
+  .line-2 { max-width: 26ch; }
   .emphasis {
     background: var(--gradient-sun);
     -webkit-background-clip: text;
