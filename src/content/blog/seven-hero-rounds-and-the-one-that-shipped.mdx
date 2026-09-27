@@ -1,0 +1,79 @@
+---
+title: "Seven hero rounds in four days, and the one that shipped"
+description: "The site has a design now. This is the record of how it got one: a closed design run, six rejected heroes, eighteen screenshots of sites I liked, three cheap sketches, and a taste pass I ran against my own work."
+pubDate: 2026-09-27
+tags: ["launch", "design", "building in public"]
+draft: false
+---
+
+Seven weeks ago this site looked like a university homepage from 1996 that lost a bet. I said so at the time, and I froze that version at [v0.thetoken.dad](https://v0.thetoken.dad) so nobody has to take my word for it.
+
+Today it has a face. Dark graphite ground, a sun with two cuts through it as the logo, a headline that says what the site is for, and colour cards that take you to the three places you can go. This post is the record of how it got there, including the six versions that did not make it.
+
+## First, the words changed
+
+The old line was "a dad automating his way out of the overwhelm." It was accurate for about a week and then it felt lame. I am not escaping anything. I am in a workshop, tinkering with tech because it is fun and because it makes me better at the three jobs I actually have: dad, provider, professional.
+
+So the headline is now **Tokenmaxxing for good. Because tech is meant to improve lives.** The dad is still the voice. The reader is anyone who wants to learn to build with this stuff and replicate a guide, kids or no kids. That reframe happened on September 19, in a long argument with myself that I made an agent referee, and everything visual below follows from it.
+
+## The design run, and why I closed it
+
+Before any of this, I ran an experiment: the same brief handed to four different AI design tools, each building whatever it wanted, with the receipts published next to the result. The four exhibits are still up at [website-challenge-v1](/website-challenge-v1/) and they stay there.
+
+The experiment taught me something the exhibits do not show. Four tools converged on the same typeface and diverged wildly on process. None of them produced a site I wanted to live in. So I closed the run, kept it as an archive, and did the next part the slow way: one model in the seat, me reviewing every round in a local dev server, one commit per round.
+
+## Six heroes that did not ship
+
+The reference I pointed at was a wallpaper I like. Retro sun, sticker lettering, little mascots, sparkles. Here is what happened when we tried to build it.
+
+**Round 1** reproduced the wallpaper. Chunky display font, an outlined gradient wordmark, twelve four-point sparkles, mascots in the corners. Verdict: the font missed by a mile, too many stars, and I hated the text logo in the navbar.
+
+**Round 2** swapped fonts from a seven-font comparison sheet and made the mascots breathe and blink. Verdict: the mascots were invisible in the corners. Turn up the creativity, I said. More space, more depth.
+
+**Round 3** did exactly that. A full synthwave stage: nebula, starfield, a comet, a perspective grid floor rolling toward you, a five-mascot squad. The execution was good. The direction was too 80s, too specific to one vibe, and the floor had to go. But one thing on that page was very cool: the sun disc with horizontal cuts through it. That sun is now the logo, the favicon, and the O in every wordmark on the site.
+
+**Round 4** turned the three sections of the site into planets on an orbit arc. Verdict: kid-like. Not serious.
+
+**Round 5** made it serious. Tracked caps, a hairline instrument strip, planets redrawn as wayfinding pictograms. Verdict: the sun was now too maximalist, and the whole thing wanted to be calmer. I asked for a research station, peace on entry, a feed of signals.
+
+**Round 6** delivered the zen station deck. A small sun emblem, a scrambling cipher line that resolved into real headlines, mono readouts, a ruled feed. It was calm. It was also uninspired, and I said so in those words.
+
+That is the honest shape of it: three rounds building the reference before agreeing what the tone was, then three rounds overcorrecting toward quiet. The process lesson is written into the project's decisions file so it does not happen again: establish tone with a cheap sketch and one paragraph before anyone builds a full scene.
+
+## Eighteen screenshots and three sketches
+
+After round 6 I stopped describing what I wanted and started showing it. Eighteen screenshots of sites I like, with a note on each about what I liked and what I did not. Colourful bites alive on a dark ground. Hairlines in a navbar. Colour-filled cards on black with a plus in the corner. A palette of orange, coral and pink over violet.
+
+From those notes came three sketches, each a single static page, each answering the verdict on the last one. The first had a "live signal" line that looked off and carried bad information, and a set of coloured squares scattered in the sky with no intention behind them. The second replaced the signal with a headline ticker and the squares with an ecosystem: nodes linked by hairlines, with short bright dashes travelling between them at different speeds. It also added a morphing glyph and pictograms on the cards. The third pulled both of those, because they looked off, and that was the one I said good to.
+
+Round 7 was the rebuild of the real components from that third sketch. It took an afternoon.
+
+## What survived
+
+The **sun** is the whole brand. It sits in the navbar as the O in THE TOKEN DAD, in the headline as the O in TOKENMAXXING, in the browser tab, and in the share card. Its gradient, orange through coral to magenta, is the only place colour carries meaning on the site.
+
+The **ecosystem** behind the headline is a graph of twelve nodes and nineteen hairlines with colour packets travelling along them. It is the "lab, alive" feeling I could not describe in round 6 and could point at in a screenshot.
+
+The **command bar** carries the wordmark, a ticker of the latest headlines, and the navigation in boxed cells. The three **colour cards** below the hero are the doors: Writing, The Dad, Lab.
+
+The **fonts** changed at the very end. The build had been running on Space Grotesk, Inter and JetBrains Mono, and all three are what every AI-built site ships with. I put four stacks side by side on the real components and picked Bricolage Grotesque for display, Figtree for reading, Martian Mono for dates and tags.
+
+## The taste pass
+
+Once the design was locked I ran a public anti-slop skill against it, the kind of checklist people use to stop AI-generated pages from looking AI-generated. It audits before it touches anything, then lists what to preserve and what to retire.
+
+It was right about several things. My headline was five lines tall. My hero had two buttons pointing where the two cards directly below them already pointed. There was a cute line under the feed header that said nothing. Both posts were full of em-dashes. The inner pages had no design at all.
+
+It was wrong, for this site, about others, and I kept them on purpose. It bans three equal cards in a row; mine are navigation and I like them. It calls hairlines decoration; mine carry the packets. It dislikes glow; the packets are the one place the site is allowed to shine. The checklist is a tool, not a boss.
+
+One thing it did not flag that I caught myself: body text on a dark ground had been set in a dimmed grey for "hierarchy," and it was barely readable. Running text is now full white. Grey is for dates and tags only. That rule is written down too.
+
+## The bill
+
+Every build on this site gets its cost published. This one is being tallied as I write, per model and per session, and it goes up as its own post with the method attached. I would rather publish it late and right than now and hedged. I learned that one the hard way in August.
+
+## What is next
+
+This version gets frozen at its own permanent URL, the same way v0 was, so you can open both and judge for yourself. The mobile layout is a separate pass and it is not done. The About page is a placeholder until I write the bio. The first guides come after that.
+
+If you want to see the rejected rounds, every one of them is a commit with a screenshot in the project's log, and the third round lives on its own branch because I could not bring myself to delete the sun's first appearance.
