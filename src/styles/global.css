@@ -28,8 +28,8 @@
 
   /* text */
   --color-ink: #f2f2f2;
-  --color-ink-muted: #a8a8a8;
-  --color-ink-faint: #6e6e6e;
+  --color-ink-muted: #a8a8a8; /* secondary metadata only (dates, tags, readouts); never running text */
+  --color-ink-faint: #6e6e6e; /* never for text: 3.34:1 on ground. Nodes, rules, disabled chrome only. */
 
   /* primary: the sun */
   --color-orange: #ff7a1f;
