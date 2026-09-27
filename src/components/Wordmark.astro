@@ -14,7 +14,7 @@ const { class: className } = Astro.props;
 
 <span class:list={['wordmark', className]}>
   <span class="sr-only">{SITE_TITLE}</span>
-  <span class="art" aria-hidden="true">The T<SunMark size="0.9em" class="o" />ken Dad</span>
+  <span class="art" aria-hidden="true">The T<SunMark size="0.7em" class="o" />ken Dad</span>
 </span>
 
 <style>
@@ -23,7 +23,7 @@ const { class: className } = Astro.props;
     align-items: center;
     font-family: var(--font-display);
     font-weight: 500;
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1;
     letter-spacing: 0.125em;
     text-transform: uppercase;
@@ -31,15 +31,18 @@ const { class: className } = Astro.props;
     white-space: nowrap;
   }
   .art {
-    display: inline-flex;
-    align-items: center;
+    display: inline-block;
     margin-right: -0.125em; /* cancel the tracking after the last letter */
   }
+  /* the O: sized to the cap height of Bricolage (0.66em, plus a touch of
+     round overshoot) and sat on the baseline so it reads as a letter */
   .art :global(.o) {
-    margin: 0 0.16em 0 0.04em;
+    display: inline-block;
+    vertical-align: baseline;
+    margin: 0 0.14em 0 0.02em;
     transition: transform 200ms ease;
   }
   @media (max-width: 26rem) {
-    .wordmark { font-size: 0.72rem; letter-spacing: 0.1em; }
+    .wordmark { font-size: 0.75rem; letter-spacing: 0.1em; }
   }
 </style>
