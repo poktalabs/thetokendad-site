@@ -13,7 +13,9 @@ export const HOME_STATEMENT = {
   word: 'TOKENMAXXING',
   tail: 'for',
   tailEmphasis: 'good',
-  line: 'Because tech is meant to',
+  lineHead: 'Because',
+  lineEmphasis: 'tech',
+  line: 'is meant to',
   emphasis: 'improve lives',
 };
 export const HOME_LEDE =

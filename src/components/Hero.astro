@@ -11,7 +11,15 @@ import Ecosystem from './Ecosystem.astro';
 import SunMark from './SunMark.astro';
 
 interface Props {
-  statement: { word: string; tail: string; tailEmphasis: string; line: string; emphasis: string };
+  statement: {
+    word: string;
+    tail: string;
+    tailEmphasis: string;
+    lineHead: string;
+    lineEmphasis: string;
+    line: string;
+    emphasis: string;
+  };
   lede: string;
 }
 const { statement, lede } = Astro.props;
@@ -33,7 +41,10 @@ const wordTail = statement.word.slice(oAt + 1);
         <span class="word" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
       </span>
       <span class="line-2">{statement.tail} <span class="emphasis">{statement.tailEmphasis}</span></span>
-      <span class="line-3">{statement.line} <span class="emphasis">{statement.emphasis}</span></span>
+      <span class="line-3">
+        {statement.lineHead} <span class="emphasis">{statement.lineEmphasis}</span>{' '}
+        {statement.line} <span class="emphasis">{statement.emphasis}</span>
+      </span>
     </h1>
     <p class="lede">{lede}</p>
 
