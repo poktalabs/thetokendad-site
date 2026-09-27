@@ -8,17 +8,15 @@ type Tone = 'orange' | 'magenta' | 'violet';
 
 interface Props {
   href: string;
-  index: string;
   label: string;
   hint?: string;
   tone: Tone;
   class?: string;
 }
-const { href, index, label, hint, tone, class: className } = Astro.props;
+const { href, label, hint, tone, class: className } = Astro.props;
 ---
 
 <a href={href} class:list={['world', tone, className]}>
-  <span class="index">{index}</span>
   <span class="label">{label}</span>
   {hint && <span class="hint">{hint}</span>}
   <span class="plus" aria-hidden="true">+</span>
@@ -28,7 +26,7 @@ const { href, index, label, hint, tone, class: className } = Astro.props;
   .world {
     position: relative;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
     gap: 0.25rem;
     min-height: 15rem;
     padding: 1.25rem 1.5rem;
@@ -41,15 +39,8 @@ const { href, index, label, hint, tone, class: className } = Astro.props;
   .world.magenta { background: var(--color-magenta); }
   .world.violet { background: var(--color-violet); color: var(--color-ink); }
 
-  .index {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    opacity: 0.7;
-  }
   .label {
     align-self: start;
-    margin-top: 1rem;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 2rem;
