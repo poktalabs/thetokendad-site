@@ -11,7 +11,7 @@ import Ecosystem from './Ecosystem.astro';
 import SunMark from './SunMark.astro';
 
 interface Props {
-  statement: { word: string; tail: string; line: string; emphasis: string };
+  statement: { word: string; tail: string; tailEmphasis: string; line: string; emphasis: string };
   lede: string;
 }
 const { statement, lede } = Astro.props;
@@ -31,9 +31,9 @@ const wordTail = statement.word.slice(oAt + 1);
       <span class="line-1">
         <span class="sr-only">{statement.word}</span>
         <span class="word" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
-        {' '}{statement.tail}
       </span>
-      <span class="line-2">{statement.line} <span class="emphasis">{statement.emphasis}</span></span>
+      <span class="line-2">{statement.tail} <span class="emphasis">{statement.tailEmphasis}</span></span>
+      <span class="line-3">{statement.line} <span class="emphasis">{statement.emphasis}</span></span>
     </h1>
     <p class="lede">{lede}</p>
 
@@ -49,6 +49,11 @@ const wordTail = statement.word.slice(oAt + 1);
     position: relative;
     isolation: isolate;
     overflow: hidden;
+  }
+  /* desktop: the hero takes the first screen minus the bar and a strip
+     of the world cards, so their titles show above the fold */
+  @media (min-width: 56rem) {
+    .hero { min-height: calc(100svh - 4.5rem - 5.5rem); }
   }
 
   /* the ecosystem covers the section; faded where the copy sits */
@@ -71,12 +76,12 @@ const wordTail = statement.word.slice(oAt + 1);
 
   .statement {
     margin: 0;
-    /* sized so the first line never breaks: about 11.5em of text on one line */
-    font-size: clamp(1.5rem, 8.3vw - 0.25rem, 4.4rem);
+    /* sized so TOKENMAXXING never breaks: about 7.6em of text on one line */
+    font-size: clamp(1.5rem, 12vw - 0.25rem, 4.4rem);
     line-height: 1;
     letter-spacing: -0.03em;
   }
-  .line-1, .line-2 { display: block; }
+  .line-1, .line-2, .line-3 { display: block; }
   .line-1 { white-space: nowrap; }
   .word { text-transform: uppercase; letter-spacing: -0.01em; }
   .word :global(.o) {
@@ -84,7 +89,7 @@ const wordTail = statement.word.slice(oAt + 1);
     vertical-align: baseline;
     margin: 0 0.05em 0 0.02em;
   }
-  .line-2 { max-width: 26ch; }
+  .line-3 { max-width: 26ch; }
   .emphasis {
     background: var(--gradient-sun);
     -webkit-background-clip: text;

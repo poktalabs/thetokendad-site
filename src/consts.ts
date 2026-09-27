@@ -11,7 +11,8 @@ export const SITE_DESCRIPTION =
 // the emphasis takes the sun gradient.
 export const HOME_STATEMENT = {
   word: 'TOKENMAXXING',
-  tail: 'for good',
+  tail: 'for',
+  tailEmphasis: 'good',
   line: 'Because tech is meant to',
   emphasis: 'improve lives',
 };
