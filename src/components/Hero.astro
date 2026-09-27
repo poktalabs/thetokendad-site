@@ -8,12 +8,17 @@
   read the log, meet the dad.
 */
 import Ecosystem from './Ecosystem.astro';
+import SunMark from './SunMark.astro';
 
 interface Props {
-  statement: string;
+  statement: { word: string; tail: string; line: string; emphasis: string };
   lede: string;
 }
 const { statement, lede } = Astro.props;
+/* the display word carries the sun as its O: split it around the first O */
+const oAt = statement.word.indexOf('O');
+const wordHead = statement.word.slice(0, oAt);
+const wordTail = statement.word.slice(oAt + 1);
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -22,7 +27,14 @@ const { statement, lede } = Astro.props;
   </div>
 
   <div class="deck wrap">
-    <h1 id="hero-title" class="statement">{statement}</h1>
+    <h1 id="hero-title" class="statement">
+      <span class="line-1">
+        <span class="sr-only">{statement.word}</span>
+        <span class="word" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
+        {' '}{statement.tail}
+      </span>
+      <span class="line-2">{statement.line} <span class="emphasis">{statement.emphasis}</span></span>
+    </h1>
     <p class="lede">{lede}</p>
 
     <div class="actions">
@@ -57,11 +69,33 @@ const { statement, lede } = Astro.props;
   .deck > * { grid-column: 1; }
 
   .statement {
-    max-width: 14ch;
     margin: 0;
-    font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+    font-size: clamp(2.4rem, 4.6vw, 4.4rem);
     line-height: 1;
     letter-spacing: -0.03em;
+  }
+  .line-1, .line-2 { display: block; }
+  .line-1 { text-wrap: balance; }
+  .word { text-transform: uppercase; letter-spacing: -0.01em; }
+  .word :global(.o) {
+    display: inline-block;
+    vertical-align: baseline;
+    margin: 0 0.05em 0 0.02em;
+  }
+  .line-2 {
+    max-width: 26ch;
+    margin-top: 0.35em;
+    font-size: 0.5em;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+  .emphasis {
+    background: var(--gradient-sun);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .lede {
     max-width: 44ch;
