@@ -1,0 +1,105 @@
+---
+/*
+  Lab: the working side of the site. Experiments (open and closed), builds
+  in progress, and the guides and resources that come out of them.
+*/
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import World from '../../components/World.astro';
+import Feed from '../../components/Feed.astro';
+import { getPublishedPosts, kindOf } from '../../lib/posts';
+import { SITE_TITLE, LAB_ENTRIES, LAB_BUILDS, RESOURCE_ENTRIES } from '../../consts';
+
+const posts = await getPublishedPosts();
+const guides = posts.filter((p) => kindOf(p.data.tags) === 'guide');
+const tones = ['orange', 'magenta', 'violet', 'coral'] as const;
+---
+
+<BaseLayout title={`Lab · ${SITE_TITLE}`} description="Experiments, builds in progress, and the guides and resources that come out of them.">
+  <section class="page-head wrap">
+    <h1>Lab</h1>
+    <p class="page-lede">Experiments, including the closed ones. Builds in progress. The guides and resources that come out of both.</p>
+  </section>
+
+  <section class="block wrap" aria-labelledby="experiments">
+    <h2 id="experiments">Experiments</h2>
+    <div class="cards">
+      {LAB_ENTRIES.map((e, i) => (
+        <World href={e.href} eyebrow={`${e.sub} · ${e.when}`} label={e.title} hint={e.line} tone={tones[i % tones.length]} compact plain />
+      ))}
+    </div>
+  </section>
+
+  <section class="block wrap" aria-labelledby="builds">
+    <h2 id="builds">Builds in progress</h2>
+    {LAB_BUILDS.length === 0 ? (
+      <p class="empty">Nothing on the bench is on the record yet. When a build starts, it shows up here with its running cost.</p>
+    ) : (
+      <div class="cards">
+        {LAB_BUILDS.map((b, i) => (
+          <World href={b.href ?? '/lab/'} eyebrow={`build · ${b.when}`} label={b.title} hint={b.line} tone={tones[(i + 2) % tones.length]} compact plain />
+        ))}
+      </div>
+    )}
+  </section>
+
+  {guides.length > 0 && <Feed posts={guides} heading="Guides" showAll={false} />}
+
+  <section class="block wrap resources" aria-labelledby="resources">
+    <h2 id="resources">Resources</h2>
+    <ul class="list">
+      {RESOURCE_ENTRIES.map((r) => (
+        <li>
+          <a href={r.href}>{r.title}</a>
+          <span class="line">{r.line}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .block { padding-block: 1.5rem 2.5rem; }
+  .block h2 {
+    margin: 0 0 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-line);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .empty { max-width: 60ch; margin: 0; color: var(--color-ink); }
+  .resources { padding-bottom: 5rem; }
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .list li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .list a {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .list a:hover { color: var(--color-magenta); }
+  .list .line { color: var(--color-ink); }
+  @media (max-width: 56rem) {
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 36rem) {
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>

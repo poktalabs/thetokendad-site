@@ -1,0 +1,477 @@
+---
+/*
+  Projector: the hero's second column. A mesh of nodes joined by hairlines,
+  colour packets travelling the links (the station doing work), and a set of
+  ports: nodes that hold an entry from one of the three archives (log, lab,
+  resources). Hover or focus a port and it throws its entry onto the display
+  as a card, with a wedge of light from the node to the card's lit edge.
+  Leave, and the card retracts and the mesh returns. Click pins a card;
+  click again, Escape or a click outside releases it.
+
+  Left alone it cycles the entries on its own, like a showcase; any pointer
+  inside pauses the cycle. Reduced motion: no packets, no cycle, no
+  scramble; hover, focus and click still project.
+
+  Colour is scenery: ports take the palette by position, never by kind.
+  Kind is a mono readout on the card.
+*/
+import type { ProjectorEntry } from '../lib/projector';
+
+interface Props {
+  entries: ProjectorEntry[];
+  class?: string;
+}
+const { entries, class: className } = Astro.props;
+
+// a 600x520 field; positions hand-placed so the graph reads as a mesh
+const W = 600;
+const H = 520;
+const nodes: Record<string, [number, number]> = {
+  a: [70, 80], b: [250, 52], c: [430, 108], d: [556, 58],
+  e: [150, 222], f: [330, 248], g: [522, 232],
+  h: [58, 384], i: [252, 418], j: [442, 380], k: [556, 468],
+  l: [340, 488],
+};
+const links: [string, string][] = [
+  ['a', 'b'], ['b', 'c'], ['c', 'd'], ['a', 'e'], ['b', 'e'], ['b', 'f'], ['c', 'f'], ['c', 'g'],
+  ['d', 'g'], ['e', 'f'], ['f', 'g'], ['e', 'h'], ['e', 'i'], ['f', 'i'], ['f', 'j'], ['g', 'j'],
+  ['g', 'k'], ['h', 'i'], ['i', 'j'], ['j', 'k'], ['i', 'l'], ['j', 'l'], ['l', 'k'],
+];
+// link index, colour, duration (s), delay (s), reversed
+const packets: [number, string, number, number, boolean][] = [
+  [5, 'orange', 6, 0, false], [7, 'magenta', 7, 1.5, true], [9, 'violet', 5, 0.5, false],
+  [10, 'coral', 6.5, 2, false], [13, 'orange', 5.5, 3, true], [15, 'magenta', 8, 1, false],
+  [18, 'violet', 6, 2.5, true], [20, 'coral', 7, 0, false], [2, 'orange', 9, 4, true],
+  [16, 'violet', 7.5, 3.5, false], [0, 'magenta', 8.5, 5, false],
+];
+// ports: the nodes that hold entries, centre first, then spread out
+const slots = ['f', 'c', 'e', 'j', 'b', 'g', 'i', 'a'];
+const tones = ['orange', 'magenta', 'violet', 'coral'];
+
+const live = entries.slice(0, slots.length);
+const portIds = new Set(slots.slice(0, live.length));
+const seg = (p: string, q: string) => `M${nodes[p][0]} ${nodes[p][1]} L${nodes[q][0]} ${nodes[q][1]}`;
+const pct = (n: number, of: number) => `${((n / of) * 100).toFixed(2)}%`;
+---
+
+<div class:list={['projector', className]} data-entries={JSON.stringify(live)} data-w={W} data-h={H}>
+  <svg class="mesh" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="beam-light" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="400">
+        <stop offset="0" stop-color="currentColor" stop-opacity="0.5" />
+        <stop offset="1" stop-color="currentColor" stop-opacity="0.03" />
+      </radialGradient>
+    </defs>
+    <g class="links">
+      {links.map(([p, q]) => <path d={seg(p, q)} />)}
+    </g>
+    <polygon class="beam" points="0,0 0,0 0,0" fill="url(#beam-light)" />
+    <g class="nodes">
+      {Object.entries(nodes)
+        .filter(([id]) => !portIds.has(id))
+        .map(([, [x, y]]) => <circle cx={x} cy={y} r="3" />)}
+    </g>
+    <g class="packets">
+      {packets.map(([li, colour, dur, delay, rev]) => {
+        const [p, q] = links[li];
+        return (
+          <path class={`pk ${colour}`} d={rev ? seg(q, p) : seg(p, q)} pathLength="100" stroke-dasharray="14 300">
+            <animate attributeName="stroke-dashoffset" values="14;-100" dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
+          </path>
+        );
+      })}
+    </g>
+  </svg>
+
+  <ul class="ports" aria-label="Archive entries">
+    {live.map((entry, i) => {
+      const [x, y] = nodes[slots[i]];
+      return (
+        <li>
+          <button
+            type="button"
+            class="port"
+            style={`--x:${pct(x, W)};--y:${pct(y, H)};--tone:var(--color-${tones[i % tones.length]})`}
+            data-i={i}
+            data-tone={`var(--color-${tones[i % tones.length]})`}
+            aria-label={`Project entry: ${entry.title}`}
+          >
+            <span class="dot" aria-hidden="true"></span>
+          </button>
+        </li>
+      );
+    })}
+  </ul>
+
+  <article class="card" aria-hidden="true">
+    <header class="card-head">
+      <span class="card-index"></span>
+      <span class="card-kind"></span>
+    </header>
+    <h3 class="card-title"></h3>
+    <p class="card-line"></p>
+    <footer class="card-foot">
+      <span class="card-when"></span>
+      <a class="card-link" href="/blog/">Open entry <span aria-hidden="true">&rarr;</span></a>
+    </footer>
+  </article>
+</div>
+
+<script>
+  interface Entry { kind: string; sub: string; when: string; title: string; line: string; href: string }
+
+  const GLYPHS = '#%&+=/<>[]{}|~^*:;0123456789ABCDEF';
+  const SHOW_MS = 4200;   // how long an auto-projected entry stays up
+  const GAP_MS = 1500;    // mesh-only pause between auto entries
+  const RESUME_MS = 2600; // after the pointer leaves, before the cycle restarts
+  const LEAVE_MS = 320;   // grace when moving from a port to the card
+
+  const root = document.querySelector<HTMLElement>('.projector');
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const entries: Entry[] = JSON.parse(root.dataset.entries ?? '[]');
+    const W = Number(root.dataset.w);
+    const H = Number(root.dataset.h);
+    const ports = Array.from(root.querySelectorAll<HTMLButtonElement>('.port'));
+    const card = root.querySelector<HTMLElement>('.card')!;
+    const beam = root.querySelector<SVGPolygonElement>('.beam')!;
+    const light = root.querySelector<SVGRadialGradientElement>('#beam-light')!;
+    const $ = (sel: string) => card.querySelector<HTMLElement>(sel)!;
+    const el = {
+      index: $('.card-index'), kind: $('.card-kind'), when: $('.card-when'),
+      title: $('.card-title'), line: $('.card-line'), link: $('.card-link') as HTMLAnchorElement,
+    };
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pad = (n: number) => String(n).padStart(2, '0');
+
+    let active = -1;
+    let pinned = false;
+    let hovering = false;
+    let leaveTimer = 0;
+    let cycleTimer = 0;
+    let scrambleTimer = 0;
+    let cycleAt = 0;
+
+    function scramble(node: HTMLElement, text: string) {
+      clearInterval(scrambleTimer);
+      if (reduced) { node.textContent = text; return; }
+      const steps = 12;
+      let step = 0;
+      scrambleTimer = window.setInterval(() => {
+        step++;
+        const settled = Math.round((text.length * step) / steps);
+        node.textContent = text
+          .split('')
+          .map((ch, i) => (i < settled || ch === ' ' ? ch : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]))
+          .join('');
+        if (step >= steps) { clearInterval(scrambleTimer); node.textContent = text; }
+      }, 24);
+    }
+
+    function aimBeam() {
+      if (active < 0) return;
+      const rr = root.getBoundingClientRect();
+      const pr = ports[active].getBoundingClientRect();
+      const cr = card.getBoundingClientRect();
+      const sx = W / rr.width;
+      const sy = H / rr.height;
+      const px = (pr.left + pr.width / 2 - rr.left) * sx;
+      const py = (pr.top + pr.height / 2 - rr.top) * sy;
+      const x1 = (cr.left - rr.left) * sx;
+      const x2 = (cr.right - rr.left) * sx;
+      const edge = (card.classList.contains('at-top') ? cr.bottom : cr.top) - rr.top;
+      const ey = edge * sy;
+      beam.setAttribute('points', `${px},${py} ${x1},${ey} ${x2},${ey}`);
+      light.setAttribute('cx', String(px));
+      light.setAttribute('cy', String(py));
+      light.setAttribute('r', String(Math.hypot((x1 + x2) / 2 - px, ey - py) * 1.15));
+    }
+
+    function project(i: number) {
+      const e = entries[i];
+      const port = ports[i];
+      if (!e || !port) return;
+      clearTimeout(leaveTimer);
+      const changed = i !== active;
+      active = i;
+      ports.forEach((p, k) => p.classList.toggle('is-active', k === i));
+
+      el.index.textContent = `Entry ${pad(i + 1)} / ${pad(entries.length)}`;
+      el.kind.textContent = `${e.kind} · ${e.sub}`;
+      el.when.textContent = e.when;
+      el.line.textContent = e.line;
+      el.link.href = e.href;
+      if (changed) scramble(el.title, e.title);
+
+      // the card sits opposite the port, so the node stays visible
+      const y = parseFloat(port.style.getPropertyValue('--y'));
+      card.classList.toggle('at-top', y > 50);
+      const tone = port.dataset.tone ?? 'currentColor';
+      card.style.setProperty('--tone', tone);
+      beam.style.color = tone;
+
+      root.classList.add('is-on');
+      card.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(aimBeam);
+    }
+
+    function retract() {
+      clearTimeout(leaveTimer);
+      if (active < 0) return;
+      active = -1;
+      pinned = false;
+      ports.forEach((p) => p.classList.remove('is-active'));
+      root.classList.remove('is-on');
+      card.setAttribute('aria-hidden', 'true');
+    }
+
+    const scheduleRetract = () => {
+      clearTimeout(leaveTimer);
+      if (!pinned) leaveTimer = window.setTimeout(retract, LEAVE_MS);
+    };
+
+    /* the showcase: cycle the entries while nobody is looking closely */
+    function stopCycle() { clearTimeout(cycleTimer); cycleTimer = 0; }
+    function startCycle(delay: number) {
+      if (reduced) return;
+      stopCycle();
+      cycleTimer = window.setTimeout(tick, delay);
+    }
+    function tick() {
+      if (hovering || pinned || document.hidden) { cycleTimer = window.setTimeout(tick, 1000); return; }
+      project(cycleAt % entries.length);
+      cycleAt++;
+      cycleTimer = window.setTimeout(() => {
+        if (!hovering && !pinned) retract();
+        cycleTimer = window.setTimeout(tick, GAP_MS);
+      }, SHOW_MS);
+    }
+
+    ports.forEach((port, i) => {
+      port.addEventListener('pointerenter', () => { stopCycle(); project(i); });
+      port.addEventListener('pointerleave', scheduleRetract);
+      port.addEventListener('focus', () => { stopCycle(); project(i); });
+      port.addEventListener('click', () => {
+        stopCycle();
+        if (pinned && active === i) { retract(); return; }
+        pinned = true;
+        project(i);
+      });
+    });
+    card.addEventListener('pointerenter', () => clearTimeout(leaveTimer));
+    card.addEventListener('pointerleave', scheduleRetract);
+
+    root.addEventListener('pointerenter', () => { hovering = true; stopCycle(); });
+    root.addEventListener('pointerleave', () => {
+      hovering = false;
+      if (!pinned) scheduleRetract();
+      startCycle(RESUME_MS);
+    });
+    root.addEventListener('focusout', (ev) => {
+      const to = ev.relatedTarget as Node | null;
+      if (!pinned && !(to && root.contains(to))) scheduleRetract();
+    });
+    document.addEventListener('pointerdown', (ev) => {
+      if (pinned && !root.contains(ev.target as Node)) { retract(); startCycle(RESUME_MS); }
+    });
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && active >= 0) { retract(); startCycle(RESUME_MS); }
+    });
+    window.addEventListener('resize', aimBeam);
+
+    startCycle(1800);
+  }
+</script>
+
+<style>
+  .projector {
+    position: relative;
+    /* the field keeps its aspect so SVG units and percent positions agree */
+    aspect-ratio: 600 / 520;
+    width: 100%;
+    user-select: none;
+  }
+
+  .mesh {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  /* one step under the text greys so the graph never clashes with the copy;
+     the packets stay the bright layer */
+  .links path {
+    fill: none;
+    stroke: var(--color-ink-faint);
+    stroke-width: 1;
+  }
+  .nodes circle { fill: var(--color-ink-faint); }
+  .links, .nodes, .packets { transition: opacity 320ms ease; }
+  .projector.is-on .links,
+  .projector.is-on .nodes,
+  .projector.is-on .packets { opacity: 0.4; }
+
+  /* packets: a short bright dash travelling the link, node to node */
+  .pk {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .pk.orange { stroke: var(--color-orange); filter: drop-shadow(0 0 5px var(--color-orange)); }
+  .pk.coral { stroke: var(--color-coral); filter: drop-shadow(0 0 5px var(--color-coral)); }
+  .pk.magenta { stroke: var(--color-magenta); filter: drop-shadow(0 0 5px var(--color-magenta)); }
+  .pk.violet { stroke: var(--color-violet); filter: drop-shadow(0 0 5px var(--color-violet)); }
+
+  /* the wedge of light from the port to the card's lit edge */
+  .beam {
+    opacity: 0;
+    transition: opacity 260ms ease;
+    pointer-events: none;
+  }
+  .projector.is-on .beam { opacity: 1; }
+
+  /* ports: the nodes that hold an entry */
+  .ports {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .port {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+    transition: opacity 320ms ease;
+  }
+  .port .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 3px var(--color-ground), 0 0 0 4px var(--color-line-strong);
+    transition: color 200ms ease, box-shadow 200ms ease, scale 200ms ease;
+  }
+  /* the lens ring: grows on hover, stays on the active port */
+  .port::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--tone);
+    border-radius: 50%;
+    opacity: 0;
+    scale: 0.4;
+    transition: opacity 200ms ease, scale 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .port:hover .dot,
+  .port:focus-visible .dot,
+  .port.is-active .dot {
+    color: var(--tone);
+    scale: 1.25;
+    box-shadow: 0 0 0 3px var(--color-ground), 0 0 0 4px var(--tone), 0 0 16px var(--tone);
+  }
+  .port:hover::before,
+  .port.is-active::before { opacity: 0.7; scale: 1; }
+  .projector.is-on .port:not(.is-active) { opacity: 0.55; }
+  .port:focus-visible { outline: 2px solid var(--tone); outline-offset: 2px; }
+
+  /* the display: an archive entry thrown onto the field */
+  .card {
+    --tone: var(--color-ink-muted);
+    position: absolute;
+    left: 3%;
+    right: 3%;
+    bottom: 4%;
+    z-index: 2;
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 0.85rem;
+    border: 1px solid var(--color-sparkle);
+    border-top: 2px solid var(--tone);
+    border-radius: 1rem;
+    background: var(--color-ground);
+    color: var(--color-ink);
+    text-align: left;
+    user-select: text;
+    visibility: hidden;
+    clip-path: inset(0 0 100% 0 round 1rem);
+    transition:
+      clip-path 300ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      visibility 0s linear 300ms;
+  }
+  .card.at-top {
+    top: 4%;
+    bottom: auto;
+    border-top: 1px solid var(--color-sparkle);
+    border-bottom: 2px solid var(--tone);
+    clip-path: inset(100% 0 0 0 round 1rem);
+  }
+  .projector.is-on .card {
+    visibility: visible;
+    clip-path: inset(0 0 0 0 round 1rem);
+    transition: clip-path 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .card-head,
+  .card-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .card-head {
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .card-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+  }
+  .card-line {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+  .card-foot { align-items: center; }
+  .card-link {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  /* the whole card opens the entry */
+  .card-link::after { content: ''; position: absolute; inset: 0; }
+  .card:hover .card-link { color: var(--color-magenta); }
+
+  @media (max-width: 56rem) {
+    .port { width: 2.4rem; height: 2.4rem; }
+    .card-title { font-size: 1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .packets { display: none; }
+    .card, .projector.is-on .card, .beam, .port::before, .port .dot { transition: none; }
+  }
+</style>

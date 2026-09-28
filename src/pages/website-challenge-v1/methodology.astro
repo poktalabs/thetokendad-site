@@ -1,0 +1,193 @@
+---
+import HubLayout from '../../layouts/HubLayout.astro';
+import { AUTHOR, SITE_TITLE } from '../../consts';
+
+const title = 'Website Challenge methodology: one controlled variable';
+const description =
+  'How four AI design tools built the same site from one frozen brief: the control surface, the frozen answer sheet, clean-context runners, and the verification gates that kept the comparison honest.';
+const url = 'https://thetoken.dad/website-challenge-v1/methodology/';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: title,
+    description,
+    about: 'AI design run methodology',
+    author: { '@type': 'Person', name: AUTHOR },
+    publisher: { '@type': 'Organization', name: SITE_TITLE },
+    datePublished: '2026-08-19',
+    url,
+    mainEntityOfPage: url,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: SITE_TITLE, item: 'https://thetoken.dad/' },
+      { '@type': 'ListItem', position: 2, name: 'Website Challenge', item: 'https://thetoken.dad/website-challenge-v1/' },
+      { '@type': 'ListItem', position: 3, name: 'Methodology', item: url },
+    ],
+  },
+];
+
+const constants = [
+  ['Harness', 'Claude Code'],
+  ['Model', 'Claude Opus 5 (see caveats below)'],
+  ['Frozen inputs', 'VISION.md, PRODUCT.md, ANSWER-SHEET.md: content-hashed, never edited mid-run'],
+  ['Starting code', 'git tag design-run-base'],
+  ['Page scope', 'Four page types: home, blog index, blog post, about'],
+  ['Content', 'Two real posts, unchanged; post prose could not be rewritten'],
+  ['Stack', 'Astro 7 static, Tailwind 4 CSS-first @theme, no component library'],
+  ['Editable files', 'global.css, two layouts, four page files, plus @fontsource-variable pins. Nothing else.'],
+  ['Isolation', 'One branch and one fixed port per arm'],
+];
+---
+
+<HubLayout
+  title={title}
+  description={description}
+  heading="How was the run controlled?"
+  lede="Exactly one thing was allowed to vary across the four runs: the design tool. Everything else was pinned before any arm started."
+  jsonLd={jsonLd}
+>
+  <p>
+    The harness, the model, the inputs, the starting code, the page scope, the content, the stack, and
+    which files could be touched were all fixed before arm 1 began. This page documents the control
+    surface, the mechanism the run existed to test, and the checks that made the four outcomes
+    comparable rather than four different experiments wearing the same name.
+  </p>
+
+  <h2>What was held constant across all four arms?</h2>
+  <p>
+    The table is the control surface: every constant that was fixed before arm 1 began, and stayed
+    fixed through arm 4.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Constant</th>
+        <th scope="col">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      {constants.map(([k, v]) => (
+        <tr>
+          <th scope="row">{k}</th>
+          <td>{v}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p>
+    Frozen-input integrity was verified at close: all three inputs still hashed to their Phase 0
+    values after three concurrent arms had run. Nothing was edited mid-run.
+  </p>
+
+  <h2>Why did each arm run in a clean-context subagent?</h2>
+  <p>
+    Every arm ran in a fresh subagent that had never read any tool's rules: not the protocol, not the
+    rubric, not the playbook, not another arm's output. This was mandatory, not preferred. The
+    orchestrating session had already read all four tools' ban lists and typography prohibitions, so a
+    design pass run directly from that session would produce one tool's output plus three competitors'
+    opinions baked in, and the contamination would be invisible in the final result.
+  </p>
+  <p>
+    Each runner received exactly four files: VISION.md, PRODUCT.md, a tool-scoped extract of the answer
+    sheet containing only its own section, and a procedural brief. No runner ever saw another tool's
+    intake answers.
+  </p>
+
+  <h2>What is the intake proxy, and why did the run need one?</h2>
+  <p>
+    Three of the four tools interview the user before they design anything. Answering those interview
+    questions live, arm by arm, would hand one arm an input no other arm received, and the gap would be
+    undetectable afterward, since it would show up only as "better design judgment." The run existed
+    partly to test whether this could be neutralized.
+  </p>
+  <p>
+    The fix: the user answered discovery once, before any arm ran, into a single frozen answer sheet.
+    Every question a tool asked during its interview was then answered by lookup against that sheet,
+    never by composing a fresh answer in the moment. Anything the sheet did not cover got exactly one
+    sentence in response ("the vision doesn't cover that: your call") plus a logged reason. Improvising
+    a rich, in-character answer was forbidden.
+  </p>
+
+  <h3>Did the intake proxy hold up in practice?</h3>
+  <p>
+    The mechanism held on first contact. Coverage ranged from 52% to 71% across the three interactive
+    arms, and the uncovered residue landed where it should have: on arm 4, all eight "your call" answers
+    fell on exactly the axes the answer sheet had deliberately left open.
+  </p>
+  <p>
+    It also proved it was not a rubber stamp. Arm 4 named two conflicts against VISION.md and rejected
+    both: an asymmetric layout that conflicted with "symmetric and calm throughout," and a JavaScript
+    theme toggle that conflicted with "no client-side framework."
+  </p>
+
+  <h2>How did parallel execution affect comparability?</h2>
+  <p>
+    Arms 2, 3, and 4 ran concurrently, each in its own git worktree, on its own branch, with its own
+    dependency install and its own assigned port. Every worktree was verified green before its runner
+    was dispatched. Because the arms shared no state, running them in parallel cost nothing in
+    comparability, and it exercised the intake-proxy mechanism three different ways at once, under real
+    concurrency rather than in sequence.
+  </p>
+
+  <h2>How was each arm verified before its result counted?</h2>
+  <p>
+    Every gate was re-verified by the orchestrator rather than taken on the runners' word. The checks
+    were:
+  </p>
+  <ul>
+    <li>Build passes</li>
+    <li>Type-check comes back at 0 errors, 0 warnings, 0 hints</li>
+    <li>All four page types render</li>
+    <li>The draft post correctly returns 404</li>
+    <li>A grep of the shipped CSS for banned visual effects</li>
+    <li>
+      git diff proving post prose is byte-identical to baseline on all three arms that were required
+      to leave it untouched
+    </li>
+  </ul>
+  <p>
+    This discipline caught nothing false in the arms' own design self-reports, which is itself the
+    finding worth recording, since it means the self-reports were reliable on this run. The same
+    discipline applied later, in the deployment phase, caught two real bugs.
+  </p>
+
+  <h2>Where did the control not fully hold?</h2>
+  <p>Two caveats are worth stating plainly rather than smoothing over.</p>
+  <p class="caveat">
+    The model constant does not hold on arm 4. gstack invokes <code>codex exec</code> as a built-in
+    step, so an OpenAI model contributed findings and a design direction on that arm. Arm 4 is a
+    multi-model ensemble; the other three arms are single-model. Separately, arm 1's model is inferred
+    from strong same-session evidence, not read from a recorded field.
+  </p>
+  <p class="caveat">
+    Two of the four tools never ran their flagship step, which makes both partial exercises of their
+    tools. gstack's AI-mockup board never ran because its design binary is not installed. Impeccable's
+    image-generation step was skipped because it bills an external key that the brief never authorized.
+  </p>
+
+  <h2>Summary</h2>
+  <dl class="stats">
+    <dt>What varied</dt>
+    <dd>The design tool. Nothing else.</dd>
+    <dt>What was pinned</dt>
+    <dd>
+      Harness, model (with two named exceptions), inputs, starting code, page scope, content, stack,
+      editable files, and isolation.
+    </dd>
+    <dt>What made it valid</dt>
+    <dd>
+      Clean-context runners with no cross-tool contamination, a frozen answer sheet answered by lookup
+      instead of live composition, and every gate re-verified by the orchestrator rather than trusted
+      from self-report.
+    </dd>
+  </dl>
+
+  <p>
+    <a href="/website-challenge-v1/results/">See how the four arms compared</a> or <a href="/website-challenge-v1/exhibits/">view each exhibit</a>.
+  </p>
+</HubLayout>

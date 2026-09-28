@@ -1,33 +1,44 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FormattedDate from '../components/FormattedDate.astro';
+import Hero from '../components/Hero.astro';
+import World from '../components/World.astro';
+import Feed from '../components/Feed.astro';
+import FAQ from '../components/FAQ.astro';
+import { faqJsonLd } from '../lib/faq';
 import { getPublishedPosts } from '../lib/posts';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { projectorEntries } from '../lib/projector';
+import { SITE_TITLE, SITE_DESCRIPTION, HOME_STATEMENT, HOME_LEDE, HOME_FAQ } from '../consts';
 
-const posts = (await getPublishedPosts()).slice(0, 5);
+const posts = await getPublishedPosts();
+const latest = posts.slice(0, 6);
+const entries = projectorEntries(posts);
+
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <section>
-    <h1>{SITE_TITLE}</h1>
-    <p>{SITE_DESCRIPTION}</p>
-  </section>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} jsonLd={faqJsonLd(HOME_FAQ)}>
+  <Hero statement={HOME_STATEMENT} lede={HOME_LEDE} entries={entries} />
 
-  <section>
-    <h2>Writing</h2>
-    {posts.length === 0 ? (
-      <p>Nothing published yet.</p>
-    ) : (
-      <ul>
-        {posts.map((post) => (
-          <li>
-            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-            <FormattedDate date={post.data.pubDate} />
-            <p>{post.data.description}</p>
-          </li>
-        ))}
-      </ul>
-    )}
-    <a href="/blog/">All writing</a>
-  </section>
+  <nav class="worlds wrap" aria-label="Worlds">
+    <World href="/lab/" label="Lab" hint="Experiments, builds in progress, guides and resources" tone="orange" />
+    <World href="/studio/" label="Studio" hint="Launched projects, the portfolio" tone="magenta" />
+    <World href="/blog/" label="Writing" hint="Posts from the bench, with receipts" tone="violet" />
+  </nav>
+
+  <Feed posts={latest} />
+
+  <FAQ class="wrap home-faq" items={HOME_FAQ} heading="Questions, answered from the bench" />
 </BaseLayout>
+
+<style>
+  .worlds {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 56rem) {
+    .worlds { grid-template-columns: 1fr; }
+  }
+  :global(.home-faq) { padding-bottom: 5rem; }
+</style>

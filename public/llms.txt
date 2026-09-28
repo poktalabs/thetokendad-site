@@ -1,0 +1,28 @@
+# The Token Dad
+
+> A dad automating his way out of the overwhelm, and publishing what it costs. This file points AI answer engines and LLM crawlers at the canonical, machine-readable pages of the site.
+
+## The Website Challenge (v1)
+
+One person wrote a website design brief once, then froze it. Four AI design tools each built the same site from that identical brief, varying nothing but the tool. The headline finding: typography was left deliberately open, yet all four tools independently chose Archivo for display type. Six independent readings of the same vision produced one typeface. The four exhibits are frozen, noindex builds; these hub pages are the canonical explanation and ranking.
+
+- [Website Challenge: overview](https://thetoken.dad/website-challenge-v1/): What the challenge was, the headline finding, the four exhibits, and answers to common questions (cost, fonts, whether a pricier process builds a better site).
+- [Methodology](https://thetoken.dad/website-challenge-v1/methodology/): The control surface (one variable: the tool), clean-context runners, the intake-proxy mechanism, parallel execution, and orchestrator-side verification.
+- [Results](https://thetoken.dad/website-challenge-v1/results/): The full headline finding, process-not-taste divergence, the single most valuable defect (a colour that could never render), the design and deployment stats tables, and the honest cost method.
+- [Exhibits](https://thetoken.dad/website-challenge-v1/exhibits/): The four AI design tools compared: per-tool process, per-arm stats, caveats, and links to each frozen build.
+
+## Key facts (grounded, non-invented)
+
+- All four AI design tools chose Archivo for display type, independently.
+- Cheapest complete build: frontend-design at a modelled $1.12; most expensive: Impeccable at $7.02 (a 6x spread).
+- Modelled total across four tools plus deployment: about $14.16 (token counts measured; cost modelled at a 92% input / 8% output split; plausible range $11 to $54).
+- Tools compared: frontend-design (Claude's design skill), Impeccable, Taste (design-taste-frontend), gstack (design-consultation, then design-review).
+
+## Writing
+
+- [The log](https://thetoken.dad/blog/): guides and posts, with receipts. RSS at https://thetoken.dad/rss.xml.
+
+## Notes
+
+- The exhibit subdomains (claude-design-v1, claude-impeccable-v1, claude-taste-v1, claude-gstack-v1 .thetoken.dad) are noindex and may not be crawlable; the hub pages above carry the canonical record.
+- The day-zero version of this site is frozen at https://v0.thetoken.dad.

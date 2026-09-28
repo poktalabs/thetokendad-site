@@ -1,0 +1,123 @@
+---
+/*
+  World: a gate into one aspect of The Token Dad, drawn as a colour card.
+  Index, label, one line, and a plus. Colour is scenery: the three cards
+  take the three palette hues by position, never by meaning.
+*/
+type Tone = 'orange' | 'magenta' | 'violet' | 'coral';
+
+interface Props {
+  href: string;
+  label: string;
+  hint?: string;
+  tone: Tone;
+  /** smaller card for grids inside the reading measure */
+  compact?: boolean;
+  /** a mono readout above the label (arm number, kind) */
+  eyebrow?: string;
+  /** sentence-case label for titles (read next), instead of the display caps */
+  plain?: boolean;
+  class?: string;
+}
+const { href, label, hint, tone, compact = false, eyebrow, plain = false, class: className } = Astro.props;
+---
+
+<a href={href} class:list={['world', tone, { compact, plain }, className]}>
+  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+  <span class="label">{label}</span>
+  {hint && <span class="hint">{hint}</span>}
+  <span class="plus" aria-hidden="true">+</span>
+</a>
+
+<style>
+  .world {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 0.25rem;
+    min-height: 15rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1.25rem;
+    color: var(--color-ground);
+    text-decoration: none;
+    transition: transform 250ms ease;
+  }
+  .world.orange { background: var(--color-orange); }
+  .world.magenta { background: var(--color-magenta); }
+  .world.violet { background: var(--color-violet); }
+  .world.coral { background: var(--color-coral); }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .world.compact {
+    min-height: 9.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+  }
+  .world.compact .label { padding-right: 2.5rem; font-size: 1.5rem; }
+  .world.plain .label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    text-wrap: pretty;
+  }
+  .world.compact .hint { max-width: none; padding-right: 2.75rem; font-size: 0.85rem; overflow-wrap: anywhere; }
+  .world.compact .plus { width: 1.9rem; height: 1.9rem; font-size: 1.2rem; }
+
+  .label {
+    align-self: start;
+    overflow-wrap: anywhere;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .hint {
+    max-width: 22ch;
+    padding-right: 3rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+  .plus {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .world:hover,
+  .world:focus-visible {
+    color: inherit;
+    transform: translateY(-4px);
+  }
+  .world:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .world { transition: none; }
+    .world:hover, .world:focus-visible { transform: none; }
+  }
+  @media (max-width: 48rem) {
+    .world { min-height: 11rem; }
+    .label { font-size: 1.6rem; }
+  }
+</style>

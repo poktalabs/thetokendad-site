@@ -1,17 +1,322 @@
 @import 'tailwindcss';
 
+/* Self-hosted fonts (fontsource, served from the bundle, no third-party requests). */
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/bricolage-grotesque/opsz.css';
+@import '@fontsource-variable/figtree';
+@import '@fontsource-variable/martian-mono';
+
 /*
-  DESIGN IS DELIBERATELY ABSENT.
+  Visual lock, 2026-09 (see workstream DECISIONS.md, 2026-09-19 and 2026-09-24).
 
-  This file carries no visual direction on purpose. The canvas's look is being
-  designed by hand (Mel, via /impeccable) on top of this scaffold, and anything
-  opinionated here would just be work to undo.
-
-  What goes here when design lands: a Tailwind 4 `@theme` block with the brand
-  tokens (colors, type scale, fonts), plus any base element styles.
-
-  @theme {
-    --color-*: ...;
-    --font-*: ...;
-  }
+  Ground: near-black graphite, never pure black. Dark-only.
+  Primary: the sun gradient, orange to magenta. Magenta is the solid form
+  used wherever a single colour has to do UI work (links, focus, primary
+  action). Secondary: violet, for depth, orbits, hover states.
+  Everything else is graphite tones and white. Meaning is carried by shape,
+  never by hue.
+  Type: a precise grotesk for headlines and labels, calm sans for reading,
+  mono for code. Reading surfaces stay quiet so the receipts can be read.
 */
+@theme static {
+  /* graphite tone steps, darkest to lightest */
+  --color-ground: #1c1c1c;
+  --color-ground-raised: #232323;
+  --color-ground-panel: #2a2a2a;
+  --color-line: #383838;
+  --color-line-strong: #4a4a4a;
+
+  /* text */
+  --color-ink: #f2f2f2;
+  --color-ink-muted: #a8a8a8; /* secondary metadata only (dates, tags, readouts); never running text */
+  --color-ink-faint: #6e6e6e; /* never for text: 3.34:1 on ground. Nodes, rules, disabled chrome only. */
+
+  /* primary: the sun */
+  --color-orange: #ff7a1f;
+  --color-coral: #ff4d6d;
+  --color-magenta: #ff2fd6;
+  --color-magenta-deep: #c400a3;
+
+  /* secondary: violet */
+  --color-violet: #8b3dff;
+  --color-violet-deep: #4a1ab8;
+  --color-space: #2a1650;
+
+  --color-sparkle: #c9c9c9;
+
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Figtree Variable', Figtree, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Martian Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --radius-pill: 999px;
+
+  --shadow-glow-magenta: 0 0 0 1px var(--color-magenta), 0 0 32px -4px rgb(255 47 214 / 0.55);
+}
+
+/* the primary gradient, reused by the sun, the wordmark and emphasis chrome */
+:root {
+  --gradient-sun: linear-gradient(180deg, var(--color-orange) 0%, var(--color-coral) 45%, var(--color-magenta) 100%);
+  --gradient-sun-deep: linear-gradient(180deg, var(--color-orange) 0%, var(--color-magenta) 55%, var(--color-violet) 100%);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+    margin: 0;
+  }
+
+  ::selection {
+    background: var(--color-magenta);
+    color: var(--color-ground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-magenta);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-color: var(--color-magenta);
+    text-underline-offset: 0.2em;
+  }
+
+  a:hover {
+    color: var(--color-magenta);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  code, pre, kbd {
+    font-family: var(--font-mono);
+  }
+}
+
+@layer components {
+  /* reading surface for posts and pages: calm, one measure, hairline rules */
+  .prose {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  .prose > * + * { margin-top: 1.25em; }
+  .prose h2, .prose h3 {
+    margin-top: 2.2em;
+    margin-bottom: 0.6em;
+    text-wrap: pretty;
+  }
+  .prose h2 { font-size: 1.6rem; }
+  .prose h3 { font-size: 1.2rem; }
+  .prose p { margin-bottom: 0; }
+  .prose a { text-decoration: underline; }
+  .prose strong { font-weight: 600; }
+  .prose ul, .prose ol { padding-left: 1.4em; }
+  .prose li + li { margin-top: 0.4em; }
+  /* quotes take the palette by position, never by meaning */
+  .prose blockquote {
+    margin-inline: 0;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    border-left: 2px solid var(--color-orange);
+  }
+  .prose blockquote:nth-of-type(4n + 2) { border-left-color: var(--color-magenta); }
+  .prose blockquote:nth-of-type(4n + 3) { border-left-color: var(--color-violet); }
+  .prose blockquote:nth-of-type(4n + 4) { border-left-color: var(--color-coral); }
+  .prose code {
+    padding: 0.1em 0.35em;
+    border-radius: 0.35rem;
+    background: var(--color-ground-panel);
+    font-size: 0.88em;
+  }
+  .prose pre {
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-ground-raised) !important;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  .prose pre code { padding: 0; background: none; font-size: inherit; }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  .prose th, .prose td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--color-line);
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .prose hr { border: 0; border-top: 1px solid var(--color-line); }
+  .prose .faq { margin-top: 2.5rem; }
+  .prose img { max-width: 100%; height: auto; border-radius: 0.75rem; }
+
+  /* page header shared by the inner pages */
+  .page-head {
+    padding-block: 3.5rem 2rem;
+  }
+  .page-head h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    letter-spacing: -0.03em;
+  }
+  .page-head .page-lede {
+    max-width: 44ch;
+    margin: 1rem 0 0;
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+
+  /* the lab hub: a kicker readout, the title, the lede, a ruled tab strip,
+     then the reading surface with stats blocks and definition lists */
+  .hub-head { padding-block: 3.5rem 1.75rem; }
+  .hub-head .kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0 0 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .hub-head .kicker span + span::before { content: '·'; margin-right: 0.75rem; }
+  .hub-head .kicker a { text-decoration: none; }
+  .hub-head .kicker a:hover { color: var(--color-magenta); }
+  .hub-head h1 {
+    margin: 0;
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    letter-spacing: -0.03em;
+    text-wrap: pretty;
+  }
+  .hub-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--color-line);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hub-nav a {
+    padding: 0.75rem 0;
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .hub-nav a:hover { color: var(--color-magenta); }
+  .hub-nav a[aria-current='page'] { border-bottom-color: var(--color-magenta); }
+  .hub-body { padding-bottom: 5rem; }
+  .hub-body caption {
+    padding-bottom: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--color-ink-muted);
+  }
+  .hub-body table { font-size: 0.9rem; }
+  .hub-body th[scope='row'] { font-family: var(--font-sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--color-ink); }
+  .hub-body dl { margin: 0; }
+  .hub-body dt {
+    margin-top: 1.25em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .hub-body dd { margin: 0.35em 0 0; }
+  /* the stats block: a ruled panel, readout on the left, value on the right */
+  .hub-body dl.stats {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.45rem 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    font-size: 0.92rem;
+  }
+  .hub-body dl.stats dt {
+    margin: 0;
+    padding-top: 0.15em;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .hub-body dl.stats dd { margin: 0; }
+  .hub-body .exhibits {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .hub-body .exhibits a { text-decoration: none; }
+  .hub-body .exhibit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .hub-body .exhibit-link:hover { border-color: var(--color-ink); color: var(--color-ink); }
+  .hub-body .caveat {
+    padding: 0.75rem 1rem;
+    border-left: 2px solid var(--color-orange);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 30rem) {
+    .hub-nav { gap: 0 1.1rem; font-size: 0.7rem; }
+    .hub-body .exhibits { grid-template-columns: 1fr; }
+    .hub-body dl.stats { grid-template-columns: 1fr; gap: 0.15rem 0; }
+    .hub-body dl.stats dd { margin-bottom: 0.5rem; }
+  }
+}
+
+@layer utilities {
+  /* max reading width shared by every surface */
+  .wrap {
+    width: min(100% - 2.5rem, 72rem);
+    margin-inline: auto;
+  }
+
+  .wrap-prose {
+    width: min(100% - 2.5rem, 42rem);
+    margin-inline: auto;
+  }
+}

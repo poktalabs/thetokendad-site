@@ -1,0 +1,53 @@
+---
+/*
+  The wordmark: THE TOKEN DAD in tracked display caps, the sun mark as the
+  O in TOKEN. Text is exposed once to assistive tech; the art is hidden.
+  On phones only the mark shows.
+*/
+import SunMark from './SunMark.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<span class:list={['wordmark', className]}>
+  <span class="sr-only">{SITE_TITLE}</span>
+  <span class="art" aria-hidden="true"><span class="t">The T</span><SunMark size="0.7em" class="o" /><span class="t">ken Dad</span></span>
+</span>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1;
+    letter-spacing: 0.125em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+  .art {
+    display: inline-block;
+    margin-right: -0.125em; /* cancel the tracking after the last letter */
+  }
+  /* the O: sized to the cap height of Bricolage (0.66em, plus a touch of
+     round overshoot) and sat on the baseline so it reads as a letter */
+  .art :global(.o) {
+    display: inline-block;
+    vertical-align: baseline;
+    margin: 0 0.14em 0 0.02em;
+    transition: transform 200ms ease;
+  }
+  /* phones: the nav needs the room, so the brand is the mark alone */
+  @media (max-width: 30rem) {
+    .t { display: none; }
+    .wordmark { font-size: 1.4rem; }
+    .art { margin-right: 0; }
+    .art :global(.o) { margin: 0; }
+  }
+</style>

@@ -1,0 +1,157 @@
+---
+/*
+  Feed: the station log. Every entry is a row: date, kind, title, one line.
+  Kind is inferred from tags for now (guide / experiment / launch / post);
+  it becomes a schema field when the guide template lands.
+*/
+import type { CollectionEntry } from 'astro:content';
+import { kindOf, toneOf } from '../lib/posts';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  heading?: string;
+  showAll?: boolean;
+}
+const { posts, heading = 'Feed', showAll = true } = Astro.props;
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<section class="feed wrap" aria-labelledby="feed-title">
+  <header class="feed-head">
+    <h2 id="feed-title">{heading}</h2>
+  </header>
+
+  {posts.length === 0 ? (
+    <p class="feed-empty">No signals yet.</p>
+  ) : (
+    <ol class="rows">
+      {posts.map((post, i) => (
+        <li class="row" style={`--tone: var(--color-${toneOf(i)})`}>
+          <time class="date" datetime={post.data.pubDate.toISOString()}>{iso(post.data.pubDate)}</time>
+          <span class="kind">{kindOf(post.data.tags)}</span>
+          <a class="title" href={`/blog/${post.id}/`}>{post.data.title}</a>
+          <p class="desc">{post.data.description}</p>
+        </li>
+      ))}
+    </ol>
+  )}
+
+  {showAll && <a class="all" href="/blog/">Full log</a>}
+</section>
+
+<style>
+  .feed {
+    padding-block: 4rem 5rem;
+  }
+
+  .feed-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .feed-head h2 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 7.5rem 7rem 1fr;
+    grid-template-areas:
+      'date kind title'
+      'date kind desc';
+    column-gap: 1.5rem;
+    row-gap: 0.35rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .date {
+    grid-area: date;
+    padding-top: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+  }
+  .kind {
+    grid-area: kind;
+    justify-self: start;
+    align-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--tone);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  /* the tone dot: the row's colour, carried to the post page and its card */
+  .kind::before {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--tone);
+  }
+  .title {
+    grid-area: title;
+    max-width: 60ch;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+  }
+  .title:hover { color: var(--color-magenta); }
+  .desc {
+    grid-area: desc;
+    max-width: 60ch;
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: var(--color-ink);
+  }
+
+  .feed-empty { color: var(--color-ink); }
+
+  .all {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-ink-muted);
+  }
+  .all::after { content: ' →'; }
+  .all:hover { color: var(--color-magenta); }
+
+  @media (max-width: 48rem) {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+    .date { padding-top: 0.3rem; }
+    .title, .desc { flex-basis: 100%; }
+  }
+</style>

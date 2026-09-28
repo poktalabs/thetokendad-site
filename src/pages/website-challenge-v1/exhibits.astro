@@ -1,0 +1,237 @@
+---
+import HubLayout from '../../layouts/HubLayout.astro';
+import World from '../../components/World.astro';
+import { AUTHOR, SITE_TITLE } from '../../consts';
+
+const title = 'Website Challenge exhibits: four AI-built websites';
+const description =
+  "Four AI design tools built the same frozen website brief: Claude's frontend-design skill, Impeccable, Taste, and gstack. Compare all four live exhibits, per-arm stats, and caveats.";
+const pageUrl = 'https://thetoken.dad/website-challenge-v1/exhibits/';
+
+type Arm = {
+  n: number;
+  tool: string;
+  host: string;
+  tone: 'orange' | 'magenta' | 'violet' | 'coral';
+  summary: string;
+  prose: string;
+  stats: [string, string][];
+  deploy?: [string, string][];
+  caveat?: string;
+};
+
+const arms: Arm[] = [
+  {
+    n: 1,
+    tool: 'frontend-design',
+    host: 'claude-design-v1.thetoken.dad',
+    tone: 'orange',
+    summary: "Claude's own design skill: asks nothing, self-fills every gap, does one visual self-review, and commits.",
+    prose:
+      "frontend-design is Claude's own design skill. Its process asks nothing: it self-fills every gap in the brief, runs one visual self-review, and commits. It was the cheapest arm by roughly six times the cost of the next cheapest, and it is the real benchmark of the four: a complete, shipped, reviewed design for a modelled $1.12. It paired Archivo for display type with Faustina for body text.",
+    stats: [
+      ['Type', 'Archivo (display) + Faustina (body)'],
+      ['Intake questions', '0'],
+      ['Tool calls', '71'],
+      ['Wall clock', '~26 minutes'],
+      ['Tokens', '~169,000'],
+      ['Review rounds', '1 self-review'],
+      ['External model', 'No'],
+      ['Modelled cost', '$1.12'],
+      ['Commit', '91835f5'],
+    ],
+    caveat: "Arm 1's model is inferred from strong same-session evidence, not a recorded field.",
+  },
+  {
+    n: 2,
+    tool: 'Impeccable',
+    host: 'claude-impeccable-v1.thetoken.dad',
+    tone: 'magenta',
+    summary: 'An internal adversarial system with a builder, a reviewer behind a fix|ship gate, and a documenter; ran two full review rounds.',
+    prose:
+      "Impeccable is an internal adversarial system: a builder, a reviewer sitting behind an explicit fix|ship gate, and a documenter that re-derives its output from source rather than summarizing the builder's claims. It ran two full rounds before it would pass itself, at roughly six times arm 1's token cost. Its two-round gate caught a hard-banned kicker it had shipped itself, an h3 heading set quieter than its own body text, and a quarter of its own mark system left uncoded. It chose the identical type pair as arm 1 with no contact between the two runs.",
+    stats: [
+      ['Type', 'Archivo (display) + Faustina (body)'],
+      ['Intake questions', '21 (15 from the sheet, 6 "your call")'],
+      ['Tool calls (design)', '258'],
+      ['Wall clock (design)', '~54 minutes'],
+      ['Tokens (design)', '1,064,198'],
+      ['Review rounds', '2 (fix|ship gate)'],
+      ['External model', 'No'],
+      ['Modelled cost (design)', '$7.02'],
+      ['Commit', '43587c5'],
+    ],
+    deploy: [
+      ['Tool calls', '15'],
+      ['Wall clock', '2.5 minutes'],
+      ['Tokens', '48,971'],
+      ['Cost', '$0.32'],
+    ],
+    caveat:
+      "Impeccable's image-generation step was skipped because it bills an external key the brief never authorised. This is a partial exercise of the tool.",
+  },
+  {
+    n: 3,
+    tool: 'Taste',
+    host: 'claude-taste-v1.thetoken.dad',
+    tone: 'violet',
+    summary: 'A templated six-slot intake with one self-review pass and the strictest copy rules of the four.',
+    prose:
+      "Taste (design-taste-frontend) runs a templated six-slot intake, one self-review pass, and applies the strictest copy rules of the four arms. It costs the most to port to production because it hands over React that must be translated to the site's Astro/Tailwind stack.",
+    stats: [
+      ['Type', 'Archivo (display), Literata (body), Geist Mono (third)'],
+      ['Intake questions', '18 (9 from the sheet, 6 "your call")'],
+      ['Tool calls (design)', '116'],
+      ['Wall clock (design)', '~48 minutes'],
+      ['Tokens (design)', '284,287'],
+      ['Review rounds', '1 self-review'],
+      ['External model', 'No'],
+      ['Modelled cost (design)', '$1.88'],
+      ['Commit', '5b3b250'],
+    ],
+    deploy: [
+      ['Tool calls', '40'],
+      ['Wall clock', '7.1 minutes'],
+      ['Tokens', '68,648'],
+      ['Cost', '$0.45'],
+    ],
+  },
+  {
+    n: 4,
+    tool: 'gstack',
+    host: 'claude-gstack-v1.thetoken.dad',
+    tone: 'coral',
+    summary: 'A structured 13-finding review that consulted an external model as a second voice, one commit per finding.',
+    prose:
+      'gstack ran design-consultation, then design-review: a structured 13-finding review with an external model brought in as a second voice, one commit per finding. It caught the single most valuable defect of the whole run: a rule named .stamp--alert was structurally unable to win against the surrounding context rules (specificity 0,2,0 against the modifier\'s 0,1,0), and the three files meant to consume it never applied it, so the one place this design uses a second hue would never have rendered red anywhere a reader meets it. No build gate, screenshot, or visual review would have caught that fault. Of its intake, all eight "your call" answers fell on axes the brief deliberately left open, and it named two conflicts against the stated vision and rejected both.',
+    stats: [
+      ['Type', 'Archivo (display), Piazzolla (body), Martian Mono (third)'],
+      ['Intake questions', '23 (12 from the sheet, 8 "your call")'],
+      ['Tool calls (design)', '151'],
+      ['Wall clock (design)', '~46 minutes'],
+      ['Tokens (design)', '409,632'],
+      ['Review rounds', '13-finding review'],
+      ['External model', 'Yes (2 codex exec calls)'],
+      ['Modelled cost (design)', '$2.70'],
+      ['Commit', 'b580b68'],
+    ],
+    deploy: [
+      ['Tool calls', '75'],
+      ['Wall clock', '38.6 minutes: a Cloudflare control-plane success the data plane did not follow; the DNS record did not appear until the binding was deleted and re-attached after a backoff'],
+      ['Tokens', '100,079'],
+      ['Cost', '$0.66'],
+    ],
+    caveat:
+      'gstack invokes codex exec as a built-in step, so an OpenAI model contributed findings and a design direction to this arm. It is a multi-model ensemble where every other arm was single-model: "model = Opus 5" cannot be claimed for arm 4, even though its subdomain, claude-gstack-v1, says otherwise on its face. Separately, gstack\'s AI-mockup variant board never ran because its design binary is not installed on this machine, so this is also a partial exercise of the tool.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: title,
+    description,
+    about: 'AI-built website exhibits',
+    author: { '@type': 'Person', name: AUTHOR },
+    publisher: { '@type': 'Organization', name: SITE_TITLE },
+    datePublished: '2026-08-19',
+    url: pageUrl,
+    mainEntityOfPage: pageUrl,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'The Website Challenge exhibits',
+    itemListElement: arms.map((a) => ({
+      '@type': 'ListItem',
+      position: a.n,
+      name: `Arm ${a.n}: ${a.tool}`,
+      url: `https://${a.host}`,
+      description: a.summary,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: SITE_TITLE, item: 'https://thetoken.dad/' },
+      { '@type': 'ListItem', position: 2, name: 'Website Challenge', item: 'https://thetoken.dad/website-challenge-v1/' },
+      { '@type': 'ListItem', position: 3, name: 'Exhibits', item: pageUrl },
+    ],
+  },
+];
+---
+
+<HubLayout
+  title={title}
+  description={description}
+  heading="The four exhibits"
+  lede="Same brief, same starting code, same stack, same content. Only the design tool differed. Every exhibit is served from the exact commit its arm produced and will not change."
+  jsonLd={jsonLd}
+>
+  <p>
+    Each of the four exhibits is a frozen, self-contained build of the same website: same brief, same
+    starting code, same Astro 7 / Tailwind 4 stack, same four page types (home, blog index, blog post,
+    about), same content. Only the design tool differed: Claude's own frontend-design skill, Impeccable,
+    Taste, and gstack each took the identical starting point and produced its own result. Every exhibit
+    is marked noindex, so it may not be crawlable by search engines; the stats and context on this page
+    are the canonical record of what each tool did. Open all four and compare them directly. That is
+    what they are for.
+  </p>
+
+  <div class="exhibits">
+    {arms.map((a) => (
+      <World href={`https://${a.host}`} eyebrow={`Arm ${a.n}`} label={a.tool} hint={a.host} tone={a.tone} compact />
+    ))}
+  </div>
+
+  {arms.map((a) => (
+    <>
+      <h2 id={`arm-${a.n}`}>Arm {a.n}: what did {a.tool} do?</h2>
+      <p>{a.prose}</p>
+      <dl class="stats">
+        {a.stats.map(([k, v]) => (
+          <>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </>
+        ))}
+      </dl>
+      {a.deploy && (
+        <>
+          <h3>Arm {a.n} deployment</h3>
+          <dl class="stats">
+            {a.deploy.map(([k, v]) => (
+              <>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </>
+            ))}
+          </dl>
+        </>
+      )}
+      {a.caveat && <p class="caveat">{a.caveat}</p>}
+      <p>
+        <a class="exhibit-link" href={`https://${a.host}`}>
+          View the arm {a.n} exhibit <span aria-hidden="true">&rarr;</span>
+        </a>
+      </p>
+    </>
+  ))}
+
+  <h2>What should a reader discount before comparing these four?</h2>
+  <p>
+    Two of the four arms, Impeccable and gstack, never ran their flagship step: Impeccable's image
+    generation and gstack's AI-mockup variant board were both skipped for reasons outside the tools' own
+    design logic. No comparison across the four exhibits should treat either arm as a full exercise of
+    its tool. Separately, all four exhibits still ship an internal ticket reference ("Bio pending",
+    pointing at TASK-005) on their About pages, because the brief's copy was frozen and no tool would
+    invent a bio to fill the gap. The exhibits were deployed faithfully as each tool produced them,
+    rather than patched afterward to remove that line.
+  </p>
+
+  <p>
+    See how the brief and starting conditions were set in the <a href="/website-challenge-v1/methodology/">methodology</a>, or the full cross-arm comparison in the <a href="/website-challenge-v1/results/">results</a>.
+  </p>
+</HubLayout>

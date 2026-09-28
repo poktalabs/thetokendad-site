@@ -1,0 +1,162 @@
+---
+import HubLayout from '../../layouts/HubLayout.astro';
+import World from '../../components/World.astro';
+import FAQ from '../../components/FAQ.astro';
+import { faqJsonLd } from '../../lib/faq';
+import { AUTHOR, SITE_TITLE } from '../../consts';
+
+const title = 'The Website Challenge: four AI design tools, one brief';
+const description =
+  'One frozen brief, four AI design tools, zero contact between them. All four independently chose the same display typeface. Here is what that does and does not prove.';
+const pageUrl = 'https://thetoken.dad/website-challenge-v1/';
+
+const exhibits = [
+  { arm: 1, tool: 'frontend-design', host: 'claude-design-v1.thetoken.dad', tone: 'orange' },
+  { arm: 2, tool: 'Impeccable', host: 'claude-impeccable-v1.thetoken.dad', tone: 'magenta' },
+  { arm: 3, tool: 'Taste', host: 'claude-taste-v1.thetoken.dad', tone: 'violet' },
+  { arm: 4, tool: 'gstack', host: 'claude-gstack-v1.thetoken.dad', tone: 'coral' },
+] as const;
+
+const faq = [
+  {
+    q: 'What was the Website Challenge?',
+    a: 'One person froze a website design brief; four AI design tools each built the same site from it, with only the tool varied.',
+  },
+  {
+    q: 'What font did every AI design tool choose?',
+    a: 'All four independently chose Archivo for display type; across six independent readings of the same brief, the display typeface was always Archivo. Two arms also independently paired it with Faustina.',
+  },
+  {
+    q: 'How much does it cost to build a website with AI?',
+    a: 'The cheapest tool (frontend-design) produced a complete, shipped, reviewed design for a modelled $1.12. Across all four tools plus deployment the modelled total was about $14.16 (token counts measured; cost modelled at a 92% input / 8% output split, with a plausible range of $11 to $54).',
+  },
+  {
+    q: 'Does a more expensive AI design process produce a better website?',
+    a: 'The run does not settle it. A 6x cost spread (Impeccable $7.02 vs frontend-design $1.12) bought a more rigorous process, with more review rounds and an adversarial gate, but whether it bought a better website is exactly what the four exhibits let readers judge.',
+  },
+  {
+    q: 'Which AI design tool is cheapest?',
+    a: "frontend-design (Claude's own design skill), at a modelled $1.12, roughly 6x cheaper than the most expensive tool; it asks nothing, self-fills every gap, does one self-review, and commits.",
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: title,
+    description,
+    about: 'AI web design tool comparison',
+    author: { '@type': 'Person', name: AUTHOR },
+    publisher: { '@type': 'Organization', name: SITE_TITLE },
+    datePublished: '2026-08-19',
+    url: pageUrl,
+    mainEntityOfPage: pageUrl,
+  },
+  faqJsonLd(faq),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: SITE_TITLE, item: 'https://thetoken.dad/' },
+      { '@type': 'ListItem', position: 2, name: 'Website Challenge', item: pageUrl },
+    ],
+  },
+];
+---
+
+<HubLayout
+  title={title}
+  description={description}
+  heading="The Website Challenge"
+  lede="One frozen brief. Four AI design tools. No contact between them. All four chose the same display typeface, and the four sites they built are still up."
+  jsonLd={jsonLd}
+>
+  <p>
+    Typography was the one variable a human deliberately left open, with an explicit warning against
+    the obvious answer, and all four AI design tools chose the same typeface anyway. One person wrote
+    a design brief once, froze it, and handed the identical frozen document to four different AI design
+    tools with nothing else varied. Across six independent readings of that brief, the display typeface
+    was Archivo every single time. Whether that is genuine agreement on the right answer or four tools
+    pattern-matching to the same training-data reflex is the open question this run cannot settle by
+    itself, which is why the four exhibits are published for readers to judge directly.
+  </p>
+
+  <h2>What was the Website Challenge?</h2>
+  <p>
+    One person wrote what he wanted from a website, once, in his own words. That document
+    (<code>VISION.md</code>) was frozen before any tool touched it. Four AI design tools were each
+    handed the same frozen brief, the same starting code, the same stack (Astro 7 static, Tailwind 4),
+    the same four page types (home, blog index, blog post, about), and the same content. Nothing varied
+    except the tool. Each tool ran in an isolated worktree, in a fresh, clean-context session that had
+    never read any tool's rules or any other arm's output.
+  </p>
+
+  <h2>What did every tool choose, independently?</h2>
+  <p>
+    The brief's instruction on type was direct: "I don't want to restrict, I want to be surprised," paired
+    with a named embarrassment to avoid, "an obvious serif font selected by AI." Type was expected to be
+    one of the places the four tools would diverge most. It was not. All four tools chose Archivo for
+    display type. Arms 1 and 2 independently chose the identical pair, Archivo and Faustina, with no
+    contact between them. Inside arm 4 alone, three further independent voices each proposed Archivo
+    without seeing one another's answers. Six independent readings of the same brief, one display
+    typeface, every time.
+  </p>
+  <p>
+    That convergence is the most interesting thing this run produced, precisely because it cuts both
+    ways. Read generously, it looks like four independent systems finding the same correct answer to a
+    well-specified problem. Read skeptically, it looks like four tools built on similar training data
+    reaching for the same safe, non-obvious choice: "surprise me" answered with consensus instead of
+    variation. The run itself cannot distinguish between those two readings. That is exactly why the
+    four exhibits are left live: so a reader can look at the actual outputs and decide which explanation
+    the evidence supports.
+  </p>
+
+  <h2>The four exhibits</h2>
+  <p>
+    Each card is a full, independently built website from the same frozen brief. All four exhibits
+    are frozen and <code>noindex</code>: they will not change, and they should not be relied on to
+    appear in search results. This hub carries the canonical explanation and ranking of the run.
+  </p>
+  <div class="exhibits">
+    {exhibits.map((e) => (
+      <World
+        href={`https://${e.host}`}
+        eyebrow={`Arm ${e.arm}`}
+        label={e.tool}
+        hint={e.host}
+        tone={e.tone}
+        compact
+      />
+    ))}
+  </div>
+
+  <h2>If the outputs converged, what actually differed?</h2>
+  <p>
+    The divergence between the four tools was in process, not in taste. The cheapest arm
+    (frontend-design) modelled at $1.12; the most expensive (Impeccable) modelled at $7.02, a 6x
+    spread, yet the visual outputs were more alike than that spread would predict. What this run
+    actually publishes is that process divergence, plus the single most valuable defect it uncovered: a
+    colour that, due to a CSS specificity conflict, could structurally never render, a problem only an
+    adversarial review pass was able to find. Full detail, including the per-tool process breakdown, the
+    defect, the stats tables, and the cost modelling method, is on the results page.
+  </p>
+
+  <h2>Read more</h2>
+  <ul>
+    <li>
+      <a href="/website-challenge-v1/methodology/">Methodology</a>: how the run was controlled. Clean-context
+      runners, the intake proxy, parallel execution, and verification.
+    </li>
+    <li>
+      <a href="/website-challenge-v1/results/">Results</a>: the headline finding in full, the process
+      divergence between tools, the key defect, the stats tables, and the cost method.
+    </li>
+    <li>
+      <a href="/website-challenge-v1/exhibits/">Exhibits</a>: the four tools with per-tool context,
+      per-arm stats, and links out to each live site.
+    </li>
+  </ul>
+
+  <FAQ items={faq} heading="Frequently asked questions" />
+</HubLayout>
