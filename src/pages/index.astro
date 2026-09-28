@@ -13,16 +13,9 @@ const posts = await getPublishedPosts();
 const latest = posts.slice(0, 6);
 const entries = projectorEntries(posts);
 
-const iso = (d: Date) => d.toISOString().slice(0, 10);
-
-/* the command bar ticker: real transmissions, newest first */
-const headlines = [
-  ...latest.slice(0, 3).map((p) => ({ when: iso(p.data.pubDate), what: p.data.title })),
-  { when: 'lab', what: 'website-challenge-v1 closed, four exhibits archived' },
-];
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} headlines={headlines} jsonLd={faqJsonLd(HOME_FAQ)}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} jsonLd={faqJsonLd(HOME_FAQ)}>
   <Hero statement={HOME_STATEMENT} lede={HOME_LEDE} entries={entries} />
 
   <nav class="worlds wrap" aria-label="Worlds">

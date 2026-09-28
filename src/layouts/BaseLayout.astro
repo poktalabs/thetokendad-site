@@ -1,10 +1,10 @@
 ---
 /*
   Base layout. The header is the command bar: one ruled pill with boxed
-  cells (brand, the headline ticker when the page supplies one, nav).
+  cells (brand, nav: Lab, Studio, Writing). The headline ticker that sat
+  between them was retired 2026-09-27: too much motion next to the projector.
 */
 import BaseHead from '../components/BaseHead.astro';
-import Ticker, { type TickerItem } from '../components/Ticker.astro';
 import Wordmark from '../components/Wordmark.astro';
 import { SITE_TITLE } from '../consts';
 import '../styles/global.css';
@@ -12,13 +12,11 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
-  headlines?: TickerItem[];
   /** structured data for the page, one object or several; serialised verbatim */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description, headlines = [], jsonLd } = Astro.props;
-const hasTicker = headlines.length > 0;
+const { title, description, jsonLd } = Astro.props;
 const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
@@ -31,15 +29,10 @@ const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   </head>
   <body class="flex min-h-dvh flex-col">
     <header class="wrap relative z-10">
-      <div class:list={['bar', { 'has-ticker': hasTicker }]}>
+      <div class="bar">
         <a href="/" class="cell brand">
           <Wordmark />
         </a>
-        {hasTicker && (
-          <div class="cell cell-ticker">
-            <Ticker items={headlines} />
-          </div>
-        )}
         <nav class="cell nav" aria-label="Site">
           <a href="/lab/">Lab</a>
           <a href="/studio/">Studio</a>
@@ -69,7 +62,6 @@ const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     background: var(--color-ground);
     font-size: 0.9rem;
   }
-  .bar.has-ticker { grid-template-columns: auto 1fr auto; }
 
   .cell {
     display: flex;
@@ -105,9 +97,8 @@ const blocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   .nav a:hover { background: var(--color-ground-raised); color: var(--color-ink); }
 
   @media (max-width: 56rem) {
-    /* no ticker: the brand cell takes the space up to the nav and centres the wordmark */
-    .bar, .bar.has-ticker { grid-template-columns: 1fr auto; }
-    .cell-ticker { display: none; }
+    /* the brand cell takes the space up to the nav and centres the wordmark */
+    .bar { grid-template-columns: 1fr auto; }
     .brand { justify-content: center; }
     .nav a { padding: 0 0.9rem; }
   }
