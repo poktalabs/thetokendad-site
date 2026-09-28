@@ -13,7 +13,6 @@ import type { ProjectorEntry } from '../lib/projector';
 interface Props {
   statement: {
     lead: string;
-    leadEmphasis: string;
     word: string;
     tail: string;
     tailEmphasis: string;
@@ -32,7 +31,7 @@ const wordTail = statement.word.slice(oAt + 1);
   <div class="deck wrap">
     <div class="copy">
       <h1 id="hero-title" class="statement">
-        <span class="line-1">{statement.lead} <span class="emphasis">{statement.leadEmphasis}</span></span>
+        <span class="line-1">{statement.lead}</span>
         <span class="line-2">
           <span class="sr-only">{statement.word}</span>
           <span class="word emphasis" aria-hidden="true">{wordHead}<SunMark size="0.7em" class="o" />{wordTail}</span>
@@ -42,7 +41,7 @@ const wordTail = statement.word.slice(oAt + 1);
       <p class="lede">{lede}</p>
 
       <div class="actions">
-        <a class="pill solid" href="/website-challenge-v1/">Check the Lab <span aria-hidden="true">&rarr;</span></a>
+        <a class="pill solid" href="/lab/">Check the Lab <span aria-hidden="true">&rarr;</span></a>
         <a class="pill" href="/blog/">Read blog</a>
       </div>
     </div>

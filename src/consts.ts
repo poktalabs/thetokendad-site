@@ -11,8 +11,7 @@ export const SITE_DESCRIPTION =
 // the emphasis takes the sun gradient, and the display word gets the sun
 // as its O.
 export const HOME_STATEMENT = {
-  lead: 'Just a',
-  leadEmphasis: 'dad',
+  lead: 'Just a dad',
   word: 'TOKENMAXXING',
   tail: 'for',
   tailEmphasis: 'good',
@@ -52,6 +51,22 @@ export const HOME_FAQ = [
 export const SOCIAL = {
   instagram: 'https://instagram.com/thetokendad',
 } as const;
+
+// Studio: launched projects, the portfolio. One card each; newest first.
+// Only what has actually shipped goes here.
+export const STUDIO_PROJECTS = [
+  {
+    title: 'thetoken.dad',
+    line: 'This site. Astro on Cloudflare, designed in public over seven hero rounds, every version frozen at its own address.',
+    href: '/',
+    when: '2026-08-07',
+    status: 'live',
+  },
+] as const;
+
+// Lab: builds in progress. Empty until something is on the bench and on
+// the record; the lab page says so rather than inventing one.
+export const LAB_BUILDS: { title: string; line: string; href?: string; when: string }[] = [];
 
 // Hero projector: the lab and resource archives. Log entries come from the
 // posts themselves (lib/projector.ts). Edit freely; each is one card.

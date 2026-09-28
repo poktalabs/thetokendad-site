@@ -2,6 +2,7 @@
 /*
   The wordmark: THE TOKEN DAD in tracked display caps, the sun mark as the
   O in TOKEN. Text is exposed once to assistive tech; the art is hidden.
+  On phones only the mark shows.
 */
 import SunMark from './SunMark.astro';
 import { SITE_TITLE } from '../consts';
@@ -14,7 +15,7 @@ const { class: className } = Astro.props;
 
 <span class:list={['wordmark', className]}>
   <span class="sr-only">{SITE_TITLE}</span>
-  <span class="art" aria-hidden="true">The T<SunMark size="0.7em" class="o" />ken Dad</span>
+  <span class="art" aria-hidden="true"><span class="t">The T</span><SunMark size="0.7em" class="o" /><span class="t">ken Dad</span></span>
 </span>
 
 <style>
@@ -42,7 +43,11 @@ const { class: className } = Astro.props;
     margin: 0 0.14em 0 0.02em;
     transition: transform 200ms ease;
   }
-  @media (max-width: 26rem) {
-    .wordmark { font-size: 0.75rem; letter-spacing: 0.1em; }
+  /* phones: the four-item nav needs the room, so the brand is the mark alone */
+  @media (max-width: 30rem) {
+    .t { display: none; }
+    .wordmark { font-size: 1.4rem; }
+    .art { margin-right: 0; }
+    .art :global(.o) { margin: 0; }
   }
 </style>

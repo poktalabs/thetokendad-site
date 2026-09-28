@@ -208,6 +208,8 @@
     color: var(--color-ink-muted);
   }
   .hub-head .kicker span + span::before { content: '·'; margin-right: 0.75rem; }
+  .hub-head .kicker a { text-decoration: none; }
+  .hub-head .kicker a:hover { color: var(--color-magenta); }
   .hub-head h1 {
     margin: 0;
     font-size: clamp(2rem, 3.6vw, 3rem);
