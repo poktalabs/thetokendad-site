@@ -122,6 +122,13 @@ export const LAB_ENTRIES = [
   },
   {
     sub: 'archive',
+    when: '2026-09-27',
+    title: 'The visual lock, frozen at v1',
+    line: 'The redesign the day it shipped, kept at its own address. Open it next to v0 and judge the seven rounds yourself.',
+    href: 'https://v1.thetoken.dad',
+  },
+  {
+    sub: 'archive',
     when: '2026-08-07',
     title: 'Day zero, frozen at v0',
     line: 'The site the way it launched, kept at its own address so nobody has to take my word for it.',
