@@ -14,6 +14,8 @@ export default defineConfig({
   // build produces two different URL sets and two sets of indexable pages.
   // Pinning it makes the canonical shape a property of the build, not of the host.
   trailingSlash: 'always',
+  // the about page folded into the Writing hero (2026-09-27); old links land there
+  redirects: { '/about/': '/blog/' },
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

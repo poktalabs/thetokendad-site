@@ -21,6 +21,12 @@ export const HOME_LEDE =
 
 export const AUTHOR = 'Mel';
 
+// The Writing page's hero doubles as the about: who is writing, in three
+// sentences. First draft, 2026-09-27; Mel's to rewrite.
+export const ABOUT_HEADLINE = "I'm Mel, a dad who forgets things.";
+export const ABOUT_BIO =
+  'So I build agents that remember them, and I write down what each build costs and what broke, so you can replicate it. Guides and posts from the bench, newest first.';
+
 // Home FAQ (first draft, 2026-09-27). Plain answers feed the FAQPage
 // structured data; `html` is the on-page version when a link belongs in it.
 export const HOME_FAQ = [
