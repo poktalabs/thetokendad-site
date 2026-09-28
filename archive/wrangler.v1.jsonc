@@ -1,0 +1,16 @@
+{
+  // Frozen version "v1" of the canvas. The visual lock: seven hero rounds and the one that shipped (2026-09-27)
+  // Deploy: bunx wrangler deploy --config archive/wrangler.v1.jsonc
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "thetokendad-v1",
+  "compatibility_date": "2026-09-28",
+  "assets": {
+    "directory": "./v1"
+  },
+  // Custom domain declared in-repo, not the dashboard, so a rebuild re-asserts
+  // the hostname. Single DNS label — Universal SSL covers one level. Without this
+  // the Worker has no route (workers.dev is disabled) and is unreachable.
+  "routes": [
+    { "pattern": "v1.thetoken.dad", "custom_domain": true }
+  ]
+}
