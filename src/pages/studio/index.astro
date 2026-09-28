@@ -7,7 +7,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import World from '../../components/World.astro';
 import { SITE_TITLE, STUDIO_PROJECTS } from '../../consts';
 
-const tones = ['magenta', 'violet', 'coral', 'orange'] as const;
+const tones = ['orange', 'magenta', 'violet', 'coral'] as const;
 ---
 
 <BaseLayout title={`Studio · ${SITE_TITLE}`} description="Launched projects from The Token Dad, with what each one cost.">
@@ -19,7 +19,15 @@ const tones = ['magenta', 'violet', 'coral', 'orange'] as const;
   <section class="block wrap" aria-label="Launched projects">
     <div class="cards">
       {STUDIO_PROJECTS.map((p, i) => (
-        <World href={p.href} eyebrow={`${p.status} · ${p.when}`} label={p.title} hint={p.line} tone={tones[i % tones.length]} compact plain />
+        <World
+          href={p.href}
+          eyebrow={'when' in p ? `${p.status} · ${p.when}` : p.status}
+          label={p.title}
+          hint={p.line}
+          tone={tones[i % tones.length]}
+          compact
+          plain
+        />
       ))}
     </div>
   </section>

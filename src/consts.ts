@@ -58,15 +58,51 @@ export const SOCIAL = {
   instagram: 'https://instagram.com/thetokendad',
 } as const;
 
-// Studio: launched projects, the portfolio. One card each; newest first.
-// Only what has actually shipped goes here.
+// Studio: launched projects, the portfolio. One card each, in Mel's order
+// (2026-09-27). `when` is optional: the eyebrow shows it when known.
 export const STUDIO_PROJECTS = [
+  {
+    title: 'Godinez.AI',
+    line: 'Agent platform for Latam founders and SMBs: tested workflows and automations for your day-to-day work.',
+    href: 'https://godinez.ai',
+    status: 'live',
+  },
+  {
+    title: 'RheumAI',
+    line: 'Intelligence for rheumatology. Doctors upload a clinical document and chat with a rheumatology-trained AI: a second opinion, an easy-to-follow patient care plan, and data that feeds rheumatology research.',
+    href: 'https://rheumai.xyz',
+    status: 'live',
+  },
+  {
+    title: 'BUDDi',
+    line: 'The AI companion designed to get you a job. Search, match, apply and prep: everything you need to land an interview and excel at it.',
+    href: 'https://buddi.agentcamp.xyz',
+    status: 'live',
+  },
+  {
+    title: 'Agent Launcher',
+    line: 'Deploy your personal Hermes agent in 30 seconds, on demand, ready for you.',
+    href: 'https://launcher.agentcamp.xyz',
+    status: 'live',
+  },
+  {
+    title: 'DNAI',
+    line: 'Agent for clinical research. Non-technical researchers build and ship the tools that make their day-to-day work easier.',
+    href: 'https://dnai-astro.pages.dev/',
+    status: 'live',
+  },
+  {
+    title: 'internOS',
+    line: 'Open-source framework for human-agent collaboration: a skill that coordinates work through opinionated filesystem conventions, so LLMs share and update state inside one workstream.',
+    href: 'https://github.com/poktalabs/intern-os',
+    status: 'open source',
+  },
   {
     title: 'thetoken.dad',
     line: 'This site. Astro on Cloudflare, designed in public over seven hero rounds, every version frozen at its own address.',
     href: '/',
-    when: '2026-08-07',
     status: 'live',
+    when: '2026-08-07',
   },
 ] as const;
 
